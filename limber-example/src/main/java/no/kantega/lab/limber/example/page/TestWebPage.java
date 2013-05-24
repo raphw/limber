@@ -1,5 +1,11 @@
 package no.kantega.lab.limber.example.page;
 
+import no.kantega.lab.limber.ajax.abstraction.AjaxEventTrigger;
+import no.kantega.lab.limber.ajax.abstraction.IAjaxCallback;
+import no.kantega.lab.limber.ajax.abstraction.IAjaxEvent;
+import no.kantega.lab.limber.dom.abstraction.element.DefaultElement;
+import no.kantega.lab.limber.dom.abstraction.element.IDomElement;
+import no.kantega.lab.limber.dom.abstraction.selection.IDomSelection;
 import no.kantega.lab.limber.page.WebPage;
 
 public class TestWebPage extends WebPage {
@@ -8,15 +14,23 @@ public class TestWebPage extends WebPage {
 
     public TestWebPage() {
 
-        select().tag("h2").setContent("Title");
+        dom().setTitle("Limber framework");
 
-        String[] array = {"First", "second", "third"};
-        StringBuilder sb = new StringBuilder();
-        for (String a : array) {
-            sb.append("<li>").append(a).append("</li>");
+        dom().tag("h2").setContent("Hello limber framework");
+
+        IDomSelection list = dom().tag("ul").removeAllChildren();
+        for (String s : new String[]{"It is easy to use", "It is elegant to use", "Supports jQuery"}) {
+            list.appendChild(new DefaultElement("li")).setContent(s);
         }
-        select().tag("ul").setContent(sb.toString());
 
+        dom().tag("button").setContent("Ajax demo").ajax(
+                AjaxEventTrigger.CLICK,
+                new IAjaxCallback() {
+                    @Override
+                    public void onEvent(IDomElement element, IAjaxEvent ajaxEvent) {
+                        System.out.println("This is not yet working!");
+                    }
+                });
 
     }
 }
