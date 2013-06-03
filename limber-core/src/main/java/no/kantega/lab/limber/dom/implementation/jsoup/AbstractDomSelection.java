@@ -1,12 +1,14 @@
 package no.kantega.lab.limber.dom.implementation.jsoup;
 
 import no.kantega.lab.limber.ajax.abstraction.AjaxEventTrigger;
-import no.kantega.lab.limber.ajax.abstraction.DefaultAjaxEvent;
 import no.kantega.lab.limber.ajax.abstraction.IAjaxCallback;
+import no.kantega.lab.limber.dom.abstraction.element.DefaultImmutableElement;
 import no.kantega.lab.limber.dom.abstraction.element.IDomElement;
 import no.kantega.lab.limber.dom.abstraction.selection.IDomElementSelection;
 import no.kantega.lab.limber.dom.abstraction.selection.IDomSelection;
+import no.kantega.lab.limber.dom.implementation.jsoup.util.JsoupElementWrapperElement;
 import no.kantega.lab.limber.page.WebPage;
+import org.jsoup.nodes.Attribute;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
@@ -111,7 +113,7 @@ public abstract class AbstractDomSelection<T extends IDomSelection> implements I
     public IDomElementSelection prependChild(IDomElement element) {
         Elements elements = new Elements();
         for (Element e : getSelectedElements()) {
-            Element child = DomElementWrapper.make(element);
+            Element child = JsoupElementWrapperElement.make(element);
             e.prependChild(child);
             elements.add(child);
         }
@@ -122,7 +124,7 @@ public abstract class AbstractDomSelection<T extends IDomSelection> implements I
     public IDomElementSelection appendChild(IDomElement element) {
         Elements elements = new Elements();
         for (Element e : getSelectedElements()) {
-            Element child = DomElementWrapper.make(element);
+            Element child = JsoupElementWrapperElement.make(element);
             e.appendChild(child);
             elements.add(child);
         }
@@ -133,7 +135,7 @@ public abstract class AbstractDomSelection<T extends IDomSelection> implements I
     public IDomElementSelection addChild(IDomElement element, int index) {
         Elements elements = new Elements();
         for (Element e : getSelectedElements()) {
-            Element child = DomElementWrapper.make(element);
+            Element child = JsoupElementWrapperElement.make(element);
             e.insertChildren(index, Arrays.asList(child));
             elements.add(child);
         }
@@ -160,9 +162,21 @@ public abstract class AbstractDomSelection<T extends IDomSelection> implements I
     @SuppressWarnings("unchecked")
     public T ajax(AjaxEventTrigger ajaxEventTrigger, IAjaxCallback ajaxCallback) {
         for (Element e : getSelectedElements()) {
-            getWebPage().registerAjaxEvent(
-                    new AjaxEventTarget(e),
-                    new DefaultAjaxEvent(ajaxEventTrigger, ajaxCallback));
+            IDomElement domElement;
+            if(e instanceof IDomElement) {
+                domElement = (IDomElement) e;
+            } else {
+                domElement = new DefaultImmutableElement(e.tagName());
+                JsoupElementWrapperElement wrapperElement = JsoupElementWrapperElement.make(domElement);
+                wrapperElement.html(e.html());
+                for(Attribute a : e.attributes()) {
+                    wrapperElement.attr(a.getKey(), a.getValue());
+                }
+                e.replaceWith(wrapperElement);
+                domElement = wrapperElement;
+
+            }
+            getWebPage().registerAjaxEvent(domElement, ajaxEventTrigger, ajaxCallback);
         }
         return (T) this;
     }

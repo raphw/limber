@@ -3,7 +3,7 @@ package no.kantega.lab.limber.dom.implementation.jsoup;
 import no.kantega.lab.limber.dom.abstraction.selection.HeadResource;
 import no.kantega.lab.limber.dom.abstraction.selection.IDomDocumentSelection;
 import no.kantega.lab.limber.dom.implementation.jsoup.util.ResourceNodeHelper;
-import no.kantega.lab.limber.general.NotYetImplementedException;
+import no.kantega.lab.limber.exception.NotYetImplementedException;
 import no.kantega.lab.limber.page.WebPage;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;

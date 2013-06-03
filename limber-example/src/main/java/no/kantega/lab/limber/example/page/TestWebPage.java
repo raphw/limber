@@ -2,15 +2,14 @@ package no.kantega.lab.limber.example.page;
 
 import no.kantega.lab.limber.ajax.abstraction.AjaxEventTrigger;
 import no.kantega.lab.limber.ajax.abstraction.IAjaxCallback;
-import no.kantega.lab.limber.ajax.abstraction.IAjaxEvent;
-import no.kantega.lab.limber.dom.abstraction.element.DefaultElement;
+import no.kantega.lab.limber.dom.abstraction.element.DefaultImmutableElement;
 import no.kantega.lab.limber.dom.abstraction.element.IDomElement;
 import no.kantega.lab.limber.dom.abstraction.selection.IDomSelection;
 import no.kantega.lab.limber.page.WebPage;
+import no.kantega.lab.limber.page.annotations.RequestMapping;
 
+@RequestMapping("/")
 public class TestWebPage extends WebPage {
-
-    private String content;
 
     public TestWebPage() {
 
@@ -20,17 +19,16 @@ public class TestWebPage extends WebPage {
 
         IDomSelection list = dom().tag("ul").removeAllChildren();
         for (String s : new String[]{"It is easy to use", "It is elegant to use", "Supports jQuery"}) {
-            list.appendChild(new DefaultElement("li")).setContent(s);
+            list.appendChild(new DefaultImmutableElement("li")).setContent(s);
         }
 
         dom().tag("button").setContent("Ajax demo").ajax(
-                AjaxEventTrigger.CLICK,
-                new IAjaxCallback() {
-                    @Override
-                    public void onEvent(IDomElement element, IAjaxEvent ajaxEvent) {
-                        System.out.println("This is not yet working!");
-                    }
-                });
+                AjaxEventTrigger.CLICK, new IAjaxCallback() {
+            @Override
+            public void onEvent(AjaxEventTrigger ajaxEventTrigger, IDomElement target) {
+                System.out.println("This is an Ajax event!");
+            }
+        });
 
     }
 }

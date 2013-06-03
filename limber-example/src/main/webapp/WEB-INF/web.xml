@@ -10,8 +10,8 @@
         <filter-name>LimberFilter</filter-name>
         <filter-class>no.kantega.lab.limber.servlet.LimberFilter</filter-class>
         <init-param>
-            <param-name>start-page</param-name>
-            <param-value>no.kantega.lab.limber.example.page.TestWebPage</param-value>
+            <param-name>scan-package</param-name>
+            <param-value>no.kantega.lab.limber.example</param-value>
         </init-param>
     </filter>
 
