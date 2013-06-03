@@ -1,15 +1,16 @@
 package no.kantega.lab.limber.ajax.abstraction;
 
-import no.kantega.lab.limber.dom.abstraction.element.IDomElement;
+import org.jsoup.nodes.Element;
 
 public class DefaultAjaxEvent implements IAjaxEvent {
 
     private final AjaxEventTrigger ajaxEventTrigger;
     private final IAjaxCallback ajaxCallback;
-    private final IDomElement ajaxEventTarget;
+    private final Element ajaxEventTarget;
 
-    public DefaultAjaxEvent(AjaxEventTrigger ajaxEventTrigger, IAjaxCallback ajaxCallback,
-                            IDomElement ajaxEventTarget) {
+    public DefaultAjaxEvent(AjaxEventTrigger ajaxEventTrigger,
+                            IAjaxCallback ajaxCallback,
+                            Element ajaxEventTarget) {
         this.ajaxEventTrigger = ajaxEventTrigger;
         this.ajaxCallback = ajaxCallback;
         this.ajaxEventTarget = ajaxEventTarget;
@@ -26,7 +27,7 @@ public class DefaultAjaxEvent implements IAjaxEvent {
     }
 
     @Override
-    public IDomElement getEventTarget() {
+    public Element getEventTarget() {
         return ajaxEventTarget;
     }
 }

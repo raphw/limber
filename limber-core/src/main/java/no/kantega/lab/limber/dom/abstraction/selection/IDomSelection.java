@@ -2,7 +2,7 @@ package no.kantega.lab.limber.dom.abstraction.selection;
 
 import no.kantega.lab.limber.ajax.abstraction.AjaxEventTrigger;
 import no.kantega.lab.limber.ajax.abstraction.IAjaxCallback;
-import no.kantega.lab.limber.dom.abstraction.element.IDomElement;
+import org.jsoup.nodes.Element;
 
 public interface IDomSelection<T extends IDomSelection> {
 
@@ -22,11 +22,11 @@ public interface IDomSelection<T extends IDomSelection> {
 
     T removeCssClass(String className);
 
-    IDomElementSelection prependChild(IDomElement element);
+    IDomElementSelection prependChild(Element domElementPrototype);
 
-    IDomElementSelection appendChild(IDomElement element);
+    IDomElementSelection appendChild(Element domElementPrototype);
 
-    IDomElementSelection addChild(IDomElement element, int index);
+    IDomElementSelection addChild(Element domElementPrototype, int index);
 
     T removeAllChildren();
 

@@ -1,6 +1,6 @@
 package no.kantega.lab.limber.ajax.abstraction;
 
-import no.kantega.lab.limber.dom.abstraction.element.IDomElement;
+import org.jsoup.nodes.Element;
 
 public interface IAjaxEvent {
 
@@ -8,6 +8,6 @@ public interface IAjaxEvent {
 
     AjaxEventTrigger getEventTrigger();
 
-    IDomElement getEventTarget();
+    Element getEventTarget();
 
 }

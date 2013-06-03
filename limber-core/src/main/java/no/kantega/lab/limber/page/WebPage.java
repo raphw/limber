@@ -4,11 +4,13 @@ import no.kantega.lab.limber.ajax.abstraction.AjaxEventTrigger;
 import no.kantega.lab.limber.ajax.abstraction.DefaultAjaxEvent;
 import no.kantega.lab.limber.ajax.abstraction.IAjaxCallback;
 import no.kantega.lab.limber.ajax.abstraction.IAjaxEvent;
-import no.kantega.lab.limber.dom.abstraction.element.IDomElement;
 import no.kantega.lab.limber.dom.abstraction.selection.HeadResource;
 import no.kantega.lab.limber.dom.abstraction.selection.IDomDocumentSelection;
+import no.kantega.lab.limber.dom.implementation.jsoup.DomDocumentSelection;
 import no.kantega.lab.limber.servlet.IRenderable;
 import no.kantega.lab.limber.servlet.IResponseContainer;
+import org.apache.commons.lang3.StringUtils;
+import org.jsoup.nodes.Element;
 
 import java.io.*;
 import java.net.URI;
@@ -27,7 +29,7 @@ public class WebPage implements IRenderable {
     private boolean renderedAjax = false;
 
     public WebPage() {
-        // TODO: Remove external link and let users choose where jQuery should be hosted.
+        domSelection = DomDocumentSelection.makeDomDocumentSelection(this);
         try {
             domSelection.addExternalResource(
                     HeadResource.JS,
@@ -35,6 +37,7 @@ public class WebPage implements IRenderable {
         } catch (URISyntaxException e) {
             e.printStackTrace();
         }
+        // TODO: Enable resource
 //        domSelection.addExternalResource(HeadResource.JS, getClass().getResource("/web/js/jquery-2.0.0.min.js"));
         ajaxEventRegister = new HashMap<UUID, IAjaxEvent>();
     }
@@ -84,7 +87,7 @@ public class WebPage implements IRenderable {
         return true;
     }
 
-    public final void registerAjaxEvent(IDomElement ajaxEventTarget,
+    public final void registerAjaxEvent(Element ajaxEventTarget,
                                         AjaxEventTrigger ajaxEventTrigger,
                                         IAjaxCallback ajaxCallback) {
         ajaxEventRegister.put(
@@ -104,7 +107,7 @@ public class WebPage implements IRenderable {
             UUID ajaxId = entry.getKey();
 
             stringBuilder.append("jQuery('");
-            stringBuilder.append(ajax.getEventTarget().getBestUniqueIdentifier());
+            stringBuilder.append(makeUniqueIdentifier(ajax.getEventTarget()));
             stringBuilder.append("').bind('");
             stringBuilder.append("click"); // Prelim.
             stringBuilder.append("',function(){");
@@ -121,5 +124,14 @@ public class WebPage implements IRenderable {
         }
         stringBuilder.append("})");
         domSelection.addEmbededResource(HeadResource.JS, stringBuilder.toString());
+    }
+
+    private String makeUniqueIdentifier(Element element) {
+        String id = element.attr("id");
+        if (StringUtils.isEmpty(id)) {
+            id = UUID.randomUUID().toString();
+            element.attr("id", id);
+        }
+        return "#" + id;
     }
 }

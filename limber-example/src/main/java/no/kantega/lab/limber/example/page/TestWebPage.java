@@ -2,11 +2,11 @@ package no.kantega.lab.limber.example.page;
 
 import no.kantega.lab.limber.ajax.abstraction.AjaxEventTrigger;
 import no.kantega.lab.limber.ajax.abstraction.IAjaxCallback;
-import no.kantega.lab.limber.dom.abstraction.element.DefaultImmutableElement;
-import no.kantega.lab.limber.dom.abstraction.element.IDomElement;
 import no.kantega.lab.limber.dom.abstraction.selection.IDomSelection;
+import no.kantega.lab.limber.dom.abstraction.selection.LimberElement;
 import no.kantega.lab.limber.page.WebPage;
 import no.kantega.lab.limber.page.annotations.RequestMapping;
+import org.jsoup.nodes.Element;
 
 @RequestMapping("/")
 public class TestWebPage extends WebPage {
@@ -19,14 +19,14 @@ public class TestWebPage extends WebPage {
 
         IDomSelection list = dom().tag("ul").removeAllChildren();
         for (String s : new String[]{"It is easy to use", "It is elegant to use", "Supports jQuery"}) {
-            list.appendChild(new DefaultImmutableElement("li")).setContent(s);
+            list.appendChild(new LimberElement("li")).setContent(s);
         }
 
         dom().tag("button").setContent("Ajax demo").ajax(
                 AjaxEventTrigger.CLICK, new IAjaxCallback() {
             @Override
-            public void onEvent(AjaxEventTrigger ajaxEventTrigger, IDomElement target) {
-                System.out.println("This is an Ajax event!");
+            public void onEvent(AjaxEventTrigger ajaxEventTrigger, Element eventTarget) {
+                System.out.println("Ajax Event");
             }
         });
 
