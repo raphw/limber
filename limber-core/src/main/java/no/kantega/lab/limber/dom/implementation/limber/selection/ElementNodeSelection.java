@@ -84,12 +84,12 @@ public class ElementNodeSelection extends NodeSelection<ElementNodeSelection, El
     }
 
     @Override
-    public <S extends AbstractNode<S>, T extends NodeSelection<T, S>> NodeSelection<? extends T, S> findByFilter(AbstractNodeFilter<S> nodeFilter) {
+    public <S extends AbstractNode<S>, U extends NodeSelection<U, S>> NodeSelection<? extends U, S> findByFilter(AbstractNodeFilter<S> nodeFilter) {
         List<S> resultSelection = new LinkedList<S>();
         for (ElementNode elementNode : getSelected()) {
             resultSelection.addAll(DomTreeBrowserHelper.getInstance().filter(elementNode, nodeFilter, Integer.MAX_VALUE));
         }
-        return new NodeSelection<T, S>(resultSelection);
+        return new NodeSelection<U, S>(resultSelection);
     }
 
     @Override

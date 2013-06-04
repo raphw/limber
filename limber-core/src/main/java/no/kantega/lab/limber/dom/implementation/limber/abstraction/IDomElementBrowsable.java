@@ -15,7 +15,7 @@ public interface IDomElementBrowsable {
 
     ElementNodeSelection findByAttr(CharSequence key, CharSequence value, FilterMatchMode filterMatchMode);
 
-    <S extends AbstractNode<S>, U extends NodeSelection<U, S>> NodeSelection<? extends U, S> findByFilter(AbstractNodeFilter<S> nodeFilter);
+    <S extends AbstractNode<S>, T extends NodeSelection<T, S>> NodeSelection<? extends T, S> findByFilter(AbstractNodeFilter<S> nodeFilter);
 
     TextNodeSelection findText();
 

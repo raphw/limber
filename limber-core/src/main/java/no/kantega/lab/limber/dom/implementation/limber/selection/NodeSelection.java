@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class NodeSelection<T extends NodeSelection<T, S>, S extends AbstractNode<S>>
+public class NodeSelection<T extends NodeSelection<?, S>, S extends AbstractNode<S>>
         implements IDomNodeMorphable<T, S>, IDomElementFilterable {
 
     private final List<S> selected;
