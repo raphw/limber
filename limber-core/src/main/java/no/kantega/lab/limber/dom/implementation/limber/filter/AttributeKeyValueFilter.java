@@ -21,7 +21,7 @@ public class AttributeKeyValueFilter extends AttributeKeyExistenceFilter {
         }
         String actualValue = element.getAttr(getAttrKey());
         switch (filterMatchMode) {
-            case ENTIRELY:
+            case FULL_MATCH:
                 return attrValue.equals(actualValue);
             case ENDS_WITH:
                 return attrValue.endsWith(actualValue);

@@ -1,9 +1,10 @@
 package no.kantega.lab.limber.dom.implementation.limber.element;
 
 import no.kantega.lab.limber.dom.implementation.limber.abstraction.IDomTextNodeMorphable;
+import no.kantega.lab.limber.dom.implementation.limber.abstraction.IDomTextNodeQueryable;
 import org.apache.commons.lang3.StringEscapeUtils;
 
-public class TextNode extends AbstractNode<TextNode> implements IDomTextNodeMorphable<TextNode> {
+public class TextNode extends AbstractNode<TextNode> implements IDomTextNodeMorphable<TextNode>, IDomTextNodeQueryable {
 
     private String content;
 
@@ -11,7 +12,8 @@ public class TextNode extends AbstractNode<TextNode> implements IDomTextNodeMorp
         setContent(content);
     }
 
-    public CharSequence getContent() {
+    @Override
+    public String getContent() {
         return content;
     }
 
@@ -32,7 +34,16 @@ public class TextNode extends AbstractNode<TextNode> implements IDomTextNodeMorp
     }
 
     @Override
+    public int size() {
+        if (content == null) {
+            return 0;
+        } else {
+            return content.length();
+        }
+    }
+
+    @Override
     public String toString() {
-        return String.format("TextNode[%b,%s]", isRender(), content);
+        return String.format("TextNode[%b,%s]", isRendered(), content);
     }
 }

@@ -69,8 +69,61 @@ public class ElementNodeSelection extends NodeSelection<ElementNodeSelection, El
     }
 
     @Override
+    public ElementNodeSelection addCssClass(CharSequence cssClassName) {
+        for (ElementNode elementNode : getSelected()) {
+            elementNode.addCssClass(cssClassName);
+        }
+        return this;
+    }
+
+    @Override
+    public ElementNodeSelection removeCssClass(CharSequence cssClassName) {
+        for (ElementNode elementNode : getSelected()) {
+            elementNode.removeCssClass(cssClassName);
+        }
+        return this;
+    }
+
+    @Override
+    public ElementNodeSelection addCssStyle(CharSequence styleKey, CharSequence styleValue) {
+        for (ElementNode elementNode : getSelected()) {
+            elementNode.addCssStyle(styleKey, styleValue);
+        }
+        return this;
+    }
+
+    @Override
+    public ElementNodeSelection removeCssStyle(CharSequence styleKey) {
+        for (ElementNode elementNode : getSelected()) {
+            elementNode.removeCssStyle(styleKey);
+        }
+        return this;
+    }
+
+    @Override
+    public ElementNodeSelection get(int from, int to) {
+        return new ElementNodeSelection(super.get(from, to));
+    }
+
+    @Override
     public ElementNodeSelection findByTag(CharSequence tagName) {
         return new ElementNodeSelection(findByFilter(new TagNameFilter(tagName)));
+    }
+
+    @Override
+    public ElementNode findById(CharSequence id) {
+        ElementNode result = null;
+        for (ElementNode elementNode : getSelected()) {
+            ElementNode found = elementNode.findById(id);
+            if (found != null) {
+                if (result == null) {
+                    result = found;
+                } else {
+                    throw new IllegalStateException();
+                }
+            }
+        }
+        return result;
     }
 
     @Override
@@ -84,7 +137,7 @@ public class ElementNodeSelection extends NodeSelection<ElementNodeSelection, El
     }
 
     @Override
-    public <S extends AbstractNode<S>, U extends NodeSelection<U, S>> NodeSelection<? extends U, S> findByFilter(AbstractNodeFilter<S> nodeFilter) {
+    public <S extends AbstractNode<S>, U extends NodeSelection<U, S>> NodeSelection<U, S> findByFilter(AbstractNodeFilter<S> nodeFilter) {
         List<S> resultSelection = new LinkedList<S>();
         for (ElementNode elementNode : getSelected()) {
             resultSelection.addAll(DomTreeBrowserHelper.getInstance().filter(elementNode, nodeFilter, Integer.MAX_VALUE));
@@ -101,4 +154,5 @@ public class ElementNodeSelection extends NodeSelection<ElementNodeSelection, El
     public ElementNodeSelection findElement() {
         return new ElementNodeSelection(findByFilter(new ElementNodeFilter()));
     }
+
 }

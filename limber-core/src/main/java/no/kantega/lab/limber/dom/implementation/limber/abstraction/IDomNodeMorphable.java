@@ -7,7 +7,7 @@ public interface IDomNodeMorphable<T extends IDomNodeMorphable<?, S>, S extends 
 
     T clear();
 
-    T setRender(boolean render);
+    T setRendered(boolean render);
 
     T remove();
 

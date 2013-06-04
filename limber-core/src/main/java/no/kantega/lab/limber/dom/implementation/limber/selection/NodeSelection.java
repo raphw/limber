@@ -2,16 +2,18 @@ package no.kantega.lab.limber.dom.implementation.limber.selection;
 
 import no.kantega.lab.limber.dom.implementation.limber.abstraction.IDomElementFilterable;
 import no.kantega.lab.limber.dom.implementation.limber.abstraction.IDomNodeMorphable;
+import no.kantega.lab.limber.dom.implementation.limber.abstraction.ISizeable;
 import no.kantega.lab.limber.dom.implementation.limber.element.AbstractNode;
 import no.kantega.lab.limber.dom.implementation.limber.element.NodeAttachment;
 import no.kantega.lab.limber.dom.implementation.limber.filter.*;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
 
 public class NodeSelection<T extends NodeSelection<?, S>, S extends AbstractNode<S>>
-        implements IDomNodeMorphable<T, S>, IDomElementFilterable {
+        implements IDomNodeMorphable<T, S>, IDomElementFilterable<S, T>, ISizeable {
 
     private final List<S> selected;
 
@@ -38,9 +40,9 @@ public class NodeSelection<T extends NodeSelection<?, S>, S extends AbstractNode
 
     @Override
     @SuppressWarnings("unchecked")
-    public T setRender(boolean render) {
+    public T setRendered(boolean render) {
         for (AbstractNode<S> node : getSelected()) {
-            node.setRender(render);
+            node.setRendered(render);
         }
         return (T) this;
     }
@@ -52,6 +54,11 @@ public class NodeSelection<T extends NodeSelection<?, S>, S extends AbstractNode
             node.remove();
         }
         return (T) this;
+    }
+
+    @Override
+    public int size() {
+        return getSelected().size();
     }
 
     @Override
@@ -73,6 +80,26 @@ public class NodeSelection<T extends NodeSelection<?, S>, S extends AbstractNode
     }
 
     @Override
+    public S get(int index) {
+        if (index < 0 || index >= selected.size()) {
+            throw new IndexOutOfBoundsException();
+        }
+        return selected.get(index);
+    }
+
+    @Override
+    public NodeSelection<?, S> get(int from, int to) {
+        if (from < 0 || to < 0 || from >= selected.size() || to >= selected.size()) {
+            throw new IndexOutOfBoundsException();
+        }
+        List<S> subSelection = new LinkedList<S>();
+        for (int i = from; i < to; i++) {
+            subSelection.add(getSelected().get(i));
+        }
+        return new NodeSelection<NodeSelection<?, S>, S>(subSelection);
+    }
+
+    @Override
     public ElementNodeSelection reduceByTag(CharSequence tagName) {
         return new ElementNodeSelection(this.reduceByFilter(new TagNameFilter(tagName)));
     }
@@ -88,7 +115,7 @@ public class NodeSelection<T extends NodeSelection<?, S>, S extends AbstractNode
     }
 
     @Override
-    public <V extends AbstractNode<V>, U extends NodeSelection<U, V>> NodeSelection<? extends U, V> reduceByFilter(AbstractNodeFilter<V> nodeFilter) {
+    public <V extends AbstractNode<V>, U extends NodeSelection<U, V>> NodeSelection<U, V> reduceByFilter(AbstractNodeFilter<V> nodeFilter) {
         Class<V> filterArgumentClass = nodeFilter.getParameterClass();
         List<V> foundNodes = new ArrayList<V>();
         for (S node : getSelected()) {

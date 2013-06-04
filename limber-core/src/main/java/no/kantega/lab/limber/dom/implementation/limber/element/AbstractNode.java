@@ -1,20 +1,22 @@
 package no.kantega.lab.limber.dom.implementation.limber.element;
 
 import no.kantega.lab.limber.dom.implementation.limber.abstraction.IDomNodeMorphable;
+import no.kantega.lab.limber.dom.implementation.limber.abstraction.IDomNodeQueryable;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class AbstractNode<T extends AbstractNode<T>> implements IDomNodeMorphable<T, T>, Cloneable {
+public abstract class AbstractNode<T extends AbstractNode<T>> implements IDomNodeMorphable<T, T>,
+        IDomNodeQueryable, Cloneable {
 
-    private boolean render;
+    private boolean rendered;
 
     private ElementNode parent;
 
     private List<NodeAttachment<? extends T>> nodeAttachments;
 
     protected AbstractNode() {
-        this.render = true;
+        this.rendered = true;
     }
 
     @Override
@@ -43,14 +45,15 @@ public abstract class AbstractNode<T extends AbstractNode<T>> implements IDomNod
         return (T) this;
     }
 
-    public boolean isRender() {
-        return render;
+    @Override
+    public boolean isRendered() {
+        return rendered;
     }
 
     @Override
     @SuppressWarnings("unchecked")
-    public T setRender(boolean render) {
-        this.render = render;
+    public T setRendered(boolean rendered) {
+        this.rendered = rendered;
         return (T) this;
     }
 
@@ -69,6 +72,6 @@ public abstract class AbstractNode<T extends AbstractNode<T>> implements IDomNod
 
     @Override
     public String toString() {
-        return String.format("%s[%b]", getClass().getName(), render);
+        return String.format("%s[%b]", getClass().getName(), rendered);
     }
 }

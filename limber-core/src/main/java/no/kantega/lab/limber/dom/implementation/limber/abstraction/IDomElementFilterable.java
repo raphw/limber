@@ -7,7 +7,11 @@ import no.kantega.lab.limber.dom.implementation.limber.selection.ElementNodeSele
 import no.kantega.lab.limber.dom.implementation.limber.selection.NodeSelection;
 import no.kantega.lab.limber.dom.implementation.limber.selection.TextNodeSelection;
 
-public interface IDomElementFilterable {
+public interface IDomElementFilterable<T extends AbstractNode<T>, S extends NodeSelection<?, T>> {
+
+    T get(int index);
+
+    NodeSelection<?, T> get(int from, int to);
 
     ElementNodeSelection reduceByTag(CharSequence tagName);
 
@@ -15,7 +19,7 @@ public interface IDomElementFilterable {
 
     ElementNodeSelection reduceByAttr(CharSequence key, CharSequence value, FilterMatchMode filterMatchMode);
 
-    <S extends AbstractNode<S>, T extends NodeSelection<T, S>> NodeSelection<? extends T, S> reduceByFilter(AbstractNodeFilter<S> nodeFilter);
+    <U extends AbstractNode<U>, V extends NodeSelection<V, U>> NodeSelection<V, U> reduceByFilter(AbstractNodeFilter<U> nodeFilter);
 
     TextNodeSelection reduceToText();
 

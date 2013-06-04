@@ -22,4 +22,9 @@ public class TextNodeSelection extends NodeSelection<TextNodeSelection, TextNode
         }
         return this;
     }
+
+    @Override
+    public TextNodeSelection get(int from, int to) {
+        return new TextNodeSelection(super.get(from, to));
+    }
 }
