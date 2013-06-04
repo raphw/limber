@@ -7,6 +7,9 @@ import no.kantega.lab.limber.ajax.abstraction.IAjaxEvent;
 import no.kantega.lab.limber.dom.abstraction.selection.HeadResource;
 import no.kantega.lab.limber.dom.abstraction.selection.IDomDocumentSelection;
 import no.kantega.lab.limber.dom.implementation.jsoup.DomDocumentSelection;
+import no.kantega.lab.limber.dom.implementation.limber.element.ElementNode;
+import no.kantega.lab.limber.dom.implementation.limber.parser.HtmlSAXParser;
+import no.kantega.lab.limber.dom.implementation.limber.renderer.DomTreeRenderer;
 import no.kantega.lab.limber.servlet.IRenderable;
 import no.kantega.lab.limber.servlet.IResponseContainer;
 import org.apache.commons.lang3.StringUtils;
@@ -62,6 +65,8 @@ public class WebPage implements IRenderable {
     @Override
     public final boolean render(OutputStream outputStream, IResponseContainer response) throws IOException {
 
+        mytry();
+
         if (response.getRequest().isAjax()) {
             UUID ajaxId = response.getRequest().getAjaxId();
             IAjaxEvent ajaxEvent = ajaxEventRegister.get(ajaxId);
@@ -85,6 +90,15 @@ public class WebPage implements IRenderable {
         writer.flush();
         inputStream.close();
         return true;
+    }
+
+    private void mytry() {
+        System.out.println("-------");
+        HtmlSAXParser saxParser = HtmlSAXParser.make();
+        ElementNode elementNode = saxParser.translateToDomTree(getDocumentResourceStream());
+        DomTreeRenderer domTreeRenderer = new DomTreeRenderer();
+        domTreeRenderer.render(elementNode, System.out);
+        System.out.println("-------");
     }
 
     public final void registerAjaxEvent(Element ajaxEventTarget,
