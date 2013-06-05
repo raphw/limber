@@ -17,6 +17,12 @@ public interface IDomElementMorphable<T extends IDomElementMorphable<T>> extends
 
     T removeAttr(CharSequence key);
 
+    T setId(CharSequence id);
+
+    T setRandomId();
+
+    T removeId();
+
     T addCssClass(CharSequence cssClassName);
 
     T removeCssClass(CharSequence cssClassName);

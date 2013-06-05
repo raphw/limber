@@ -22,6 +22,8 @@ public interface IDomElementQueryable extends IDomNodeQueryable {
 
     boolean isCssClass(CharSequence cssClassName);
 
+    boolean isIdSet();
+
     boolean isCssStyle(CharSequence key);
 
     boolean isCssStyle(CharSequence key, CharSequence value, QueryMatchMode queryMatchMode);

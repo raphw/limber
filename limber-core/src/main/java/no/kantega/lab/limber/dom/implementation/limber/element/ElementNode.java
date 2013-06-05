@@ -145,6 +145,26 @@ public class ElementNode extends AbstractNode<ElementNode>
     }
 
     @Override
+    public boolean isIdSet() {
+        return getAttr("id") != null;
+    }
+
+    @Override
+    public ElementNode setId(CharSequence id) {
+        return putAttr("id", id);
+    }
+
+    @Override
+    public ElementNode setRandomId() {
+        return putAttr("id", UUID.randomUUID().toString());
+    }
+
+    @Override
+    public ElementNode removeId() {
+        return removeAttr("id");
+    }
+
+    @Override
     public boolean isCssClass(CharSequence cssClassName) {
         return makeCssClassList().contains(cssClassName.toString());
     }
@@ -259,12 +279,22 @@ public class ElementNode extends AbstractNode<ElementNode>
 
     @Override
     public ElementNodeSelection findByTag(CharSequence tagName) {
-        return new ElementNodeSelection(findByFilter(new TagNameFilter(tagName)));
+        return findByTag(tagName, Integer.MAX_VALUE);
+    }
+
+    @Override
+    public ElementNodeSelection findByTag(CharSequence tagName, int maxDepth) {
+        return new ElementNodeSelection(findByFilter(new TagNameFilter(tagName), maxDepth));
     }
 
     @Override
     public ElementNode findById(CharSequence id) {
-        ElementNodeSelection elementNodeSelection = findByAttr("id", id, QueryMatchMode.FULL_MATCH);
+        return findById(id, Integer.MAX_VALUE);
+    }
+
+    @Override
+    public ElementNode findById(CharSequence id, int maxDepth) {
+        ElementNodeSelection elementNodeSelection = findByAttr("id", id, QueryMatchMode.FULL_MATCH, maxDepth);
         if (elementNodeSelection.size() == 0) {
             return null;
         } else if (elementNodeSelection.size() > 1) {
@@ -276,27 +306,62 @@ public class ElementNode extends AbstractNode<ElementNode>
 
     @Override
     public ElementNodeSelection findByAttr(CharSequence key) {
-        return new ElementNodeSelection(findByFilter(new AttributeKeyExistenceFilter(key)));
+        return findByAttr(key, Integer.MAX_VALUE);
+    }
+
+    @Override
+    public ElementNodeSelection findByAttr(CharSequence key, int maxDepth) {
+        return new ElementNodeSelection(findByFilter(new AttributeKeyExistenceFilter(key), maxDepth));
     }
 
     @Override
     public ElementNodeSelection findByAttr(CharSequence key, CharSequence value, QueryMatchMode filterMatchMode) {
-        return new ElementNodeSelection(findByFilter(new AttributeKeyValueFilter(key, value, filterMatchMode)));
+        return findByAttr(key, value, filterMatchMode, Integer.MAX_VALUE);
+    }
+
+    @Override
+    public ElementNodeSelection findByAttr(CharSequence key, CharSequence value, QueryMatchMode filterMatchMode, int maxDepth) {
+        return new ElementNodeSelection(findByFilter(new AttributeKeyValueFilter(key, value, filterMatchMode), maxDepth));
+    }
+
+    @Override
+    public ElementNodeSelection findByCssClass(CharSequence cssClassName) {
+        return findByCssClass(cssClassName, Integer.MAX_VALUE);
+    }
+
+    @Override
+    public ElementNodeSelection findByCssClass(CharSequence cssClassName, int maxDepth) {
+        return new ElementNodeSelection(findByFilter(new CssClassNameFilter(cssClassName), maxDepth));
     }
 
     @Override
     public <S extends AbstractNode<S>, T extends NodeSelection<T, S>> NodeSelection<T, S> findByFilter(INodeFilter<S> nodeFilter) {
-        return new NodeSelection<T, S>(NodeFilterSupport.getInstance().filter(this, nodeFilter, Integer.MAX_VALUE));
+        return findByFilter(nodeFilter, Integer.MAX_VALUE);
+    }
+
+    @Override
+    public <S extends AbstractNode<S>, T extends NodeSelection<T, S>> NodeSelection<T, S> findByFilter(INodeFilter<S> nodeFilter, int maxDepth) {
+        return new NodeSelection<T, S>(NodeFilterSupport.getInstance().filter(this, nodeFilter, maxDepth));
     }
 
     @Override
     public TextNodeSelection findTextNodes() {
-        return new TextNodeSelection(findByFilter(new TextNodeFilter()));
+        return findTextNodes(Integer.MAX_VALUE);
+    }
+
+    @Override
+    public TextNodeSelection findTextNodes(int maxDepth) {
+        return new TextNodeSelection(findByFilter(new TextNodeFilter(), maxDepth));
     }
 
     @Override
     public ElementNodeSelection findElements() {
-        return new ElementNodeSelection(findByFilter(new ElementNodeFilter()));
+        return findElements(Integer.MAX_VALUE);
+    }
+
+    @Override
+    public ElementNodeSelection findElements(int maxDepth) {
+        return new ElementNodeSelection(findByFilter(new ElementNodeFilter(), maxDepth));
     }
 
     @Override
