@@ -9,12 +9,87 @@
     <version>1.0-SNAPSHOT</version>
     <packaging>pom</packaging>
 
-    <name>Limber web frame work</name>
+    <inceptionYear>2013</inceptionYear>
+
+    <name>Limber web framework</name>
+    <description>A web framework based on DOM manipulation.</description>
     <url>http://www.kantega.no</url>
+
+    <licenses>
+        <license>
+            <name>The Apache Software License, Version 2.0</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+            <distribution>repo</distribution>
+            <comments>A business-friendly OSS license</comments>
+        </license>
+    </licenses>
+
+    <developers>
+        <developer>
+            <id>rafwin</id>
+            <name>Rafael Winterhalter</name>
+            <email>rafael.winterhalter@kantega.no</email>
+            <url>http://mydailyjava.blogspot.com</url>
+            <organization>Kantega</organization>
+            <organizationUrl>http://www.kantega.no</organizationUrl>
+            <roles>
+                <role>developer</role>
+            </roles>
+            <timezone>+1</timezone>
+        </developer>
+    </developers>
 
     <modules>
         <module>limber-core</module>
         <module>limber-example</module>
     </modules>
+
+    <properties>
+        <version.servlet-api>2.5</version.servlet-api>
+        <version.commons>3.1</version.commons>
+        <version.reflections>0.9.9-RC1</version.reflections>
+        <version.xerces>2.11.0</version.xerces>
+        <version.neko>1.9.18</version.neko>
+    </properties>
+
+    <dependencyManagement>
+        <dependencies>
+
+            <!-- Servlet API -->
+            <dependency>
+                <groupId>javax.servlet</groupId>
+                <artifactId>servlet-api</artifactId>
+                <version>${version.servlet-api}</version>
+                <scope>provided</scope>
+            </dependency>
+
+            <!-- Utilities -->
+            <dependency>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-lang3</artifactId>
+                <version>${version.commons}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.reflections</groupId>
+                <artifactId>reflections</artifactId>
+                <version>${version.reflections}</version>
+            </dependency>
+
+            <!-- Parsers -->
+            <dependency>
+                <groupId>net.sourceforge.nekohtml</groupId>
+                <artifactId>nekohtml</artifactId>
+                <version>${version.neko}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>xerces</groupId>
+                <artifactId>xercesImpl</artifactId>
+                <version>${version.xerces}</version>
+            </dependency>
+
+        </dependencies>
+    </dependencyManagement>
 
 </project>

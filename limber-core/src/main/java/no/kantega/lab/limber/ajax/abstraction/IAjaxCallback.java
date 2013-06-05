@@ -1,9 +1,9 @@
 package no.kantega.lab.limber.ajax.abstraction;
 
-import org.jsoup.nodes.Element;
+import no.kantega.lab.limber.dom.element.ElementNode;
 
 public interface IAjaxCallback {
 
-    void onEvent(AjaxEventTrigger ajaxEventTrigger, Element eventTarget);
+    void onEvent(AjaxEventTrigger ajaxEventTrigger, ElementNode eventTarget);
 
 }

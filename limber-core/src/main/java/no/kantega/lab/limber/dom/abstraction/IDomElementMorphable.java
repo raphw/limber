@@ -3,6 +3,9 @@ package no.kantega.lab.limber.dom.abstraction;
 import no.kantega.lab.limber.dom.element.AbstractNode;
 import no.kantega.lab.limber.dom.element.ElementNode;
 
+import java.util.List;
+import java.util.Map;
+
 public interface IDomElementMorphable<T extends IDomElementMorphable<T>> extends IDomNodeMorphable<T, ElementNode> {
 
     T setTagName(CharSequence tagName);
@@ -33,13 +36,19 @@ public interface IDomElementMorphable<T extends IDomElementMorphable<T>> extends
 
     T setRandomId();
 
+    T setRandomIdIfNone();
+
     T removeId();
 
     T addCssClass(CharSequence cssClassName);
 
+    T setCssClasses(List<? extends CharSequence> cssClassNames);
+
     T removeCssClass(CharSequence cssClassName);
 
     T addCssStyle(CharSequence styleKey, CharSequence styleValue);
+
+    T setCssStyles(Map<? extends CharSequence, ? extends CharSequence> cssStyles);
 
     T removeCssStyle(CharSequence styleKey);
 }

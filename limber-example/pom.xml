@@ -13,26 +13,14 @@
     <artifactId>limber-example</artifactId>
     <packaging>war</packaging>
 
-    <name>Limber web frame work - example</name>
+    <name>Limber web framework - example</name>
+    <description>An example application of the limber web framework.</description>
 
     <dependencies>
         <dependency>
-            <groupId>javax.servlet</groupId>
-            <artifactId>servlet-api</artifactId>
-            <version>2.5</version>
-            <scope>provided</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>no.kantega.lab.limber</groupId>
+            <groupId>${project.groupId}</groupId>
             <artifactId>limber-core</artifactId>
-            <version>1.0-SNAPSHOT</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.jsoup</groupId>
-            <artifactId>jsoup</artifactId>
-            <version>1.7.2</version>
+            <version>${project.version}</version>
         </dependency>
     </dependencies>
 

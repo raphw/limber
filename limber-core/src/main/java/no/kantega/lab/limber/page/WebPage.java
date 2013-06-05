@@ -13,8 +13,6 @@ import no.kantega.lab.limber.servlet.IResponseContainer;
 import no.kantega.lab.limber.servlet.meta.IDomSelectable;
 import no.kantega.lab.limber.servlet.meta.ResourceIdentification;
 import no.kantega.lab.limber.servlet.meta.ResourceType;
-import org.apache.commons.lang3.StringUtils;
-import org.jsoup.nodes.Element;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -64,7 +62,7 @@ public class WebPage implements IRenderable, IDomSelectable<HtmlDocumentSelectio
         return true;
     }
 
-    public final void registerAjaxEvent(Element ajaxEventTarget,
+    public final void registerAjaxEvent(ElementNode ajaxEventTarget,
                                         AjaxEventTrigger ajaxEventTrigger,
                                         IAjaxCallback ajaxCallback) {
         ajaxEventRegister.put(
@@ -84,7 +82,7 @@ public class WebPage implements IRenderable, IDomSelectable<HtmlDocumentSelectio
             UUID ajaxId = entry.getKey();
 
             stringBuilder.append("jQuery('");
-            stringBuilder.append(makeUniqueIdentifier(ajax.getEventTarget()));
+            stringBuilder.append(ajax.getEventTarget().setRandomIdIfNone().getId());
             stringBuilder.append("').bind('");
             stringBuilder.append("click"); // Prelim.
             stringBuilder.append("',function(){");
@@ -101,14 +99,5 @@ public class WebPage implements IRenderable, IDomSelectable<HtmlDocumentSelectio
         }
         stringBuilder.append("})");
 //        domSelection.addEmbededResource(HeadResource.JS, stringBuilder.toString());
-    }
-
-    private String makeUniqueIdentifier(Element element) {
-        String id = element.attr("id");
-        if (StringUtils.isEmpty(id)) {
-            id = UUID.randomUUID().toString();
-            element.attr("id", id);
-        }
-        return "#" + id;
     }
 }

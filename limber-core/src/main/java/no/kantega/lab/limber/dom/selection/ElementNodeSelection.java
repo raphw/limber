@@ -8,6 +8,7 @@ import no.kantega.lab.limber.dom.filter.*;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 public class ElementNodeSelection extends NodeSelection<ElementNodeSelection, ElementNode>
         implements IDomElementMorphable<ElementNodeSelection>, IDomElementBrowsable<ElementNode> {
@@ -125,6 +126,14 @@ public class ElementNodeSelection extends NodeSelection<ElementNodeSelection, El
     }
 
     @Override
+    public ElementNodeSelection setRandomIdIfNone() {
+        for (ElementNode elementNode : getSelected()) {
+            elementNode.setRandomIdIfNone();
+        }
+        return this;
+    }
+
+    @Override
     public ElementNodeSelection removeId() {
         for (ElementNode elementNode : getSelected()) {
             elementNode.removeId();
@@ -149,6 +158,14 @@ public class ElementNodeSelection extends NodeSelection<ElementNodeSelection, El
     }
 
     @Override
+    public ElementNodeSelection setCssClasses(List<? extends CharSequence> cssClassNames) {
+        for (ElementNode elementNode : getSelected()) {
+            elementNode.setCssClasses(cssClassNames);
+        }
+        return this;
+    }
+
+    @Override
     public ElementNodeSelection removeCssClass(CharSequence cssClassName) {
         for (ElementNode elementNode : getSelected()) {
             elementNode.removeCssClass(cssClassName);
@@ -160,6 +177,14 @@ public class ElementNodeSelection extends NodeSelection<ElementNodeSelection, El
     public ElementNodeSelection addCssStyle(CharSequence styleKey, CharSequence styleValue) {
         for (ElementNode elementNode : getSelected()) {
             elementNode.addCssStyle(styleKey, styleValue);
+        }
+        return this;
+    }
+
+    @Override
+    public ElementNodeSelection setCssStyles(Map<? extends CharSequence, ? extends CharSequence> cssStyles) {
+        for (ElementNode elementNode : getSelected()) {
+            elementNode.setCssStyles(cssStyles);
         }
         return this;
     }

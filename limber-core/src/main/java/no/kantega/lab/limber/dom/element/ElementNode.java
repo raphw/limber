@@ -185,8 +185,19 @@ public class ElementNode extends AbstractNode<ElementNode>
     }
 
     @Override
+    public String getId() {
+        return getAttr("id");
+    }
+
+    @Override
     public ElementNode setRandomId() {
         return putAttr("id", UUID.randomUUID().toString());
+    }
+
+    @Override
+    public ElementNode setRandomIdIfNone() {
+        if(!isIdSet()) setRandomId();
+        return this;
     }
 
     @Override
@@ -196,47 +207,50 @@ public class ElementNode extends AbstractNode<ElementNode>
 
     @Override
     public boolean isCssClass(CharSequence cssClassName) {
-        return makeCssClassList().contains(cssClassName.toString());
+        return getCssClasses().contains(cssClassName.toString());
     }
 
     @Override
     public ElementNode addCssClass(CharSequence cssClassName) {
-        List<String> cssClassList = makeCssClassList();
+        List<String> cssClassList = getCssClasses();
         if (!cssClassList.contains(cssClassName.toString())) {
             cssClassList.add(cssClassName.toString());
-            updateCssClassAttr(cssClassList);
+            setCssClasses(cssClassList);
         }
         return this;
     }
 
     @Override
     public ElementNode removeCssClass(CharSequence cssClassName) {
-        List<String> cssClassList = makeCssClassList();
+        List<String> cssClassList = getCssClasses();
         if (cssClassList.remove(cssClassName.toString())) {
-            updateCssClassAttr(cssClassList);
+            setCssClasses(cssClassList);
         }
         return this;
     }
 
-    private List<String> makeCssClassList() {
+    @Override
+    public List<String> getCssClasses() {
         String cssClassAttributeValue = getAttr(HTML_ATTR_CLASS);
         if (cssClassAttributeValue == null) return Collections.emptyList();
         return Arrays.asList(cssClassAttributeValue.split(HTML_SEPARATOR_CLASS_REGEX));
     }
 
-    private void updateCssClassAttr(List<String> cssClassList) {
-        String cssClassString = StringUtils.join(cssClassList, HTML_SEPARATOR_CLASS);
+    @Override
+    public ElementNode setCssClasses(List<? extends CharSequence> cssClassNames) {
+        String cssClassString = StringUtils.join(cssClassNames, HTML_SEPARATOR_CLASS);
         putAttr(HTML_ATTR_CLASS, cssClassString);
+        return this;
     }
 
     @Override
     public boolean isCssStyle(CharSequence key) {
-        return makeCssStyleMap().containsKey(key.toString());
+        return getCssStyles().containsKey(key.toString());
     }
 
     @Override
     public boolean isCssStyle(CharSequence key, CharSequence value, QueryMatchMode queryMatchMode) {
-        Map<String, String> cssStyleMap = makeCssStyleMap();
+        Map<String, String> cssStyleMap = getCssStyles();
         String actualValue = cssStyleMap.get(key.toString());
         if (actualValue == null) return false;
         switch (queryMatchMode) {
@@ -255,24 +269,25 @@ public class ElementNode extends AbstractNode<ElementNode>
 
     @Override
     public ElementNode addCssStyle(CharSequence styleKey, CharSequence styleValue) {
-        Map<String, String> cssStyleMap = makeCssStyleMap();
+        Map<String, String> cssStyleMap = getCssStyles();
         if (!StringUtils.equals(cssStyleMap.get(styleKey.toString()), styleKey)) {
             cssStyleMap.put(styleKey.toString(), styleValue.toString());
-            updateCssStyleAttr(cssStyleMap);
+            setCssStyles(cssStyleMap);
         }
         return this;
     }
 
     @Override
     public ElementNode removeCssStyle(CharSequence styleKey) {
-        Map<String, String> cssStyleMap = makeCssStyleMap();
+        Map<String, String> cssStyleMap = getCssStyles();
         if (cssStyleMap.remove(styleKey.toString()) != null) {
-            updateCssStyleAttr(cssStyleMap);
+            setCssStyles(cssStyleMap);
         }
         return this;
     }
 
-    private Map<String, String> makeCssStyleMap() {
+    @Override
+    public Map<String, String> getCssStyles() {
         String cssClassAttributeValue = getAttr(HTML_ATTR_STYLE);
         if (cssClassAttributeValue == null) return Collections.emptyMap();
         List<String> currentCssStyles = Arrays.asList(cssClassAttributeValue.split(HTML_SEPARATOR_STYLE_ARRAY_REGEX));
@@ -290,13 +305,14 @@ public class ElementNode extends AbstractNode<ElementNode>
         return cssStyleMap;
     }
 
-    private void updateCssStyleAttr(Map<String, String> cssStyleMap) {
+    @Override
+    public ElementNode setCssStyles(Map<? extends CharSequence, ? extends CharSequence> cssStyles) {
         StringBuilder stringBuilder = new StringBuilder();
-        for (Map.Entry<String, String> entry : cssStyleMap.entrySet()) {
+        for (Map.Entry<? extends CharSequence, ? extends CharSequence> entry : cssStyles.entrySet()) {
             stringBuilder.append(entry.getKey()).append(HTML_SEPARATOR_STYLE_VALUE).append(entry.getValue()).append(';');
         }
         putAttr(HTML_ATTR_STYLE, stringBuilder.toString());
-
+        return this;
     }
 
     @Override

@@ -4,6 +4,7 @@ import no.kantega.lab.limber.dom.element.AbstractNode;
 import no.kantega.lab.limber.dom.filter.QueryMatchMode;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 public interface IDomElementQueryable extends IDomNodeQueryable {
@@ -15,6 +16,12 @@ public interface IDomElementQueryable extends IDomNodeQueryable {
     String getAttr(CharSequence key);
 
     Set<String> attrs();
+
+    String getId();
+
+    List<String> getCssClasses();
+
+    Map<String, String> getCssStyles();
 
     boolean isAttribute(CharSequence key);
 
