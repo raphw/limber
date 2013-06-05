@@ -110,13 +110,13 @@ public class NodeSelection<T extends NodeSelection<?, S>, S extends AbstractNode
     }
 
     @Override
-    public ElementNodeSelection reduceByAttr(CharSequence key, CharSequence value, FilterMatchMode filterMatchMode) {
-        return new ElementNodeSelection(this.reduceByFilter(new AttributeKeyValueFilter(key, value, filterMatchMode)));
+    public ElementNodeSelection reduceByAttr(CharSequence key, CharSequence value, QueryMatchMode queryMatchMode) {
+        return new ElementNodeSelection(this.reduceByFilter(new AttributeKeyValueFilter(key, value, queryMatchMode)));
     }
 
     @Override
-    public <V extends AbstractNode<V>, U extends NodeSelection<U, V>> NodeSelection<U, V> reduceByFilter(AbstractNodeFilter<V> nodeFilter) {
-        Class<V> filterArgumentClass = nodeFilter.getParameterClass();
+    public <V extends AbstractNode<V>, U extends NodeSelection<U, V>> NodeSelection<U, V> reduceByFilter(INodeFilter<V> nodeFilter) {
+        Class<V> filterArgumentClass = NodeFilterSupport.getInstance().findFilterParameterClass(nodeFilter);
         List<V> foundNodes = new ArrayList<V>();
         for (S node : getSelected()) {
             if (!filterArgumentClass.isAssignableFrom(filterArgumentClass)) {

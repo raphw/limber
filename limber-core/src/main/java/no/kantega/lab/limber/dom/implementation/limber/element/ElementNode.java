@@ -24,7 +24,7 @@ public class ElementNode extends AbstractNode<ElementNode>
 
     private String tagName;
 
-    private Map<CharSequence, String> attr;
+    private Map<String, String> attr;
 
     private List<AbstractNode<?>> children;
 
@@ -90,7 +90,7 @@ public class ElementNode extends AbstractNode<ElementNode>
     @Override
     public String getAttr(CharSequence key) {
         if (attr == null) return null;
-        return attr.get(key);
+        return attr.get(key.toString());
     }
 
     @Override
@@ -99,21 +99,21 @@ public class ElementNode extends AbstractNode<ElementNode>
             removeAttr(key);
             return this;
         }
-        if (attr == null) attr = new HashMap<CharSequence, String>();
-        attr.put(key, value.toString());
+        if (attr == null) attr = new HashMap<String, String>();
+        attr.put(key.toString(), value.toString());
         return this;
     }
 
     @Override
     public ElementNode removeAttr(CharSequence key) {
         if (attr == null) return this;
-        attr.remove(key);
+        attr.remove(key.toString());
         if (attr.size() == 0) attr = null;
         return this;
     }
 
     @Override
-    public Set<CharSequence> attrs() {
+    public Set<String> attrs() {
         if (attr == null) {
             return Collections.emptySet();
         } else {
@@ -122,62 +122,131 @@ public class ElementNode extends AbstractNode<ElementNode>
     }
 
     @Override
+    public boolean isAttribute(CharSequence key) {
+        return attr != null && attr.containsKey(key.toString());
+    }
+
+    @Override
+    public boolean isAttribute(CharSequence key, CharSequence value, QueryMatchMode queryMatchMode) {
+        String actualValue = getAttr(key);
+        if (actualValue == null) return false;
+        switch (queryMatchMode) {
+            case FULL_MATCH:
+                return StringUtils.equals(actualValue, value);
+            case STARTS_WITH:
+                return StringUtils.startsWith(actualValue, value);
+            case ENDS_WITH:
+                return StringUtils.endsWith(actualValue, value);
+            case CONTAINS:
+                return StringUtils.contains(actualValue, value);
+            default:
+                return false;
+        }
+    }
+
+    @Override
+    public boolean isCssClass(CharSequence cssClassName) {
+        return makeCssClassList().contains(cssClassName.toString());
+    }
+
+    @Override
     public ElementNode addCssClass(CharSequence cssClassName) {
-        String cssClassAttributeValue = getAttr(HTML_ATTR_CLASS);
-        List<String> currentCssClasses = Arrays.asList(cssClassAttributeValue.split(HTML_SEPARATOR_CLASS_REGEX));
-        if (!currentCssClasses.contains(cssClassAttributeValue)) {
-            currentCssClasses.add(cssClassName.toString());
-            cssClassAttributeValue = StringUtils.join(currentCssClasses, HTML_SEPARATOR_CLASS);
-            putAttr(HTML_ATTR_CLASS, cssClassAttributeValue);
+        List<String> cssClassList = makeCssClassList();
+        if (!cssClassList.contains(cssClassName.toString())) {
+            cssClassList.add(cssClassName.toString());
+            updateCssClassAttr(cssClassList);
         }
         return this;
     }
 
     @Override
     public ElementNode removeCssClass(CharSequence cssClassName) {
-        String cssClassAttributeValue = getAttr(HTML_ATTR_CLASS);
-        List<String> currentCssClasses = Arrays.asList(cssClassAttributeValue.split(HTML_SEPARATOR_CLASS_REGEX));
-        if (currentCssClasses.remove(cssClassAttributeValue)) {
-            cssClassAttributeValue = StringUtils.join(currentCssClasses, HTML_SEPARATOR_CLASS);
-            putAttr(HTML_ATTR_CLASS, cssClassAttributeValue);
+        List<String> cssClassList = makeCssClassList();
+        if (cssClassList.remove(cssClassName.toString())) {
+            updateCssClassAttr(cssClassList);
         }
         return this;
     }
 
+    private List<String> makeCssClassList() {
+        String cssClassAttributeValue = getAttr(HTML_ATTR_CLASS);
+        if (cssClassAttributeValue == null) return Collections.emptyList();
+        return Arrays.asList(cssClassAttributeValue.split(HTML_SEPARATOR_CLASS_REGEX));
+    }
+
+    private void updateCssClassAttr(List<String> cssClassList) {
+        String cssClassString = StringUtils.join(cssClassList, HTML_SEPARATOR_CLASS);
+        putAttr(HTML_ATTR_CLASS, cssClassString);
+    }
+
+    @Override
+    public boolean isCssStyle(CharSequence key) {
+        return makeCssStyleMap().containsKey(key.toString());
+    }
+
+    @Override
+    public boolean isCssStyle(CharSequence key, CharSequence value, QueryMatchMode queryMatchMode) {
+        Map<String, String> cssStyleMap = makeCssStyleMap();
+        String actualValue = cssStyleMap.get(key.toString());
+        if (actualValue == null) return false;
+        switch (queryMatchMode) {
+            case FULL_MATCH:
+                return StringUtils.equals(actualValue, value);
+            case STARTS_WITH:
+                return StringUtils.startsWith(actualValue, value);
+            case ENDS_WITH:
+                return StringUtils.endsWith(actualValue, value);
+            case CONTAINS:
+                return StringUtils.contains(actualValue, value);
+            default:
+                return false;
+        }
+    }
+
     @Override
     public ElementNode addCssStyle(CharSequence styleKey, CharSequence styleValue) {
-        List<String> currentCssStyles = removeCssStyleHelper(styleKey);
-        currentCssStyles.add(String.format("%s%s%s", styleKey, HTML_SEPARATOR_STYLE_VALUE, styleValue));
-        String cssClassAttributeValue = StringUtils.join(currentCssStyles, HTML_SEPARATOR_STYLE_ARRAY);
-        putAttr(HTML_ATTR_STYLE, cssClassAttributeValue);
+        Map<String, String> cssStyleMap = makeCssStyleMap();
+        if (!StringUtils.equals(cssStyleMap.get(styleKey.toString()), styleKey)) {
+            cssStyleMap.put(styleKey.toString(), styleValue.toString());
+            updateCssStyleAttr(cssStyleMap);
+        }
         return this;
     }
 
     @Override
     public ElementNode removeCssStyle(CharSequence styleKey) {
-        List<String> currentCssStyles = removeCssStyleHelper(styleKey);
-        String cssClassAttributeValue = StringUtils.join(currentCssStyles, HTML_SEPARATOR_STYLE_ARRAY);
-        putAttr(HTML_ATTR_STYLE, cssClassAttributeValue);
+        Map<String, String> cssStyleMap = makeCssStyleMap();
+        if (cssStyleMap.remove(styleKey.toString()) != null) {
+            updateCssStyleAttr(cssStyleMap);
+        }
         return this;
     }
 
-    private List<String> removeCssStyleHelper(CharSequence styleKey) {
+    private Map<String, String> makeCssStyleMap() {
         String cssClassAttributeValue = getAttr(HTML_ATTR_STYLE);
+        if (cssClassAttributeValue == null) return Collections.emptyMap();
         List<String> currentCssStyles = Arrays.asList(cssClassAttributeValue.split(HTML_SEPARATOR_STYLE_ARRAY_REGEX));
-        Iterator<String> currentCssStylesIterator = currentCssStyles.iterator();
-        while (currentCssStylesIterator.hasNext()) {
-            String cssStyleArray = currentCssStylesIterator.next();
-            int valueIndex = cssStyleArray.indexOf(HTML_SEPARATOR_STYLE_VALUE);
+        Map<String, String> cssStyleMap = new HashMap<String, String>();
+        for (String combinedStyle : currentCssStyles) {
+            int valueIndex = combinedStyle.indexOf(HTML_SEPARATOR_STYLE_VALUE);
             if (valueIndex == -1) {
-                currentCssStylesIterator.remove();
-                continue;
-            }
-            String currentStyleKey = cssStyleArray.substring(0, valueIndex).trim();
-            if (StringUtils.equalsIgnoreCase(currentStyleKey, styleKey)) {
-                currentCssStylesIterator.remove();
+                cssStyleMap.put(combinedStyle, null);
+            } else {
+                String styleKey = combinedStyle.substring(0, valueIndex).trim(),
+                        styleValue = combinedStyle.substring(valueIndex).trim();
+                cssStyleMap.put(styleKey, styleValue);
             }
         }
-        return currentCssStyles;
+        return cssStyleMap;
+    }
+
+    private void updateCssStyleAttr(Map<String, String> cssStyleMap) {
+        StringBuilder stringBuilder = new StringBuilder();
+        for (Map.Entry<String, String> entry : cssStyleMap.entrySet()) {
+            stringBuilder.append(entry.getKey()).append(HTML_SEPARATOR_STYLE_VALUE).append(entry.getValue()).append(';');
+        }
+        putAttr(HTML_ATTR_STYLE, stringBuilder.toString());
+
     }
 
     @Override
@@ -195,7 +264,7 @@ public class ElementNode extends AbstractNode<ElementNode>
 
     @Override
     public ElementNode findById(CharSequence id) {
-        ElementNodeSelection elementNodeSelection = findByAttr("id", id, FilterMatchMode.FULL_MATCH);
+        ElementNodeSelection elementNodeSelection = findByAttr("id", id, QueryMatchMode.FULL_MATCH);
         if (elementNodeSelection.size() == 0) {
             return null;
         } else if (elementNodeSelection.size() > 1) {
@@ -211,22 +280,22 @@ public class ElementNode extends AbstractNode<ElementNode>
     }
 
     @Override
-    public ElementNodeSelection findByAttr(CharSequence key, CharSequence value, FilterMatchMode filterMatchMode) {
+    public ElementNodeSelection findByAttr(CharSequence key, CharSequence value, QueryMatchMode filterMatchMode) {
         return new ElementNodeSelection(findByFilter(new AttributeKeyValueFilter(key, value, filterMatchMode)));
     }
 
     @Override
-    public <S extends AbstractNode<S>, T extends NodeSelection<T, S>> NodeSelection<T, S> findByFilter(AbstractNodeFilter<S> nodeFilter) {
-        return new NodeSelection<T, S>(DomTreeBrowserHelper.getInstance().filter(this, nodeFilter, Integer.MAX_VALUE));
+    public <S extends AbstractNode<S>, T extends NodeSelection<T, S>> NodeSelection<T, S> findByFilter(INodeFilter<S> nodeFilter) {
+        return new NodeSelection<T, S>(NodeFilterSupport.getInstance().filter(this, nodeFilter, Integer.MAX_VALUE));
     }
 
     @Override
-    public TextNodeSelection findText() {
+    public TextNodeSelection findTextNodes() {
         return new TextNodeSelection(findByFilter(new TextNodeFilter()));
     }
 
     @Override
-    public ElementNodeSelection findElement() {
+    public ElementNodeSelection findElements() {
         return new ElementNodeSelection(findByFilter(new ElementNodeFilter()));
     }
 
@@ -237,7 +306,7 @@ public class ElementNode extends AbstractNode<ElementNode>
         stringBuilder.append(',');
         stringBuilder.append(getTagName());
         if (attr != null) {
-            for (Map.Entry<CharSequence, String> entry : attr.entrySet()) {
+            for (Map.Entry<String, String> entry : attr.entrySet()) {
                 stringBuilder.append(',');
                 stringBuilder.append(entry.getKey()).append('=').append(entry.getValue());
             }

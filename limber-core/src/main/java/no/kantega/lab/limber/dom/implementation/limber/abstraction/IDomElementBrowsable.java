@@ -2,8 +2,8 @@ package no.kantega.lab.limber.dom.implementation.limber.abstraction;
 
 import no.kantega.lab.limber.dom.implementation.limber.element.AbstractNode;
 import no.kantega.lab.limber.dom.implementation.limber.element.ElementNode;
-import no.kantega.lab.limber.dom.implementation.limber.filter.AbstractNodeFilter;
-import no.kantega.lab.limber.dom.implementation.limber.filter.FilterMatchMode;
+import no.kantega.lab.limber.dom.implementation.limber.filter.INodeFilter;
+import no.kantega.lab.limber.dom.implementation.limber.filter.QueryMatchMode;
 import no.kantega.lab.limber.dom.implementation.limber.selection.ElementNodeSelection;
 import no.kantega.lab.limber.dom.implementation.limber.selection.NodeSelection;
 import no.kantega.lab.limber.dom.implementation.limber.selection.TextNodeSelection;
@@ -16,11 +16,11 @@ public interface IDomElementBrowsable {
 
     ElementNodeSelection findByAttr(CharSequence key);
 
-    ElementNodeSelection findByAttr(CharSequence key, CharSequence value, FilterMatchMode filterMatchMode);
+    ElementNodeSelection findByAttr(CharSequence key, CharSequence value, QueryMatchMode filterMatchMode);
 
-    <S extends AbstractNode<S>, T extends NodeSelection<T, S>> NodeSelection<T, S> findByFilter(AbstractNodeFilter<S> nodeFilter);
+    <S extends AbstractNode<S>, T extends NodeSelection<T, S>> NodeSelection<T, S> findByFilter(INodeFilter<S> nodeFilter);
 
-    TextNodeSelection findText();
+    TextNodeSelection findTextNodes();
 
-    ElementNodeSelection findElement();
+    ElementNodeSelection findElements();
 }

@@ -6,9 +6,9 @@ public class AttributeKeyValueFilter extends AttributeKeyExistenceFilter {
 
     private final String attrValue;
 
-    private final FilterMatchMode filterMatchMode;
+    private final QueryMatchMode filterMatchMode;
 
-    public AttributeKeyValueFilter(CharSequence attrKey, CharSequence attrValue, FilterMatchMode filterMatchMode) {
+    public AttributeKeyValueFilter(CharSequence attrKey, CharSequence attrValue, QueryMatchMode filterMatchMode) {
         super(attrKey);
         this.attrValue = attrValue.toString();
         this.filterMatchMode = filterMatchMode;

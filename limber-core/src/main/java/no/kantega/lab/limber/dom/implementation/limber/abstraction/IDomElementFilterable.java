@@ -1,8 +1,8 @@
 package no.kantega.lab.limber.dom.implementation.limber.abstraction;
 
 import no.kantega.lab.limber.dom.implementation.limber.element.AbstractNode;
-import no.kantega.lab.limber.dom.implementation.limber.filter.AbstractNodeFilter;
-import no.kantega.lab.limber.dom.implementation.limber.filter.FilterMatchMode;
+import no.kantega.lab.limber.dom.implementation.limber.filter.INodeFilter;
+import no.kantega.lab.limber.dom.implementation.limber.filter.QueryMatchMode;
 import no.kantega.lab.limber.dom.implementation.limber.selection.ElementNodeSelection;
 import no.kantega.lab.limber.dom.implementation.limber.selection.NodeSelection;
 import no.kantega.lab.limber.dom.implementation.limber.selection.TextNodeSelection;
@@ -17,9 +17,9 @@ public interface IDomElementFilterable<T extends AbstractNode<T>, S extends Node
 
     ElementNodeSelection reduceByAttr(CharSequence key);
 
-    ElementNodeSelection reduceByAttr(CharSequence key, CharSequence value, FilterMatchMode filterMatchMode);
+    ElementNodeSelection reduceByAttr(CharSequence key, CharSequence value, QueryMatchMode queryMatchMode);
 
-    <U extends AbstractNode<U>, V extends NodeSelection<V, U>> NodeSelection<V, U> reduceByFilter(AbstractNodeFilter<U> nodeFilter);
+    <U extends AbstractNode<U>, V extends NodeSelection<V, U>> NodeSelection<V, U> reduceByFilter(INodeFilter<U> nodeFilter);
 
     TextNodeSelection reduceToText();
 

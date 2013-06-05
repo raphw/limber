@@ -132,26 +132,26 @@ public class ElementNodeSelection extends NodeSelection<ElementNodeSelection, El
     }
 
     @Override
-    public ElementNodeSelection findByAttr(CharSequence key, CharSequence value, FilterMatchMode filterMatchMode) {
+    public ElementNodeSelection findByAttr(CharSequence key, CharSequence value, QueryMatchMode filterMatchMode) {
         return new ElementNodeSelection(findByFilter(new AttributeKeyValueFilter(key, value, filterMatchMode)));
     }
 
     @Override
-    public <S extends AbstractNode<S>, U extends NodeSelection<U, S>> NodeSelection<U, S> findByFilter(AbstractNodeFilter<S> nodeFilter) {
+    public <S extends AbstractNode<S>, U extends NodeSelection<U, S>> NodeSelection<U, S> findByFilter(INodeFilter<S> nodeFilter) {
         List<S> resultSelection = new LinkedList<S>();
         for (ElementNode elementNode : getSelected()) {
-            resultSelection.addAll(DomTreeBrowserHelper.getInstance().filter(elementNode, nodeFilter, Integer.MAX_VALUE));
+            resultSelection.addAll(NodeFilterSupport.getInstance().filter(elementNode, nodeFilter, Integer.MAX_VALUE));
         }
         return new NodeSelection<U, S>(resultSelection);
     }
 
     @Override
-    public TextNodeSelection findText() {
+    public TextNodeSelection findTextNodes() {
         return new TextNodeSelection(findByFilter(new TextNodeFilter()));
     }
 
     @Override
-    public ElementNodeSelection findElement() {
+    public ElementNodeSelection findElements() {
         return new ElementNodeSelection(findByFilter(new ElementNodeFilter()));
     }
 

@@ -2,7 +2,7 @@ package no.kantega.lab.limber.dom.implementation.limber.filter;
 
 import no.kantega.lab.limber.dom.implementation.limber.element.ElementNode;
 
-public class TagNameFilter extends AbstractNodeFilter<ElementNode> {
+public class TagNameFilter implements INodeFilter<ElementNode> {
 
     private final CharSequence tagName;
 
