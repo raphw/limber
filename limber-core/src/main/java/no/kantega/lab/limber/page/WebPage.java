@@ -4,27 +4,24 @@ import no.kantega.lab.limber.ajax.abstraction.AjaxEventTrigger;
 import no.kantega.lab.limber.ajax.abstraction.DefaultAjaxEvent;
 import no.kantega.lab.limber.ajax.abstraction.IAjaxCallback;
 import no.kantega.lab.limber.ajax.abstraction.IAjaxEvent;
-import no.kantega.lab.limber.dom.abstraction.selection.HeadResource;
-import no.kantega.lab.limber.dom.abstraction.selection.IDomDocumentSelection;
-import no.kantega.lab.limber.dom.implementation.jsoup.DomDocumentSelection;
-import no.kantega.lab.limber.dom.implementation.limber.element.ElementNode;
-import no.kantega.lab.limber.dom.implementation.limber.parser.HtmlSAXParser;
-import no.kantega.lab.limber.dom.implementation.limber.renderer.DomTreeRenderer;
+import no.kantega.lab.limber.dom.parser.HtmlSAXParser;
+import no.kantega.lab.limber.dom.renderer.DomTreeRenderer;
+import no.kantega.lab.limber.dom.selection.HtmlDocumentSelection;
 import no.kantega.lab.limber.servlet.IRenderable;
 import no.kantega.lab.limber.servlet.IResponseContainer;
 import org.apache.commons.lang3.StringUtils;
 import org.jsoup.nodes.Element;
 
-import java.io.*;
-import java.net.URI;
-import java.net.URISyntaxException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
 public class WebPage implements IRenderable {
 
-    private final IDomDocumentSelection domSelection;
+    private final HtmlDocumentSelection htmlDocumentSelection;
 
     private final Map<UUID, IAjaxEvent> ajaxEventRegister;
 
@@ -32,25 +29,13 @@ public class WebPage implements IRenderable {
     private boolean renderedAjax = false;
 
     public WebPage() {
-        domSelection = DomDocumentSelection.makeDomDocumentSelection(this);
-        try {
-            domSelection.addExternalResource(
-                    HeadResource.JS,
-                    new URI("//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"));
-        } catch (URISyntaxException e) {
-            e.printStackTrace();
-        }
-        // TODO: Enable resource
-//        domSelection.addExternalResource(HeadResource.JS, getClass().getResource("/web/js/jquery-2.0.0.min.js"));
+        htmlDocumentSelection = new HtmlDocumentSelection(HtmlSAXParser.make().translateToDomTree(getDocumentResourceStream()));
         ajaxEventRegister = new HashMap<UUID, IAjaxEvent>();
     }
 
-    public final IDomDocumentSelection dom() {
-        return domSelection;
+    public final HtmlDocumentSelection dom() {
+        return htmlDocumentSelection;
     }
-
-    //TODO: The following methods should at best reside outside this class to hold the API clean.
-    // All of the following implementations are very preliminary and for working demonstration.
 
     public final InputStream getDocumentResourceStream() {
         String name = getClass().getSimpleName() + ".html";
@@ -65,7 +50,6 @@ public class WebPage implements IRenderable {
     @Override
     public final boolean render(OutputStream outputStream, IResponseContainer response) throws IOException {
 
-        mytry();
 
         if (response.getRequest().isAjax()) {
             UUID ajaxId = response.getRequest().getAjaxId();
@@ -83,22 +67,8 @@ public class WebPage implements IRenderable {
             renderedAjax = true;
         }
 
-        InputStream inputStream = getDocumentResourceStream();
-        String documentHtml = domSelection.getOutput();
-        Writer writer = new OutputStreamWriter(outputStream);
-        writer.write(documentHtml);
-        writer.flush();
-        inputStream.close();
+        DomTreeRenderer.getInstance().render(dom().getRootNode(), outputStream);
         return true;
-    }
-
-    private void mytry() {
-        System.out.println("-------");
-        HtmlSAXParser saxParser = HtmlSAXParser.make();
-        ElementNode elementNode = saxParser.translateToDomTree(getDocumentResourceStream());
-        DomTreeRenderer domTreeRenderer = new DomTreeRenderer();
-        domTreeRenderer.render(elementNode, System.out);
-        System.out.println("-------");
     }
 
     public final void registerAjaxEvent(Element ajaxEventTarget,
@@ -137,7 +107,7 @@ public class WebPage implements IRenderable {
             stringBuilder.append("})");
         }
         stringBuilder.append("})");
-        domSelection.addEmbededResource(HeadResource.JS, stringBuilder.toString());
+//        domSelection.addEmbededResource(HeadResource.JS, stringBuilder.toString());
     }
 
     private String makeUniqueIdentifier(Element element) {
