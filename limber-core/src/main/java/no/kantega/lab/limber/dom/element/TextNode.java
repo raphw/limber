@@ -2,14 +2,19 @@ package no.kantega.lab.limber.dom.element;
 
 import no.kantega.lab.limber.dom.abstraction.IDomTextNodeMorphable;
 import no.kantega.lab.limber.dom.abstraction.IDomTextNodeQueryable;
-import org.apache.commons.lang3.StringEscapeUtils;
+
+import javax.annotation.Nonnull;
 
 public class TextNode extends AbstractNode<TextNode> implements IDomTextNodeMorphable<TextNode>, IDomTextNodeQueryable {
 
     private String content;
 
     public TextNode(CharSequence content) {
-        setContent(content);
+        this(content, ContentEscapeMode.getDefault());
+    }
+
+    public TextNode(CharSequence content, @Nonnull ContentEscapeMode contentEscapeMode) {
+        setContent(content, contentEscapeMode);
     }
 
     @Override
@@ -19,10 +24,15 @@ public class TextNode extends AbstractNode<TextNode> implements IDomTextNodeMorp
 
     @Override
     public TextNode setContent(CharSequence content) {
+        return setContent(content, ContentEscapeMode.getDefault());
+    }
+
+    @Override
+    public TextNode setContent(CharSequence content, @Nonnull ContentEscapeMode contentEscapeMode) {
         if (content == null) {
             clear();
         } else {
-            this.content = StringEscapeUtils.ESCAPE_HTML4.translate(content);
+            this.content = contentEscapeMode.translate(content);
         }
         return this;
     }

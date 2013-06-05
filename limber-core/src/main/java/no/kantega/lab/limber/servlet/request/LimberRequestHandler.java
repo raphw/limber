@@ -10,6 +10,7 @@ import no.kantega.lab.limber.servlet.request.interpreter.AnnotationRequestInterp
 import no.kantega.lab.limber.servlet.request.interpreter.IRequestInterpreter;
 import no.kantega.lab.limber.servlet.request.interpreter.LimberRequestExpressionInterpreter;
 
+import javax.annotation.Nonnull;
 import javax.servlet.FilterConfig;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -25,7 +26,7 @@ public class LimberRequestHandler {
 
     private final RequestPacker requestPacker;
 
-    public LimberRequestHandler(FilterConfig filterConfig) {
+    public LimberRequestHandler(@Nonnull FilterConfig filterConfig) {
 
         // Set up request interpreters
         requestInterpreters = new LinkedList<IRequestInterpreter>();
@@ -48,8 +49,8 @@ public class LimberRequestHandler {
     }
 
     public boolean proceedRequest(
-            HttpServletRequest httpServletRequest,
-            HttpServletResponse httpServletResponse)
+            @Nonnull HttpServletRequest httpServletRequest,
+            @Nonnull HttpServletResponse httpServletResponse)
             throws IOException {
 
         // Transform servlet request in raw request which is visible to API users.
@@ -63,15 +64,11 @@ public class LimberRequestHandler {
 
         // Query container stack to handle the request.
         IRenderable renderable = findRenderableToRequest(limberRequest);
-        if (renderable == null) {
-            return false;
-        }
-
-        return renderRequest(limberRequest, renderable, httpServletResponse);
+        return renderable != null && renderRequest(limberRequest, renderable, httpServletResponse);
 
     }
 
-    private ILimberRequest interpretRawRequest(RawRequest rawRequest) throws IOException {
+    private ILimberRequest interpretRawRequest(@Nonnull RawRequest rawRequest) throws IOException {
         for (IRequestInterpreter requestResolver : requestInterpreters) {
             ILimberRequest limberRequest = requestResolver.interpret(rawRequest);
             if (limberRequest != null) {
@@ -81,7 +78,7 @@ public class LimberRequestHandler {
         return null;
     }
 
-    private IRenderable findRenderableToRequest(ILimberRequest limberRequest) {
+    private IRenderable findRenderableToRequest(@Nonnull ILimberRequest limberRequest) {
         for (IInstanceContainer instanceContainer : instanceContainers) {
             IRenderable renderable = instanceContainer.resolve(limberRequest, instanceCreator);
             if (renderable != null) {
@@ -91,8 +88,8 @@ public class LimberRequestHandler {
         return null;
     }
 
-    private boolean renderRequest(ILimberRequest limberRequest, IRenderable renderable,
-                                  HttpServletResponse httpServletResponse) throws IOException {
+    private boolean renderRequest(@Nonnull ILimberRequest limberRequest, @Nonnull IRenderable renderable,
+                                  @Nonnull HttpServletResponse httpServletResponse) throws IOException {
         return renderable.render(httpServletResponse.getOutputStream(),
                 new DefaultResponseContainer(limberRequest, httpServletResponse));
     }
@@ -118,12 +115,12 @@ public class LimberRequestHandler {
         }
 
         @Override
-        public void addHeader(String key, String value) {
+        public void addHeader(@Nonnull String key, String value) {
             httpServletResponse.addHeader(key, value);
         }
 
         @Override
-        public URI decodeLink(Class<? extends IRenderable> renderableClass, UUID versionId, UUID ajaxId) {
+        public URI decodeLink(@Nonnull Class<? extends IRenderable> renderableClass, UUID versionId, UUID ajaxId) {
             // Reversely iterate over the list of request interpreters.
             Iterator<IRequestInterpreter> iterator = requestInterpreters.descendingIterator();
             while (iterator.hasNext()) {

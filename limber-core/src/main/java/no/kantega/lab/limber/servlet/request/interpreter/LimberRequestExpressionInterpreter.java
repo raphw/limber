@@ -6,6 +6,7 @@ import no.kantega.lab.limber.servlet.request.DefaultLimberRequest;
 import no.kantega.lab.limber.servlet.request.ILimberRequest;
 import no.kantega.lab.limber.servlet.request.RawRequest;
 
+import javax.annotation.Nonnull;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.UUID;
@@ -34,7 +35,7 @@ public class LimberRequestExpressionInterpreter implements IRequestInterpreter {
     }
 
     @Override
-    public ILimberRequest interpret(RawRequest rawRequest) {
+    public ILimberRequest interpret(@Nonnull RawRequest rawRequest) {
 
         // Check if this expression interpreter can be applied at all.
         String limberQuery = rawRequest.getQueryArgument("limber");
@@ -81,12 +82,12 @@ public class LimberRequestExpressionInterpreter implements IRequestInterpreter {
     }
 
     @SuppressWarnings("unchecked")
-    private Class<? extends IRenderable> castToRenderable(Class<?> type) {
+    private Class<? extends IRenderable> castToRenderable(@Nonnull Class<?> type) {
         return (Class<? extends IRenderable>) type;
     }
 
     @Override
-    public URI resolve(Class<? extends IRenderable> renderableClass, UUID versionId, UUID ajaxId) {
+    public URI resolve(@Nonnull Class<? extends IRenderable> renderableClass, UUID versionId, UUID ajaxId) {
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append("/?limber=");
         stringBuilder.append(renderableClass.getName());

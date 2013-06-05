@@ -2,6 +2,8 @@ package no.kantega.lab.limber.dom.filter;
 
 import no.kantega.lab.limber.dom.element.ElementNode;
 
+import javax.annotation.Nonnull;
+
 public class AttributeKeyExistenceFilter implements INodeFilter<ElementNode> {
 
     private final CharSequence attrKey;
@@ -11,8 +13,8 @@ public class AttributeKeyExistenceFilter implements INodeFilter<ElementNode> {
     }
 
     @Override
-    public boolean filter(ElementNode element) {
-        return element.getAttr(attrKey) != null;
+    public boolean filter(@Nonnull ElementNode element) {
+        return element.isAttribute(attrKey);
     }
 
     protected CharSequence getAttrKey() {

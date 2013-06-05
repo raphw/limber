@@ -7,19 +7,21 @@ import no.kantega.lab.limber.dom.selection.ElementNodeSelection;
 import no.kantega.lab.limber.dom.selection.NodeSelection;
 import no.kantega.lab.limber.dom.selection.TextNodeSelection;
 
-public interface IDomElementFilterable<T extends AbstractNode<T>, S extends NodeSelection<?, T>> extends Iterable<T> {
+import javax.annotation.Nonnull;
+
+public interface IDomElementFilterable<T extends AbstractNode<T>> extends Iterable<T> {
 
     T get(int index);
 
     NodeSelection<?, T> get(int from, int to);
 
-    ElementNodeSelection reduceByTag(CharSequence tagName);
+    ElementNodeSelection reduceByTag(@Nonnull CharSequence tagName);
 
-    ElementNodeSelection reduceByAttr(CharSequence key);
+    ElementNodeSelection reduceByAttr(@Nonnull CharSequence key);
 
-    ElementNodeSelection reduceByAttr(CharSequence key, CharSequence value, QueryMatchMode queryMatchMode);
+    ElementNodeSelection reduceByAttr(@Nonnull CharSequence key, CharSequence value, @Nonnull QueryMatchMode queryMatchMode);
 
-    <U extends AbstractNode<U>, V extends NodeSelection<V, U>> NodeSelection<V, U> reduceByFilter(INodeFilter<U> nodeFilter);
+    <U extends AbstractNode<U>, V extends NodeSelection<V, U>> NodeSelection<V, U> reduceByFilter(@Nonnull INodeFilter<U> nodeFilter);
 
     TextNodeSelection reduceToText();
 

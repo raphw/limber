@@ -3,6 +3,7 @@ package no.kantega.lab.limber.dom.element;
 import no.kantega.lab.limber.dom.abstraction.IDomNodeMorphable;
 import no.kantega.lab.limber.dom.abstraction.IDomNodeQueryable;
 
+import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -10,9 +11,7 @@ public abstract class AbstractNode<T extends AbstractNode<T>> implements IDomNod
         IDomNodeQueryable, Cloneable {
 
     private boolean rendered;
-
     private ElementNode parent;
-
     private List<NodeAttachment<? extends T>> nodeAttachments;
 
     protected AbstractNode() {
@@ -21,7 +20,7 @@ public abstract class AbstractNode<T extends AbstractNode<T>> implements IDomNod
 
     @Override
     @SuppressWarnings("unchecked")
-    public T addNodeAttachment(NodeAttachment<? extends T> nodeAttachment) {
+    public T addNodeAttachment(@Nonnull NodeAttachment<? extends T> nodeAttachment) {
         if (nodeAttachments == null) nodeAttachments = new ArrayList<NodeAttachment<? extends T>>();
         nodeAttachments.add(nodeAttachment);
         return (T) this;
@@ -29,7 +28,7 @@ public abstract class AbstractNode<T extends AbstractNode<T>> implements IDomNod
 
     @Override
     @SuppressWarnings("unchecked")
-    public T removeNodeAttachment(NodeAttachment<? extends T> nodeAttachment) {
+    public T removeNodeAttachment(@Nonnull NodeAttachment<? extends T> nodeAttachment) {
         if (nodeAttachments == null) return (T) this;
         nodeAttachments.remove(nodeAttachment);
         if (nodeAttachments.size() == 0) nodeAttachments = null;
@@ -58,7 +57,9 @@ public abstract class AbstractNode<T extends AbstractNode<T>> implements IDomNod
     }
 
     @Override
-    public abstract T clear();
+    public boolean isEmpty() {
+        return size() == 0;
+    }
 
     @Override
     @SuppressWarnings("unchecked")

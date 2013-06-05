@@ -14,6 +14,7 @@ import no.kantega.lab.limber.servlet.meta.IDomSelectable;
 import no.kantega.lab.limber.servlet.meta.ResourceIdentification;
 import no.kantega.lab.limber.servlet.meta.ResourceType;
 
+import javax.annotation.Nonnull;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.HashMap;
@@ -40,7 +41,7 @@ public class WebPage implements IRenderable, IDomSelectable<HtmlDocumentSelectio
     }
 
     @Override
-    public final boolean render(OutputStream outputStream, IResponseContainer response) throws IOException {
+    public final boolean render(@Nonnull OutputStream outputStream, @Nonnull IResponseContainer response) throws IOException {
 
         if (response.getRequest().isAjax()) {
             UUID ajaxId = response.getRequest().getAjaxId();
@@ -73,7 +74,7 @@ public class WebPage implements IRenderable, IDomSelectable<HtmlDocumentSelectio
                         ajaxEventTarget));
     }
 
-    private final void appendAjaxEvents(IResponseContainer response) {
+    private void appendAjaxEvents(IResponseContainer response) {
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append("jQuery(document).ready(function(){");
         for (Map.Entry<UUID, IAjaxEvent> entry : ajaxEventRegister.entrySet()) {

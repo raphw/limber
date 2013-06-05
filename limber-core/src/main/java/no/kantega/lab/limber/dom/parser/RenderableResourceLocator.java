@@ -6,14 +6,16 @@ import no.kantega.lab.limber.servlet.meta.ResourceIdentification;
 import no.kantega.lab.limber.servlet.meta.ResourceType;
 import org.apache.commons.lang3.StringUtils;
 
+import javax.annotation.Nonnull;
 import java.io.InputStream;
-import java.util.Locale;
 
 public class RenderableResourceLocator {
 
-    public InputStream locateResource(Class<? extends IRenderable> renderableClass) {
+    public InputStream locateResource(@Nonnull Class<? extends IRenderable> renderableClass) {
 
-        ResourceIdentification resourceIdentification = renderableClass.getAnnotation(ResourceIdentification.class);
+        ResourceIdentification resourceIdentification =
+                renderableClass.getAnnotation(ResourceIdentification.class);
+
         ResourceType resourceType;
         String resourceLocation;
         if (resourceIdentification == null) {
@@ -25,10 +27,11 @@ public class RenderableResourceLocator {
         }
 
         InputStream inputStream;
-        if (StringUtils.isEmpty(resourceLocation)) {
-            String resourceName = String.format("%s.%s",
+        if (StringUtils.isBlank(resourceLocation)) {
+            String resourceName = String.format("%s%s%s",
                     renderableClass.getSimpleName(),
-                    resourceType.toString().toLowerCase(Locale.US));
+                    resourceType.getFileNameExtension() == null ? "" : ".",
+                    StringUtils.defaultString(resourceType.getFileNameExtension()));
             inputStream = renderableClass.getResourceAsStream(resourceName);
         } else {
             throw new NotYetImplementedException();
@@ -39,6 +42,5 @@ public class RenderableResourceLocator {
         }
 
         return inputStream;
-
     }
 }

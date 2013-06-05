@@ -21,14 +21,17 @@ public class DomGenerationContentHandler implements ContentHandler {
 
     @Override
     public void setDocumentLocator(Locator locator) {
+        System.out.println("setDocumentLocator " + locator);
     }
 
     @Override
     public void startDocument() throws SAXException {
+        System.out.println("startDocument");
     }
 
     @Override
     public void endDocument() throws SAXException {
+        System.out.println("endDocument");
     }
 
     @Override

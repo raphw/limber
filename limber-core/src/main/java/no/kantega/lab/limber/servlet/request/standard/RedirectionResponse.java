@@ -4,6 +4,7 @@ import no.kantega.lab.limber.servlet.IRenderable;
 import no.kantega.lab.limber.servlet.IResponseContainer;
 import no.kantega.lab.limber.servlet.request.ILimberRequest;
 
+import javax.annotation.Nonnull;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -21,7 +22,7 @@ public class RedirectionResponse implements IRenderable {
     }
 
     @Override
-    public boolean render(OutputStream outputStream, IResponseContainer responseContainer) throws IOException {
+    public boolean render(@Nonnull OutputStream outputStream, @Nonnull IResponseContainer responseContainer) throws IOException {
         URI referralURI = responseContainer.decodeLink(limberRequest.getRenderableClass(), uuid, null);
         responseContainer.addHeader("Location", referralURI.toString());
         responseContainer.setStatusCode(HttpServletResponse.SC_FOUND);

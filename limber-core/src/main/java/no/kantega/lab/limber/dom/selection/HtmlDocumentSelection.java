@@ -4,13 +4,14 @@ import no.kantega.lab.limber.dom.abstraction.IDomHtmlRootSteerable;
 import no.kantega.lab.limber.dom.element.ElementNode;
 import no.kantega.lab.limber.dom.element.TextNode;
 
+import javax.annotation.Nonnull;
 import java.util.Arrays;
 
 public class HtmlDocumentSelection extends ElementNodeSelection implements IDomHtmlRootSteerable<HtmlDocumentSelection> {
 
     private final ElementNode rootNode;
 
-    public HtmlDocumentSelection(ElementNode rootNode) {
+    public HtmlDocumentSelection(@Nonnull ElementNode rootNode) {
         super(Arrays.asList(rootNode));
         this.rootNode = rootNode;
     }
@@ -39,7 +40,8 @@ public class HtmlDocumentSelection extends ElementNodeSelection implements IDomH
     }
 
     @Override
-    public HtmlDocumentSelection setTile(CharSequence charSequence) {
+    public HtmlDocumentSelection setTile(@Nonnull CharSequence charSequence) {
+        getTitleNode().clear().appendText(charSequence);
         return this;
     }
 
@@ -47,16 +49,22 @@ public class HtmlDocumentSelection extends ElementNodeSelection implements IDomH
     public String getTitle() {
         ElementNode titleNode = getTitleNode();
         StringBuilder stringBuilder = new StringBuilder();
-        for(TextNode textNode : titleNode.findTextNodes()) {
+        for (TextNode textNode : titleNode.findTextNodes()) {
             stringBuilder.append(textNode.getContent());
         }
         return stringBuilder.toString();
     }
 
     @Override
+    public HtmlDocumentSelection clearTitle() {
+        getTitleNode().clear();
+        return this;
+    }
+
+    @Override
     public ElementNode getTitleNode() {
         ElementNodeSelection titleNodeSelection = getHeadNode().findByTag("title");
-        if(titleNodeSelection.size() != 1) {
+        if (titleNodeSelection.size() != 1) {
             throw new IllegalStateException();
         }
         return titleNodeSelection.get(0);

@@ -5,7 +5,11 @@ import no.kantega.lab.limber.servlet.IRenderable;
 import org.apache.xerces.parsers.AbstractSAXParser;
 import org.apache.xerces.xni.parser.XMLParserConfiguration;
 import org.cyberneko.html.HTMLConfiguration;
+import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
 
+import javax.annotation.Nonnull;
+import java.io.IOException;
 import java.io.InputStream;
 
 public class DomTreeProvider {
@@ -22,18 +26,27 @@ public class DomTreeProvider {
         renderableResourceLocator = new RenderableResourceLocator();
     }
 
-    public HtmlDocumentSelection provideDocumentSelection(Class<? extends IRenderable> renderableClass) {
+    public HtmlDocumentSelection provideDocumentSelection(@Nonnull Class<? extends IRenderable> renderableClass) {
         InputStream resourceInputStream = renderableResourceLocator.locateResource(renderableClass);
         HTMLConfiguration htmlConfiguration = new HTMLConfiguration();
         htmlConfiguration.setFeature("http://cyberneko.org/html/features/balance-tags", true);
         AbstractSAXParser htmlSAXParser = new SaxParser(htmlConfiguration);
         DomGenerationContentHandler domContentHandler = new DomGenerationContentHandler();
         htmlSAXParser.setContentHandler(domContentHandler);
-        return new HtmlDocumentSelection(domContentHandler.getRoot());
+        try {
+            htmlSAXParser.parse(new InputSource(resourceInputStream));
+            return new HtmlDocumentSelection(domContentHandler.getRoot());
+        } catch (SAXException e) {
+            e.printStackTrace();
+            return null;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
     private class SaxParser extends AbstractSAXParser {
-        private SaxParser(XMLParserConfiguration xmlParserConfiguration) {
+        private SaxParser(@Nonnull XMLParserConfiguration xmlParserConfiguration) {
             super(xmlParserConfiguration);
         }
     }

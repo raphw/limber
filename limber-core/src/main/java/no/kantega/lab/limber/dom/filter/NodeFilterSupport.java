@@ -3,12 +3,10 @@ package no.kantega.lab.limber.dom.filter;
 import no.kantega.lab.limber.dom.element.AbstractNode;
 import no.kantega.lab.limber.dom.element.ElementNode;
 
+import javax.annotation.Nonnull;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
-import java.util.ArrayDeque;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Queue;
+import java.util.*;
 
 public class NodeFilterSupport {
 
@@ -22,8 +20,8 @@ public class NodeFilterSupport {
         /* empty */
     }
 
-    public <T extends AbstractNode<T>> List<T> filter(ElementNode parent,
-                                                      INodeFilter<T> nodeFilter,
+    public <T extends AbstractNode<T>> List<T> filter(@Nonnull ElementNode origin,
+                                                      @Nonnull INodeFilter<T> nodeFilter,
                                                       int maxDepth) {
 
         Class<T> filterParameterClass = findFilterParameterClass(nodeFilter);
@@ -31,16 +29,15 @@ public class NodeFilterSupport {
         List<T> foundNodes = new ArrayList<T>();
         if (maxDepth < 1) return foundNodes;
         Queue<ElementNode> nodesToScan = new ArrayDeque<ElementNode>();
-        nodesToScan.add(parent);
+        nodesToScan.add(origin);
 
         int currentDepth = 0, timeToDepthIncrease = 1, nextTimeToDepthIncrease = 0;
 
         while (!nodesToScan.isEmpty()) {
             ElementNode current = nodesToScan.poll();
-            if (currentDepth > 0) {
-                nodesToScan.add(current);
-            }
-            nextTimeToDepthIncrease += current.size();
+            List<ElementNode> children = findBrowsableChildren(current);
+            nextTimeToDepthIncrease += children.size();
+            nodesToScan.addAll(children);
             if (--timeToDepthIncrease == 0) {
                 if (++currentDepth > maxDepth) break;
                 timeToDepthIncrease = nextTimeToDepthIncrease;
@@ -60,8 +57,18 @@ public class NodeFilterSupport {
 
     }
 
+    private List<ElementNode> findBrowsableChildren(@Nonnull ElementNode parent) {
+        List<ElementNode> elementChildren = new LinkedList<ElementNode>();
+        for (AbstractNode<?> child : parent.children()) {
+            if (child instanceof ElementNode) {
+                elementChildren.add((ElementNode) child);
+            }
+        }
+        return elementChildren;
+    }
+
     @SuppressWarnings("unchecked")
-    public <T extends AbstractNode<T>> Class<T> findFilterParameterClass(INodeFilter<T> filter) {
+    public <T extends AbstractNode<T>> Class<T> findFilterParameterClass(@Nonnull INodeFilter<T> filter) {
         Class<?> currentClass = filter.getClass();
         do {
             for (Type interfaceType : currentClass.getGenericInterfaces()) {

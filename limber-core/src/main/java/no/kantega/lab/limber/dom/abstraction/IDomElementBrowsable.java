@@ -8,31 +8,33 @@ import no.kantega.lab.limber.dom.selection.ElementNodeSelection;
 import no.kantega.lab.limber.dom.selection.NodeSelection;
 import no.kantega.lab.limber.dom.selection.TextNodeSelection;
 
+import javax.annotation.Nonnull;
+
 public interface IDomElementBrowsable<U extends AbstractNode<?>> extends Iterable<U> {
 
-    ElementNodeSelection findByTag(CharSequence tagName);
+    ElementNodeSelection findByTag(@Nonnull CharSequence tagName);
 
-    ElementNodeSelection findByTag(CharSequence tagName, int maxDepth);
+    ElementNodeSelection findByTag(@Nonnull CharSequence tagName, int maxDepth);
 
-    ElementNode findById(CharSequence id);
+    ElementNode findById(@Nonnull CharSequence id);
 
-    ElementNode findById(CharSequence id, int maxDepth);
+    ElementNode findById(@Nonnull CharSequence id, int maxDepth);
 
-    ElementNodeSelection findByCssClass(CharSequence cssClassName);
+    ElementNodeSelection findByCssClass(@Nonnull CharSequence cssClassName);
 
-    ElementNodeSelection findByCssClass(CharSequence cssClassName, int maxDepth);
+    ElementNodeSelection findByCssClass(@Nonnull CharSequence cssClassName, int maxDepth);
 
-    ElementNodeSelection findByAttr(CharSequence key);
+    ElementNodeSelection findByAttr(@Nonnull CharSequence key);
 
-    ElementNodeSelection findByAttr(CharSequence key, int maxDepth);
+    ElementNodeSelection findByAttr(@Nonnull CharSequence key, int maxDepth);
 
-    ElementNodeSelection findByAttr(CharSequence key, CharSequence value, QueryMatchMode filterMatchMode);
+    ElementNodeSelection findByAttr(@Nonnull CharSequence key, CharSequence value, @Nonnull QueryMatchMode queryMatchMode);
 
-    ElementNodeSelection findByAttr(CharSequence key, CharSequence value, QueryMatchMode filterMatchMode, int maxDepth);
+    ElementNodeSelection findByAttr(@Nonnull CharSequence key, CharSequence value, @Nonnull QueryMatchMode queryMatchMode, int maxDepth);
 
-    <S extends AbstractNode<S>, T extends NodeSelection<T, S>> NodeSelection<T, S> findByFilter(INodeFilter<S> nodeFilter);
+    <S extends AbstractNode<S>, T extends NodeSelection<T, S>> NodeSelection<T, S> findByFilter(@Nonnull INodeFilter<S> nodeFilter);
 
-    <S extends AbstractNode<S>, T extends NodeSelection<T, S>> NodeSelection<T, S> findByFilter(INodeFilter<S> nodeFilter, int maxDepth);
+    <S extends AbstractNode<S>, T extends NodeSelection<T, S>> NodeSelection<T, S> findByFilter(@Nonnull INodeFilter<S> nodeFilter, int maxDepth);
 
     TextNodeSelection findTextNodes();
 

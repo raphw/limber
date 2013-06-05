@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
+import java.util.Map;
 
 public class DomTreeRenderer {
 
@@ -40,11 +41,11 @@ public class DomTreeRenderer {
     private void renderElement(ElementNode elementNode, Writer writer) throws IOException {
         writer.append('<');
         writer.append(elementNode.getTagName());
-        for (CharSequence charSequence : elementNode.attrs()) {
+        for (Map.Entry<String, String> attr : elementNode.getAttrs().entrySet()) {
             writer.append(' ');
-            writer.append(charSequence);
+            writer.append(attr.getKey());
             writer.append("=\"");
-            writer.append(elementNode.getAttr(charSequence));
+            writer.append(attr.getValue());
             writer.append("\"");
         }
         writer.append('>');

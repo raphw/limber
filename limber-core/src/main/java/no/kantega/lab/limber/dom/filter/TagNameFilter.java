@@ -2,6 +2,8 @@ package no.kantega.lab.limber.dom.filter;
 
 import no.kantega.lab.limber.dom.element.ElementNode;
 
+import javax.annotation.Nonnull;
+
 public class TagNameFilter implements INodeFilter<ElementNode> {
 
     private final CharSequence tagName;
@@ -11,7 +13,7 @@ public class TagNameFilter implements INodeFilter<ElementNode> {
     }
 
     @Override
-    public boolean filter(ElementNode element) {
-        return tagName.equals(element.getTagName());
+    public boolean filter(@Nonnull ElementNode element) {
+        return element.isTag(tagName);
     }
 }

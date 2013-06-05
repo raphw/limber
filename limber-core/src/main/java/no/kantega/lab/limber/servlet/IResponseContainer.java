@@ -2,6 +2,7 @@ package no.kantega.lab.limber.servlet;
 
 import no.kantega.lab.limber.servlet.request.ILimberRequest;
 
+import javax.annotation.Nonnull;
 import java.net.URI;
 import java.util.UUID;
 
@@ -11,7 +12,7 @@ public interface IResponseContainer {
 
     void setStatusCode(int code);
 
-    void addHeader(String key, String value);
+    void addHeader(@Nonnull String key, String value);
 
-    URI decodeLink(Class<? extends IRenderable> renderableClass, UUID versionId, UUID ajaxId);
+    URI decodeLink(@Nonnull Class<? extends IRenderable> renderableClass, UUID versionId, UUID ajaxId);
 }

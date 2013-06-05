@@ -3,9 +3,9 @@ package no.kantega.lab.limber.dom.abstraction;
 import no.kantega.lab.limber.dom.element.AbstractNode;
 import no.kantega.lab.limber.dom.filter.QueryMatchMode;
 
+import javax.annotation.Nonnull;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 public interface IDomElementQueryable extends IDomNodeQueryable {
 
@@ -13,9 +13,9 @@ public interface IDomElementQueryable extends IDomNodeQueryable {
 
     List<AbstractNode<?>> children();
 
-    String getAttr(CharSequence key);
+    String getAttr(@Nonnull CharSequence key);
 
-    Set<String> attrs();
+    Map<String, String> getAttrs();
 
     String getId();
 
@@ -23,9 +23,11 @@ public interface IDomElementQueryable extends IDomNodeQueryable {
 
     Map<String, String> getCssStyles();
 
+    boolean isTag(CharSequence tagName);
+
     boolean isAttribute(CharSequence key);
 
-    boolean isAttribute(CharSequence key, CharSequence value, QueryMatchMode queryMatchMode);
+    boolean isAttribute(@Nonnull CharSequence key, CharSequence value, @Nonnull QueryMatchMode queryMatchMode);
 
     boolean isCssClass(CharSequence cssClassName);
 
@@ -33,5 +35,5 @@ public interface IDomElementQueryable extends IDomNodeQueryable {
 
     boolean isCssStyle(CharSequence key);
 
-    boolean isCssStyle(CharSequence key, CharSequence value, QueryMatchMode queryMatchMode);
+    boolean isCssStyle(@Nonnull CharSequence key, CharSequence value, @Nonnull QueryMatchMode queryMatchMode);
 }

@@ -4,21 +4,24 @@ import no.kantega.lab.limber.dom.abstraction.IDomElementFilterable;
 import no.kantega.lab.limber.dom.abstraction.IDomNodeMorphable;
 import no.kantega.lab.limber.dom.abstraction.ISizeable;
 import no.kantega.lab.limber.dom.element.AbstractNode;
+import no.kantega.lab.limber.dom.element.ContentEscapeMode;
 import no.kantega.lab.limber.dom.element.NodeAttachment;
 import no.kantega.lab.limber.dom.filter.*;
 
+import javax.annotation.Nonnull;
 import java.util.*;
 
 public class NodeSelection<T extends NodeSelection<?, S>, S extends AbstractNode<S>>
-        implements IDomNodeMorphable<T, S>, IDomElementFilterable<S, T>, ISizeable {
+        implements IDomNodeMorphable<T, S>, IDomElementFilterable<S>, ISizeable {
 
     private final List<S> selected;
 
-    public NodeSelection(List<S> selected) {
+    public NodeSelection(@Nonnull List<S> selected) {
+        if(selected.contains(null)) throw new IllegalArgumentException();
         this.selected = Collections.unmodifiableList(new ArrayList<S>(selected));
     }
 
-    protected NodeSelection(NodeSelection<?, S> that) {
+    protected NodeSelection(@Nonnull NodeSelection<?, S> that) {
         this.selected = that.getSelected();
     }
 
@@ -60,7 +63,25 @@ public class NodeSelection<T extends NodeSelection<?, S>, S extends AbstractNode
 
     @Override
     @SuppressWarnings("unchecked")
-    public T addNodeAttachment(NodeAttachment<? extends S> nodeAttachment) {
+    public T setContent(CharSequence content) {
+        for (AbstractNode<S> node : getSelected()) {
+            node.setContent(content);
+        }
+        return (T) this;
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public T setContent(CharSequence content, @Nonnull ContentEscapeMode escapeMode) {
+        for (AbstractNode<S> node : getSelected()) {
+            node.setContent(content, escapeMode);
+        }
+        return (T) this;
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public T addNodeAttachment(@Nonnull NodeAttachment<? extends S> nodeAttachment) {
         for (AbstractNode<S> node : getSelected()) {
             node.addNodeAttachment(nodeAttachment);
         }
@@ -69,7 +90,7 @@ public class NodeSelection<T extends NodeSelection<?, S>, S extends AbstractNode
 
     @Override
     @SuppressWarnings("unchecked")
-    public T removeNodeAttachment(NodeAttachment<? extends S> nodeAttachment) {
+    public T removeNodeAttachment(@Nonnull NodeAttachment<? extends S> nodeAttachment) {
         for (AbstractNode<S> node : getSelected()) {
             node.removeNodeAttachment(nodeAttachment);
         }
@@ -97,22 +118,22 @@ public class NodeSelection<T extends NodeSelection<?, S>, S extends AbstractNode
     }
 
     @Override
-    public ElementNodeSelection reduceByTag(CharSequence tagName) {
+    public ElementNodeSelection reduceByTag(@Nonnull CharSequence tagName) {
         return new ElementNodeSelection(this.reduceByFilter(new TagNameFilter(tagName)));
     }
 
     @Override
-    public ElementNodeSelection reduceByAttr(CharSequence key) {
+    public ElementNodeSelection reduceByAttr(@Nonnull CharSequence key) {
         return new ElementNodeSelection(this.reduceByFilter(new AttributeKeyExistenceFilter(key)));
     }
 
     @Override
-    public ElementNodeSelection reduceByAttr(CharSequence key, CharSequence value, QueryMatchMode queryMatchMode) {
+    public ElementNodeSelection reduceByAttr(@Nonnull CharSequence key, CharSequence value, @Nonnull QueryMatchMode queryMatchMode) {
         return new ElementNodeSelection(this.reduceByFilter(new AttributeKeyValueFilter(key, value, queryMatchMode)));
     }
 
     @Override
-    public <V extends AbstractNode<V>, U extends NodeSelection<U, V>> NodeSelection<U, V> reduceByFilter(INodeFilter<V> nodeFilter) {
+    public <V extends AbstractNode<V>, U extends NodeSelection<U, V>> NodeSelection<U, V> reduceByFilter(@Nonnull INodeFilter<V> nodeFilter) {
         Class<V> filterArgumentClass = NodeFilterSupport.getInstance().findFilterParameterClass(nodeFilter);
         List<V> foundNodes = new ArrayList<V>();
         for (S node : getSelected()) {

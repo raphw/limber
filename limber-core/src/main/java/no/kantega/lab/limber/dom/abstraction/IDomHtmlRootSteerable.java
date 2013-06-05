@@ -2,11 +2,15 @@ package no.kantega.lab.limber.dom.abstraction;
 
 import no.kantega.lab.limber.dom.element.ElementNode;
 
+import javax.annotation.Nonnull;
+
 public interface IDomHtmlRootSteerable<T extends IDomHtmlRootSteerable<T>> {
 
-    T setTile(CharSequence charSequence);
+    T setTile(@Nonnull CharSequence charSequence);
 
     String getTitle();
+
+    T clearTitle();
 
     ElementNode getTitleNode();
 

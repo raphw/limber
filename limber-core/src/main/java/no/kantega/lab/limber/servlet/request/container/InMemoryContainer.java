@@ -6,6 +6,7 @@ import no.kantega.lab.limber.servlet.request.creator.IInstanceCreator;
 import no.kantega.lab.limber.servlet.request.standard.InvalidRequestResponse;
 import no.kantega.lab.limber.servlet.request.standard.RedirectionResponse;
 
+import javax.annotation.Nonnull;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -30,7 +31,7 @@ public class InMemoryContainer implements IInstanceContainer {
     }
 
     @Override
-    public IRenderable resolve(ILimberRequest limberRequest, IInstanceCreator instanceCreator) {
+    public IRenderable resolve(@Nonnull ILimberRequest limberRequest, @Nonnull IInstanceCreator instanceCreator) {
 
         // Request is not versioned.
         if (!limberRequest.isVersioned()) {
@@ -57,7 +58,7 @@ public class InMemoryContainer implements IInstanceContainer {
     }
 
     @Override
-    public UUID store(ILimberRequest limberRequest, IRenderable renderable) {
+    public UUID store(@Nonnull ILimberRequest limberRequest, @Nonnull IRenderable renderable) {
         UUID versionNumber = UUID.randomUUID();
         memoryPageStore.put(new InstanceKey(
                 limberRequest.getSessionId(),
@@ -71,7 +72,10 @@ public class InMemoryContainer implements IInstanceContainer {
         private final Class<? extends IRenderable> renderableClass;
         private final UUID versionNumber;
 
-        private InstanceKey(String sessionId, Class<? extends IRenderable> renderableClass, UUID versionNumber) {
+        private InstanceKey(
+                @Nonnull String sessionId,
+                @Nonnull Class<? extends IRenderable> renderableClass,
+                UUID versionNumber) {
             this.sessionId = sessionId;
             this.renderableClass = renderableClass;
             this.versionNumber = versionNumber;
@@ -84,11 +88,9 @@ public class InMemoryContainer implements IInstanceContainer {
 
             InstanceKey that = (InstanceKey) o;
 
-            if (!renderableClass.equals(that.renderableClass)) return false;
-            if (!sessionId.equals(that.sessionId)) return false;
-            if (!versionNumber.equals(that.versionNumber)) return false;
-
-            return true;
+            return renderableClass.equals(that.renderableClass)
+                    && sessionId.equals(that.sessionId)
+                    && versionNumber.equals(that.versionNumber);
         }
 
         @Override

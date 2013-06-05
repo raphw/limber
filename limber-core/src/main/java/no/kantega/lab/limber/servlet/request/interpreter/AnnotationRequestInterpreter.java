@@ -9,6 +9,7 @@ import no.kantega.lab.limber.servlet.request.ILimberRequest;
 import no.kantega.lab.limber.servlet.request.RawRequest;
 import org.reflections.Reflections;
 
+import javax.annotation.Nonnull;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.*;
@@ -31,14 +32,14 @@ public class AnnotationRequestInterpreter implements IRequestInterpreter {
 
     private final Pattern pathPattern;
 
-    public AnnotationRequestInterpreter(String scanPackage) {
+    public AnnotationRequestInterpreter(@Nonnull String scanPackage) {
         pathPattern = Pattern.compile(LIMBER_REQUEST_REGEX);
         this.requestMapping = new HashMap<String, Class<? extends IRenderable>>();
         this.requestMappingBacklink = new WeakHashMap<Class<? extends IRenderable>, String>();
         scanPath(scanPackage);
     }
 
-    private void scanPath(String scanPackage) {
+    private void scanPath(@Nonnull String scanPackage) {
 
         Reflections reflections = new Reflections(scanPackage);
         Collection<Class<?>> foundTypes = reflections.getTypesAnnotatedWith(RequestMapping.class);
@@ -66,12 +67,12 @@ public class AnnotationRequestInterpreter implements IRequestInterpreter {
     }
 
     @SuppressWarnings("unchecked")
-    private Class<? extends IRenderable> castToRenderable(Class<?> type) {
+    private Class<? extends IRenderable> castToRenderable(@Nonnull Class<?> type) {
         return (Class<? extends IRenderable>) type;
     }
 
     @Override
-    public ILimberRequest interpret(RawRequest rawRequest) {
+    public ILimberRequest interpret(@Nonnull RawRequest rawRequest) {
 
         // Try to find registered class.
         Class<? extends IRenderable> renderableClass = requestMapping.get(rawRequest.getRequestURI());
@@ -103,7 +104,7 @@ public class AnnotationRequestInterpreter implements IRequestInterpreter {
     }
 
     @Override
-    public URI resolve(Class<? extends IRenderable> renderableClass, UUID versionId, UUID ajaxId) {
+    public URI resolve(@Nonnull Class<? extends IRenderable> renderableClass, UUID versionId, UUID ajaxId) {
         String backlink = requestMappingBacklink.get(renderableClass);
         if (backlink == null) {
             return null;

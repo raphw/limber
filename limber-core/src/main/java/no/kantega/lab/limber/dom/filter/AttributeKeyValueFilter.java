@@ -2,35 +2,26 @@ package no.kantega.lab.limber.dom.filter;
 
 import no.kantega.lab.limber.dom.element.ElementNode;
 
+import javax.annotation.Nonnull;
+
 public class AttributeKeyValueFilter extends AttributeKeyExistenceFilter {
 
     private final String attrValue;
 
-    private final QueryMatchMode filterMatchMode;
+    private final QueryMatchMode queryMatchMode;
 
-    public AttributeKeyValueFilter(CharSequence attrKey, CharSequence attrValue, QueryMatchMode filterMatchMode) {
+    public AttributeKeyValueFilter(CharSequence attrKey, CharSequence attrValue, QueryMatchMode queryMatchMode) {
         super(attrKey);
         this.attrValue = attrValue.toString();
-        this.filterMatchMode = filterMatchMode;
+        this.queryMatchMode = queryMatchMode;
     }
 
     @Override
-    public boolean filter(ElementNode element) {
+    public boolean filter(@Nonnull ElementNode element) {
         if (!super.filter(element)) {
             return false;
         }
         String actualValue = element.getAttr(getAttrKey());
-        switch (filterMatchMode) {
-            case FULL_MATCH:
-                return attrValue.equals(actualValue);
-            case ENDS_WITH:
-                return attrValue.endsWith(actualValue);
-            case STARTS_WITH:
-                return attrValue.startsWith(actualValue);
-            case CONTAINS:
-                return attrValue.contains(actualValue);
-            default:
-                return false;
-        }
+        return queryMatchMode.compare(actualValue, attrValue);
     }
 }
