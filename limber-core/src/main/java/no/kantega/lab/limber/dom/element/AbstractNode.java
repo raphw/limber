@@ -56,11 +56,6 @@ public abstract class AbstractNode<N extends AbstractNode<N>> implements IDomNod
     }
 
     @Override
-    public boolean isEmpty() {
-        return size() == 0;
-    }
-
-    @Override
     @SuppressWarnings("unchecked")
     public N clone() {
         try {

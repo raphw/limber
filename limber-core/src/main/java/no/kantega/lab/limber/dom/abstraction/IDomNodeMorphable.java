@@ -6,7 +6,7 @@ import no.kantega.lab.limber.dom.element.NodeAttachment;
 
 import javax.annotation.Nonnull;
 
-public interface IDomNodeMorphable<M extends IDomNodeMorphable<?, N>, N extends AbstractNode<N>> extends Cloneable {
+public interface IDomNodeMorphable<N extends AbstractNode<N>, M extends IDomNodeMorphable<N, ?>> extends Cloneable {
 
     M clear();
 

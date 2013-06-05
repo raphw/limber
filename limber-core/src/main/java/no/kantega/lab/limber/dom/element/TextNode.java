@@ -53,6 +53,11 @@ public class TextNode extends AbstractNode<TextNode> implements IDomTextNodeMorp
     }
 
     @Override
+    public boolean isEmpty() {
+        return size() == 0;
+    }
+
+    @Override
     public String toString() {
         return String.format("TextNode[%b,%s]", isRendered(), content);
     }

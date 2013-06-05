@@ -8,7 +8,7 @@ import javax.annotation.Nonnull;
 import java.util.List;
 import java.util.Map;
 
-public interface IDomElementMorphable<M extends IDomElementMorphable<M>> extends IDomNodeMorphable<M, ElementNode> {
+public interface IDomElementMorphable<M extends IDomElementMorphable<M>> extends IDomNodeMorphable<ElementNode, M> {
 
     M setTagName(@Nonnull CharSequence tagName);
 

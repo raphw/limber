@@ -2,7 +2,7 @@ package no.kantega.lab.limber.dom.selection;
 
 import no.kantega.lab.limber.dom.abstraction.IDomElementFilterable;
 import no.kantega.lab.limber.dom.abstraction.IDomNodeMorphable;
-import no.kantega.lab.limber.dom.abstraction.ISizeable;
+import no.kantega.lab.limber.dom.abstraction.IDomSelectionQueryable;
 import no.kantega.lab.limber.dom.element.AbstractNode;
 import no.kantega.lab.limber.dom.element.ContentEscapeMode;
 import no.kantega.lab.limber.dom.element.NodeAttachment;
@@ -12,7 +12,7 @@ import javax.annotation.Nonnull;
 import java.util.*;
 
 public class NodeSelection<N extends AbstractNode<N>, C extends NodeSelection<N, ?>>
-        implements IDomNodeMorphable<C, N>, IDomElementFilterable<N>, ISizeable {
+        implements IDomNodeMorphable<N, C>, IDomElementFilterable<N>, IDomSelectionQueryable {
 
     private final List<N> selected;
 

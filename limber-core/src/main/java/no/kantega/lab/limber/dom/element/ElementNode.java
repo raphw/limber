@@ -155,6 +155,11 @@ public class ElementNode extends AbstractNode<ElementNode> implements IDomElemen
         }
     }
 
+    @Override
+    public boolean isEmpty() {
+        return size() == 0;
+    }
+
     private static String normalizeAttributeKey(CharSequence key) {
         if (StringUtils.isBlank(key)) throw new IllegalArgumentException();
         return key.toString().toLowerCase(Locale.US);

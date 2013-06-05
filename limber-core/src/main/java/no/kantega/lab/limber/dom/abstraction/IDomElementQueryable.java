@@ -33,6 +33,8 @@ public interface IDomElementQueryable extends IDomNodeQueryable {
 
     boolean isIdSet();
 
+    int size();
+
     boolean isCssStyle(CharSequence key);
 
     boolean isCssStyle(@Nonnull CharSequence key, CharSequence value, @Nonnull QueryMatchMode queryMatchMode);
