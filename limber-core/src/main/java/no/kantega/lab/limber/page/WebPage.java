@@ -4,52 +4,45 @@ import no.kantega.lab.limber.ajax.abstraction.AjaxEventTrigger;
 import no.kantega.lab.limber.ajax.abstraction.DefaultAjaxEvent;
 import no.kantega.lab.limber.ajax.abstraction.IAjaxCallback;
 import no.kantega.lab.limber.ajax.abstraction.IAjaxEvent;
-import no.kantega.lab.limber.dom.parser.HtmlSAXParser;
+import no.kantega.lab.limber.dom.element.ElementNode;
+import no.kantega.lab.limber.dom.parser.DomTreeProvider;
 import no.kantega.lab.limber.dom.renderer.DomTreeRenderer;
 import no.kantega.lab.limber.dom.selection.HtmlDocumentSelection;
 import no.kantega.lab.limber.servlet.IRenderable;
 import no.kantega.lab.limber.servlet.IResponseContainer;
+import no.kantega.lab.limber.servlet.meta.IDomSelectable;
+import no.kantega.lab.limber.servlet.meta.ResourceIdentification;
+import no.kantega.lab.limber.servlet.meta.ResourceType;
 import org.apache.commons.lang3.StringUtils;
 import org.jsoup.nodes.Element;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-public class WebPage implements IRenderable {
+@ResourceIdentification(ResourceType.HTML)
+public class WebPage implements IRenderable, IDomSelectable<HtmlDocumentSelection, ElementNode> {
 
     private final HtmlDocumentSelection htmlDocumentSelection;
-
     private final Map<UUID, IAjaxEvent> ajaxEventRegister;
 
     // TODO: Remove this hack and replace by actual solution (annotation methods)
     private boolean renderedAjax = false;
 
     public WebPage() {
-        htmlDocumentSelection = new HtmlDocumentSelection(HtmlSAXParser.make().translateToDomTree(getDocumentResourceStream()));
+        htmlDocumentSelection = DomTreeProvider.getInstance().provideDocumentSelection(getClass());
         ajaxEventRegister = new HashMap<UUID, IAjaxEvent>();
     }
 
+    @Override
     public final HtmlDocumentSelection dom() {
         return htmlDocumentSelection;
     }
 
-    public final InputStream getDocumentResourceStream() {
-        String name = getClass().getSimpleName() + ".html";
-        InputStream inputStream = getClass().getResourceAsStream(name);
-        if (inputStream == null) {
-            throw new RuntimeException("Cannot find resource.");
-        }
-
-        return inputStream;
-    }
-
     @Override
     public final boolean render(OutputStream outputStream, IResponseContainer response) throws IOException {
-
 
         if (response.getRequest().isAjax()) {
             UUID ajaxId = response.getRequest().getAjaxId();

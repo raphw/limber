@@ -3,7 +3,7 @@ package no.kantega.lab.limber.example.page;
 import no.kantega.lab.limber.dom.element.TextNode;
 import no.kantega.lab.limber.dom.selection.ElementNodeSelection;
 import no.kantega.lab.limber.page.WebPage;
-import no.kantega.lab.limber.page.annotations.RequestMapping;
+import no.kantega.lab.limber.servlet.meta.RequestMapping;
 
 @RequestMapping("/")
 public class TestWebPage extends WebPage {

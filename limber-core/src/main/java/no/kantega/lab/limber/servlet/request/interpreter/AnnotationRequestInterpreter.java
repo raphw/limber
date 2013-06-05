@@ -2,8 +2,8 @@ package no.kantega.lab.limber.servlet.request.interpreter;
 
 import no.kantega.lab.limber.exception.LimberRequestMappingException;
 import no.kantega.lab.limber.exception.LimberRequestPathConflictException;
-import no.kantega.lab.limber.page.annotations.RequestMapping;
 import no.kantega.lab.limber.servlet.IRenderable;
+import no.kantega.lab.limber.servlet.meta.RequestMapping;
 import no.kantega.lab.limber.servlet.request.DefaultLimberRequest;
 import no.kantega.lab.limber.servlet.request.ILimberRequest;
 import no.kantega.lab.limber.servlet.request.RawRequest;
