@@ -7,12 +7,11 @@ import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class AbstractNode<T extends AbstractNode<T>> implements IDomNodeMorphable<T, T>,
-        IDomNodeQueryable, Cloneable {
+public abstract class AbstractNode<N extends AbstractNode<N>> implements IDomNodeMorphable<N, N>, IDomNodeQueryable {
 
     private boolean rendered;
     private ElementNode parent;
-    private List<NodeAttachment<? extends T>> nodeAttachments;
+    private List<NodeAttachment<? extends N>> nodeAttachments;
 
     protected AbstractNode() {
         this.rendered = true;
@@ -20,28 +19,28 @@ public abstract class AbstractNode<T extends AbstractNode<T>> implements IDomNod
 
     @Override
     @SuppressWarnings("unchecked")
-    public T addNodeAttachment(@Nonnull NodeAttachment<? extends T> nodeAttachment) {
-        if (nodeAttachments == null) nodeAttachments = new ArrayList<NodeAttachment<? extends T>>();
+    public N addNodeAttachment(@Nonnull NodeAttachment<? extends N> nodeAttachment) {
+        if (nodeAttachments == null) nodeAttachments = new ArrayList<NodeAttachment<? extends N>>();
         nodeAttachments.add(nodeAttachment);
-        return (T) this;
+        return (N) this;
     }
 
     @Override
     @SuppressWarnings("unchecked")
-    public T removeNodeAttachment(@Nonnull NodeAttachment<? extends T> nodeAttachment) {
-        if (nodeAttachments == null) return (T) this;
+    public N removeNodeAttachment(@Nonnull NodeAttachment<? extends N> nodeAttachment) {
+        if (nodeAttachments == null) return (N) this;
         nodeAttachments.remove(nodeAttachment);
         if (nodeAttachments.size() == 0) nodeAttachments = null;
-        return (T) this;
+        return (N) this;
     }
 
     @Override
     @SuppressWarnings("unchecked")
-    public T remove() {
-        if (parent == null) return (T) this;
+    public N remove() {
+        if (parent == null) return (N) this;
         parent.removeChild(this);
         parent = null;
-        return (T) this;
+        return (N) this;
     }
 
     @Override
@@ -51,9 +50,9 @@ public abstract class AbstractNode<T extends AbstractNode<T>> implements IDomNod
 
     @Override
     @SuppressWarnings("unchecked")
-    public T setRendered(boolean rendered) {
+    public N setRendered(boolean rendered) {
         this.rendered = rendered;
-        return (T) this;
+        return (N) this;
     }
 
     @Override
@@ -63,9 +62,9 @@ public abstract class AbstractNode<T extends AbstractNode<T>> implements IDomNod
 
     @Override
     @SuppressWarnings("unchecked")
-    public T clone() {
+    public N clone() {
         try {
-            return (T) super.clone();
+            return (N) super.clone();
         } catch (CloneNotSupportedException e) {
             throw new IllegalStateException();
         }

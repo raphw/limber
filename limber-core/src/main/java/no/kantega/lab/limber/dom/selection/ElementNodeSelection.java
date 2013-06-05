@@ -12,14 +12,14 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-public class ElementNodeSelection extends NodeSelection<ElementNodeSelection, ElementNode>
+public class ElementNodeSelection extends NodeSelection<ElementNode, ElementNodeSelection>
         implements IDomElementMorphable<ElementNodeSelection>, IDomElementBrowsable<ElementNode> {
 
     public ElementNodeSelection(@Nonnull List<ElementNode> selected) {
         super(selected);
     }
 
-    public ElementNodeSelection(@Nonnull NodeSelection<?, ElementNode> that) {
+    public ElementNodeSelection(@Nonnull NodeSelection<ElementNode, ?> that) {
         super(that);
     }
 
@@ -286,17 +286,17 @@ public class ElementNodeSelection extends NodeSelection<ElementNodeSelection, El
     }
 
     @Override
-    public <S extends AbstractNode<S>, U extends NodeSelection<U, S>> NodeSelection<U, S> findByFilter(@Nonnull INodeFilter<S> nodeFilter) {
+    public <N2 extends AbstractNode<N2>, C2 extends NodeSelection<N2, C2>> NodeSelection<N2, C2> findByFilter(@Nonnull INodeFilter<N2> nodeFilter) {
         return findByFilter(nodeFilter, Integer.MAX_VALUE);
     }
 
     @Override
-    public <S extends AbstractNode<S>, U extends NodeSelection<U, S>> NodeSelection<U, S> findByFilter(@Nonnull INodeFilter<S> nodeFilter, int maxDepth) {
-        List<S> resultSelection = new LinkedList<S>();
+    public <N2 extends AbstractNode<N2>, C2 extends NodeSelection<N2, C2>> NodeSelection<N2, C2> findByFilter(@Nonnull INodeFilter<N2> nodeFilter, int maxDepth) {
+        List<N2> resultSelection = new LinkedList<N2>();
         for (ElementNode elementNode : getSelected()) {
             resultSelection.addAll(NodeFilterSupport.getInstance().filter(elementNode, nodeFilter, maxDepth));
         }
-        return new NodeSelection<U, S>(resultSelection);
+        return new NodeSelection<N2, C2>(resultSelection);
     }
 
     @Override

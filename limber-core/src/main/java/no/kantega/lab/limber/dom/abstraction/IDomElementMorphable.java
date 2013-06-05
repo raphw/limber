@@ -8,55 +8,55 @@ import javax.annotation.Nonnull;
 import java.util.List;
 import java.util.Map;
 
-public interface IDomElementMorphable<T extends IDomElementMorphable<T>> extends IDomNodeMorphable<T, ElementNode> {
+public interface IDomElementMorphable<M extends IDomElementMorphable<M>> extends IDomNodeMorphable<M, ElementNode> {
 
-    T setTagName(@Nonnull CharSequence tagName);
+    M setTagName(@Nonnull CharSequence tagName);
 
-    T addChild(int index, @Nonnull AbstractNode<?> node);
+    M addChild(int index, @Nonnull AbstractNode<?> node);
 
-    T addChild(int index, @Nonnull CharSequence tagName);
+    M addChild(int index, @Nonnull CharSequence tagName);
 
-    T addText(int index, @Nonnull CharSequence text);
+    M addText(int index, @Nonnull CharSequence text);
 
-    T addText(int index, @Nonnull CharSequence text, @Nonnull ContentEscapeMode contentEscapeMode);
+    M addText(int index, @Nonnull CharSequence text, @Nonnull ContentEscapeMode contentEscapeMode);
 
-    T appendChild(@Nonnull AbstractNode<?> node);
+    M appendChild(@Nonnull AbstractNode<?> node);
 
-    T appendChild(@Nonnull CharSequence tagName);
+    M appendChild(@Nonnull CharSequence tagName);
 
-    T appendText(@Nonnull CharSequence text);
+    M appendText(@Nonnull CharSequence text);
 
-    T appendText(@Nonnull CharSequence text, @Nonnull ContentEscapeMode contentEscapeMode);
+    M appendText(@Nonnull CharSequence text, @Nonnull ContentEscapeMode contentEscapeMode);
 
-    T prependChild(@Nonnull AbstractNode<?> node);
+    M prependChild(@Nonnull AbstractNode<?> node);
 
-    T prependChild(@Nonnull CharSequence tagName);
+    M prependChild(@Nonnull CharSequence tagName);
 
-    T prependText(@Nonnull CharSequence text);
+    M prependText(@Nonnull CharSequence text);
 
-    T prependText(@Nonnull CharSequence text, @Nonnull ContentEscapeMode contentEscapeMode);
+    M prependText(@Nonnull CharSequence text, @Nonnull ContentEscapeMode contentEscapeMode);
 
-    T putAttr(@Nonnull CharSequence key, CharSequence value);
+    M putAttr(@Nonnull CharSequence key, CharSequence value);
 
-    T removeAttr(@Nonnull CharSequence key);
+    M removeAttr(@Nonnull CharSequence key);
 
-    T setId(@Nonnull CharSequence id);
+    M setId(@Nonnull CharSequence id);
 
-    T setRandomId();
+    M setRandomId();
 
-    T setRandomIdIfNone();
+    M setRandomIdIfNone();
 
-    T removeId();
+    M removeId();
 
-    T addCssClass(@Nonnull CharSequence cssClassName);
+    M addCssClass(@Nonnull CharSequence cssClassName);
 
-    T setCssClasses(@Nonnull List<? extends CharSequence> cssClassNames);
+    M setCssClasses(@Nonnull List<? extends CharSequence> cssClassNames);
 
-    T removeCssClass(@Nonnull CharSequence cssClassName);
+    M removeCssClass(@Nonnull CharSequence cssClassName);
 
-    T addCssStyle(@Nonnull CharSequence styleKey, CharSequence styleValue);
+    M addCssStyle(@Nonnull CharSequence styleKey, CharSequence styleValue);
 
-    T setCssStyles(@Nonnull Map<? extends CharSequence, ? extends CharSequence> cssStyles);
+    M setCssStyles(@Nonnull Map<? extends CharSequence, ? extends CharSequence> cssStyles);
 
-    T removeCssStyle(@Nonnull CharSequence styleKey);
+    M removeCssStyle(@Nonnull CharSequence styleKey);
 }

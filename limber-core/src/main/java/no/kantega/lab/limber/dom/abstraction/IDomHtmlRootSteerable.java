@@ -4,13 +4,13 @@ import no.kantega.lab.limber.dom.element.ElementNode;
 
 import javax.annotation.Nonnull;
 
-public interface IDomHtmlRootSteerable<T extends IDomHtmlRootSteerable<T>> {
+public interface IDomHtmlRootSteerable<R extends IDomHtmlRootSteerable<R>> {
 
-    T setTile(@Nonnull CharSequence charSequence);
+    R setTile(@Nonnull CharSequence charSequence);
 
     String getTitle();
 
-    T clearTitle();
+    R clearTitle();
 
     ElementNode getTitleNode();
 

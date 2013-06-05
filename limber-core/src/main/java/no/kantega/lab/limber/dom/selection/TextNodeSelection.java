@@ -6,13 +6,13 @@ import no.kantega.lab.limber.dom.element.TextNode;
 import javax.annotation.Nonnull;
 import java.util.List;
 
-public class TextNodeSelection extends NodeSelection<TextNodeSelection, TextNode> implements IDomTextNodeMorphable<TextNodeSelection> {
+public class TextNodeSelection extends NodeSelection<TextNode, TextNodeSelection> implements IDomTextNodeMorphable<TextNodeSelection> {
 
     public TextNodeSelection(@Nonnull List<TextNode> selected) {
         super(selected);
     }
 
-    public TextNodeSelection(@Nonnull NodeSelection<?, TextNode> that) {
+    public TextNodeSelection(@Nonnull NodeSelection<TextNode, ?> that) {
         super(that);
     }
 

@@ -4,7 +4,7 @@ import no.kantega.lab.limber.dom.element.AbstractNode;
 
 import javax.annotation.Nonnull;
 
-public interface INodeFilter<T extends AbstractNode<T>> {
+public interface INodeFilter<N extends AbstractNode<N>> {
 
-    boolean filter(@Nonnull T element);
+    boolean filter(@Nonnull N element);
 }

@@ -6,19 +6,21 @@ import no.kantega.lab.limber.dom.element.NodeAttachment;
 
 import javax.annotation.Nonnull;
 
-public interface IDomNodeMorphable<T extends IDomNodeMorphable<?, S>, S extends AbstractNode<S>> {
+public interface IDomNodeMorphable<M extends IDomNodeMorphable<?, N>, N extends AbstractNode<N>> extends Cloneable {
 
-    T clear();
+    M clear();
 
-    T setRendered(boolean render);
+    M setRendered(boolean render);
 
-    T setContent(CharSequence content);
+    M setContent(CharSequence content);
 
-    T setContent(CharSequence content, @Nonnull ContentEscapeMode escapeMode);
+    M setContent(CharSequence content, @Nonnull ContentEscapeMode escapeMode);
 
-    T remove();
+    M remove();
 
-    T addNodeAttachment(@Nonnull NodeAttachment<? extends S> nodeAttachment);
+    M addNodeAttachment(@Nonnull NodeAttachment<? extends N> nodeAttachment);
 
-    T removeNodeAttachment(@Nonnull NodeAttachment<? extends S> nodeAttachment);
+    M removeNodeAttachment(@Nonnull NodeAttachment<? extends N> nodeAttachment);
+
+    M clone();
 }

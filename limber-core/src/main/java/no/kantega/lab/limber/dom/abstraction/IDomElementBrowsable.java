@@ -10,7 +10,7 @@ import no.kantega.lab.limber.dom.selection.TextNodeSelection;
 
 import javax.annotation.Nonnull;
 
-public interface IDomElementBrowsable<U extends AbstractNode<?>> extends Iterable<U> {
+public interface IDomElementBrowsable<N extends AbstractNode<?>> extends Iterable<N> {
 
     ElementNodeSelection findByTag(@Nonnull CharSequence tagName);
 
@@ -32,9 +32,9 @@ public interface IDomElementBrowsable<U extends AbstractNode<?>> extends Iterabl
 
     ElementNodeSelection findByAttr(@Nonnull CharSequence key, CharSequence value, @Nonnull QueryMatchMode queryMatchMode, int maxDepth);
 
-    <S extends AbstractNode<S>, T extends NodeSelection<T, S>> NodeSelection<T, S> findByFilter(@Nonnull INodeFilter<S> nodeFilter);
+    <N2 extends AbstractNode<N2>, C2 extends NodeSelection<N2, C2>> NodeSelection<N2, C2> findByFilter(@Nonnull INodeFilter<N2> nodeFilter);
 
-    <S extends AbstractNode<S>, T extends NodeSelection<T, S>> NodeSelection<T, S> findByFilter(@Nonnull INodeFilter<S> nodeFilter, int maxDepth);
+    <N2 extends AbstractNode<N2>, C2 extends NodeSelection<N2, C2>> NodeSelection<N2, C2> findByFilter(@Nonnull INodeFilter<N2> nodeFilter, int maxDepth);
 
     TextNodeSelection findTextNodes();
 

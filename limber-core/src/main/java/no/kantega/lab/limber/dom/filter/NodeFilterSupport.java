@@ -20,13 +20,13 @@ public class NodeFilterSupport {
         /* empty */
     }
 
-    public <T extends AbstractNode<T>> List<T> filter(@Nonnull ElementNode origin,
-                                                      @Nonnull INodeFilter<T> nodeFilter,
+    public <N extends AbstractNode<N>> List<N> filter(@Nonnull ElementNode origin,
+                                                      @Nonnull INodeFilter<N> nodeFilter,
                                                       int maxDepth) {
 
-        Class<T> filterParameterClass = findFilterParameterClass(nodeFilter);
+        Class<? extends N> filterParameterClass = findFilterParameterClass(nodeFilter);
 
-        List<T> foundNodes = new ArrayList<T>();
+        List<N> foundNodes = new ArrayList<N>();
         if (maxDepth < 1) return foundNodes;
         Queue<ElementNode> nodesToScan = new ArrayDeque<ElementNode>();
         nodesToScan.add(origin);
@@ -45,7 +45,7 @@ public class NodeFilterSupport {
             }
             for (AbstractNode<?> node : current.children()) {
                 if (filterParameterClass.isAssignableFrom(node.getClass())) {
-                    T castNode = filterParameterClass.cast(node);
+                    N castNode = filterParameterClass.cast(node);
                     if (nodeFilter.filter(castNode)) {
                         foundNodes.add(castNode);
                     }
@@ -68,14 +68,14 @@ public class NodeFilterSupport {
     }
 
     @SuppressWarnings("unchecked")
-    public <T extends AbstractNode<T>> Class<T> findFilterParameterClass(@Nonnull INodeFilter<T> filter) {
+    public <N extends AbstractNode<N>> Class<? extends N> findFilterParameterClass(@Nonnull INodeFilter<N> filter) {
         Class<?> currentClass = filter.getClass();
         do {
             for (Type interfaceType : currentClass.getGenericInterfaces()) {
                 ParameterizedType parameterizedInterfaceType = (ParameterizedType) interfaceType;
                 Class<?> interfaceClass = (Class<?>) parameterizedInterfaceType.getRawType();
                 if (interfaceClass == INodeFilter.class) {
-                    return (Class<T>) parameterizedInterfaceType.getActualTypeArguments()[0];
+                    return (Class<N>) parameterizedInterfaceType.getActualTypeArguments()[0];
                 }
             }
         } while ((currentClass = currentClass.getSuperclass()) != null);

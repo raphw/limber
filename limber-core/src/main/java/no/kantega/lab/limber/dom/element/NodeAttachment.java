@@ -1,6 +1,6 @@
 package no.kantega.lab.limber.dom.element;
 
-public interface NodeAttachment<T extends AbstractNode> {
+public interface NodeAttachment<N extends AbstractNode<N>> {
 
-    void visit(T node);
+    void visit(N node);
 }

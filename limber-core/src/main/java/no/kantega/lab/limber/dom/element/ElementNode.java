@@ -12,8 +12,8 @@ import org.apache.commons.lang3.StringUtils;
 import javax.annotation.Nonnull;
 import java.util.*;
 
-public class ElementNode extends AbstractNode<ElementNode>
-        implements IDomElementMorphable<ElementNode>, IDomElementBrowsable<AbstractNode<?>>, IDomElementQueryable {
+public class ElementNode extends AbstractNode<ElementNode> implements IDomElementMorphable<ElementNode>,
+        IDomElementBrowsable<AbstractNode<?>>, IDomElementQueryable {
 
     private static final String HTML_ATTR_CLASS = "class";
     private static final String HTML_ATTR_STYLE = "style";
@@ -410,13 +410,13 @@ public class ElementNode extends AbstractNode<ElementNode>
     }
 
     @Override
-    public <S extends AbstractNode<S>, T extends NodeSelection<T, S>> NodeSelection<T, S> findByFilter(@Nonnull INodeFilter<S> nodeFilter) {
+    public <N2 extends AbstractNode<N2>, C2 extends NodeSelection<N2, C2>> NodeSelection<N2, C2> findByFilter(@Nonnull INodeFilter<N2> nodeFilter) {
         return findByFilter(nodeFilter, Integer.MAX_VALUE);
     }
 
     @Override
-    public <S extends AbstractNode<S>, T extends NodeSelection<T, S>> NodeSelection<T, S> findByFilter(@Nonnull INodeFilter<S> nodeFilter, int maxDepth) {
-        return new NodeSelection<T, S>(NodeFilterSupport.getInstance().filter(this, nodeFilter, maxDepth));
+    public <N2 extends AbstractNode<N2>, C2 extends NodeSelection<N2, C2>> NodeSelection<N2, C2> findByFilter(@Nonnull INodeFilter<N2> nodeFilter, int maxDepth) {
+        return new NodeSelection<N2, C2>(NodeFilterSupport.getInstance().filter(this, nodeFilter, maxDepth));
     }
 
     @Override
