@@ -352,7 +352,7 @@ public class ElementNodeSelection extends NodeSelection<ElementNode, ElementNode
     public <N2 extends AbstractNode<?>, C2 extends NodeSelection<N2, C2>> NodeSelection<N2, C2> findByFilter(@Nonnull INodeFilter<N2> nodeFilter, int maxDepth) {
         LinkedHashSet<N2> resultSelection = new LinkedHashSet<N2>();
         for (ElementNode elementNode : getSelected()) {
-            resultSelection.addAll(NodeFilterSupport.getInstance().filterBreadthFirst(elementNode, nodeFilter, maxDepth));
+            resultSelection.addAll(NodeFilterSupport.getInstance().filterNodeTree(elementNode, nodeFilter, maxDepth));
         }
         return new NodeSelection<N2, C2>(resultSelection);
     }

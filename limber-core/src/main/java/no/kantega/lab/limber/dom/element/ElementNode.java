@@ -472,7 +472,7 @@ public class ElementNode extends AbstractNode<ElementNode> implements IDomElemen
     @Nonnull
     @Override
     public <N2 extends AbstractNode<?>, C2 extends NodeSelection<N2, C2>> NodeSelection<N2, C2> findByFilter(@Nonnull INodeFilter<N2> nodeFilter, int maxDepth) {
-        return new NodeSelection<N2, C2>(NodeFilterSupport.getInstance().filterBreadthFirst(this, nodeFilter, maxDepth));
+        return new NodeSelection<N2, C2>(NodeFilterSupport.getInstance().filterNodeTree(this, nodeFilter, maxDepth));
     }
 
     @Nonnull

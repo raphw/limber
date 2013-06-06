@@ -166,18 +166,7 @@ public class NodeSelection<N extends AbstractNode<?>, C extends NodeSelection<N,
     @Override
     @SuppressWarnings("unchecked")
     public <N2 extends AbstractNode<?>, C2 extends NodeSelection<N2, C2>> NodeSelection<N2, C2> reduceByFilter(@Nonnull INodeFilter<N2> nodeFilter) {
-        Class<?> filterArgumentClass = NodeFilterSupport.getInstance().evaluateFilterParameterType(nodeFilter);
-        List<N2> foundNodes = new ArrayList<N2>();
-        for (N node : getSelected()) {
-            if (!filterArgumentClass.isAssignableFrom(filterArgumentClass)) {
-                continue;
-            }
-            N2 castNode = (N2) node;
-            if (nodeFilter.filter(castNode)) {
-                foundNodes.add(castNode);
-            }
-        }
-        return new NodeSelection<N2, C2>(foundNodes);
+        return new NodeSelection<N2, C2>(NodeFilterSupport.getInstance().filterNodeList(getSelected(), nodeFilter));
     }
 
     @Nonnull
