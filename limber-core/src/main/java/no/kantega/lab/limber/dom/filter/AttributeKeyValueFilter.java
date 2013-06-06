@@ -1,6 +1,7 @@
 package no.kantega.lab.limber.dom.filter;
 
 import no.kantega.lab.limber.dom.element.ElementNode;
+import no.kantega.lab.limber.dom.filter.util.QueryMatchMode;
 
 import javax.annotation.Nonnull;
 

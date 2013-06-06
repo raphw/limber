@@ -1,13 +1,22 @@
 package no.kantega.lab.limber.dom.element;
 
+import no.kantega.lab.limber.dom.abstraction.IDomNodeBrowsable;
 import no.kantega.lab.limber.dom.abstraction.IDomNodeMorphable;
 import no.kantega.lab.limber.dom.abstraction.IDomNodeQueryable;
+import no.kantega.lab.limber.dom.filter.BooleanRepeaterFilter;
+import no.kantega.lab.limber.dom.filter.ConjunctionFilter;
+import no.kantega.lab.limber.dom.filter.INodeFilter;
+import no.kantega.lab.limber.dom.filter.NodeExclusionFilter;
+import no.kantega.lab.limber.dom.filter.util.NodeFilterSupport;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
-public abstract class AbstractNode<N extends AbstractNode<N>> implements IDomNodeMorphable<N, N>, IDomNodeQueryable {
+public abstract class AbstractNode<N extends AbstractNode<N>> implements IDomNodeMorphable<N, N>,
+        IDomNodeQueryable, IDomNodeBrowsable {
 
     private boolean rendered;
     private ElementNode parent;
@@ -57,6 +66,45 @@ public abstract class AbstractNode<N extends AbstractNode<N>> implements IDomNod
     public N setRendered(boolean rendered) {
         this.rendered = rendered;
         return (N) this;
+    }
+
+    @Override
+    public ElementNode getParent() {
+        return parent;
+    }
+
+    @Nonnull
+    @Override
+    public List<AbstractNode<?>> getSiblings() {
+        return getSiblings(false);
+    }
+
+    @Nonnull
+    @Override
+    public List<AbstractNode<?>> getSiblings(boolean includeMe) {
+        return getSiblings(new BooleanRepeaterFilter(true), includeMe);
+    }
+
+    @Nonnull
+    @Override
+    public <N2 extends AbstractNode<N2>> List<N2> getSiblings(@Nonnull INodeFilter<N2> nodeFilter) {
+        return getSiblings(nodeFilter, false);
+    }
+
+    @Nonnull
+    @Override
+    public <N2 extends AbstractNode<N2>> List<N2> getSiblings(@Nonnull INodeFilter<N2> nodeFilter, boolean includeMe) {
+        if (getParent() != null) {
+            if (!includeMe) nodeFilter = new ConjunctionFilter<N2>(nodeFilter, new NodeExclusionFilter<N2>(this));
+            return getParent().getChildren(nodeFilter);
+        } else {
+            if (!includeMe) {
+                return Collections.emptyList();
+            } else {
+                N2 filterResultNode = NodeFilterSupport.getInstance().filterNode(this, nodeFilter);
+                return filterResultNode == null ? Collections.<N2>emptyList() : Arrays.asList(filterResultNode);
+            }
+        }
     }
 
     @Nonnull

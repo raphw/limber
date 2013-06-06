@@ -1,4 +1,4 @@
-package no.kantega.lab.limber.dom.filter;
+package no.kantega.lab.limber.dom.filter.util;
 
 import org.apache.commons.lang3.StringUtils;
 

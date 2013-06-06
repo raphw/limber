@@ -50,7 +50,7 @@ public class DomTreeRenderer {
         }
         writer.append('>');
 
-        for (AbstractNode<?> child : elementNode.children()) {
+        for (AbstractNode<?> child : elementNode.getChildren()) {
             render(child, writer);
         }
 

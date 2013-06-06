@@ -1,7 +1,6 @@
 package no.kantega.lab.limber.dom.abstraction;
 
-import no.kantega.lab.limber.dom.element.AbstractNode;
-import no.kantega.lab.limber.dom.filter.QueryMatchMode;
+import no.kantega.lab.limber.dom.filter.util.QueryMatchMode;
 
 import javax.annotation.Nonnull;
 import java.util.List;
@@ -11,9 +10,6 @@ public interface IDomElementQueryable extends IDomNodeQueryable {
 
     @Nonnull
     String getTagName();
-
-    @Nonnull
-    List<AbstractNode<?>> children();
 
     String getAttr(@Nonnull CharSequence key);
 

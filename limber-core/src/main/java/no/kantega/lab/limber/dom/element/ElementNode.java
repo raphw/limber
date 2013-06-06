@@ -4,6 +4,8 @@ import no.kantega.lab.limber.dom.abstraction.IDomElementBrowsable;
 import no.kantega.lab.limber.dom.abstraction.IDomElementMorphable;
 import no.kantega.lab.limber.dom.abstraction.IDomElementQueryable;
 import no.kantega.lab.limber.dom.filter.*;
+import no.kantega.lab.limber.dom.filter.util.NodeFilterSupport;
+import no.kantega.lab.limber.dom.filter.util.QueryMatchMode;
 import no.kantega.lab.limber.dom.selection.ElementNodeSelection;
 import no.kantega.lab.limber.dom.selection.NodeSelection;
 import no.kantega.lab.limber.dom.selection.TextNodeSelection;
@@ -87,12 +89,17 @@ public class ElementNode extends AbstractNode<ElementNode> implements IDomElemen
 
     @Nonnull
     @Override
-    public List<AbstractNode<?>> children() {
+    public List<AbstractNode<?>> getChildren() {
         if (children == null) {
             return Collections.emptyList();
         } else {
             return Collections.unmodifiableList(children);
         }
+    }
+
+    @Nonnull
+    @Override
+    public <N2 extends AbstractNode<N2>> List<N2> getChildren(@Nonnull INodeFilter<N2> nodeFilter) {
     }
 
     @Nonnull
@@ -498,12 +505,12 @@ public class ElementNode extends AbstractNode<ElementNode> implements IDomElemen
 
             @Override
             public boolean hasNext() {
-                return iterationCount < children().size();
+                return iterationCount < getChildren().size();
             }
 
             @Override
             public AbstractNode<?> next() {
-                return children().get(iterationCount++);
+                return getChildren().get(iterationCount++);
             }
 
             @Override
@@ -525,7 +532,7 @@ public class ElementNode extends AbstractNode<ElementNode> implements IDomElemen
                 stringBuilder.append(entry.getKey()).append('=').append(entry.getValue());
             }
         }
-        for (AbstractNode<?> node : children()) {
+        for (AbstractNode<?> node : getChildren()) {
             stringBuilder.append('\n');
             stringBuilder.append(node.toString());
         }

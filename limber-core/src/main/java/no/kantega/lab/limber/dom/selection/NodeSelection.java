@@ -7,6 +7,8 @@ import no.kantega.lab.limber.dom.element.AbstractNode;
 import no.kantega.lab.limber.dom.element.ContentEscapeMode;
 import no.kantega.lab.limber.dom.element.NodeAttachment;
 import no.kantega.lab.limber.dom.filter.*;
+import no.kantega.lab.limber.dom.filter.util.NodeFilterSupport;
+import no.kantega.lab.limber.dom.filter.util.QueryMatchMode;
 
 import javax.annotation.Nonnull;
 import java.util.*;

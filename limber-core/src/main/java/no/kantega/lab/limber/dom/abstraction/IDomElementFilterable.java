@@ -2,7 +2,7 @@ package no.kantega.lab.limber.dom.abstraction;
 
 import no.kantega.lab.limber.dom.element.AbstractNode;
 import no.kantega.lab.limber.dom.filter.INodeFilter;
-import no.kantega.lab.limber.dom.filter.QueryMatchMode;
+import no.kantega.lab.limber.dom.filter.util.QueryMatchMode;
 import no.kantega.lab.limber.dom.selection.ElementNodeSelection;
 import no.kantega.lab.limber.dom.selection.NodeSelection;
 import no.kantega.lab.limber.dom.selection.TextNodeSelection;
