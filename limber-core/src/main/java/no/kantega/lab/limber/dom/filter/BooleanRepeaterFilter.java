@@ -4,7 +4,7 @@ import no.kantega.lab.limber.dom.element.AbstractNode;
 
 import javax.annotation.Nonnull;
 
-public class BooleanRepeaterFilter<N extends AbstractNode<?>> implements INodeFilter<N> {
+public class BooleanRepeaterFilter<N extends AbstractNode> implements INodeFilter<N> {
 
     private final boolean answer;
 

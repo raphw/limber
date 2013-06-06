@@ -13,7 +13,7 @@ import no.kantega.lab.limber.dom.filter.util.QueryMatchMode;
 import javax.annotation.Nonnull;
 import java.util.*;
 
-public class NodeSelection<N extends AbstractNode<N>, C extends NodeSelection<N, ?>>
+public class NodeSelection<N extends AbstractNode, C extends NodeSelection<N, ?>>
         implements IDomNodeMorphable<N, C>, IDomElementFilterable<N>, IDomSelectionQueryable {
 
     private final List<N> selected;

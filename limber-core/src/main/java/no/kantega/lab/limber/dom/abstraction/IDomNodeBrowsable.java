@@ -18,8 +18,8 @@ public interface IDomNodeBrowsable {
     List<AbstractNode<?>> getSiblings(boolean includeMe);
 
     @Nonnull
-    <N2 extends AbstractNode<N2>> List<N2> getSiblings(@Nonnull INodeFilter<N2> nodeFilter);
+    <N2 extends AbstractNode> List<N2> getSiblings(@Nonnull INodeFilter<N2> nodeFilter);
 
     @Nonnull
-    <N2 extends AbstractNode<N2>> List<N2> getSiblings(@Nonnull INodeFilter<N2> nodeFilter, boolean includeMe);
+    <N2 extends AbstractNode> List<N2> getSiblings(@Nonnull INodeFilter<N2> nodeFilter, boolean includeMe);
 }

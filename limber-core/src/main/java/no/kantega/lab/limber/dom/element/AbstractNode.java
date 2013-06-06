@@ -82,18 +82,18 @@ public abstract class AbstractNode<N extends AbstractNode<N>> implements IDomNod
     @Nonnull
     @Override
     public List<AbstractNode<?>> getSiblings(boolean includeMe) {
-        return getSiblings(new BooleanRepeaterFilter(true), includeMe);
+        return getSiblings(new BooleanRepeaterFilter<AbstractNode<?>>(true), includeMe);
     }
 
     @Nonnull
     @Override
-    public <N2 extends AbstractNode<N2>> List<N2> getSiblings(@Nonnull INodeFilter<N2> nodeFilter) {
+    public <N2 extends AbstractNode> List<N2> getSiblings(@Nonnull INodeFilter<N2> nodeFilter) {
         return getSiblings(nodeFilter, false);
     }
 
     @Nonnull
     @Override
-    public <N2 extends AbstractNode<N2>> List<N2> getSiblings(@Nonnull INodeFilter<N2> nodeFilter, boolean includeMe) {
+    public <N2 extends AbstractNode> List<N2> getSiblings(@Nonnull INodeFilter<N2> nodeFilter, boolean includeMe) {
         if (getParent() != null) {
             if (!includeMe) nodeFilter = new ConjunctionFilter<N2>(nodeFilter, new NodeExclusionFilter<N2>(this));
             return getParent().getChildren(nodeFilter);

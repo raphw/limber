@@ -27,7 +27,7 @@ public interface IDomElementFilterable<N extends AbstractNode<N>> extends Iterab
     ElementNodeSelection reduceByAttr(@Nonnull CharSequence key, CharSequence value, @Nonnull QueryMatchMode queryMatchMode);
 
     @Nonnull
-    <N2 extends AbstractNode<N2>, C2 extends NodeSelection<N2, C2>> NodeSelection<N2, C2> reduceByFilter(@Nonnull INodeFilter<N2> nodeFilter);
+    <N2 extends AbstractNode, C2 extends NodeSelection<N2, C2>> NodeSelection<N2, C2> reduceByFilter(@Nonnull INodeFilter<N2> nodeFilter);
 
     @Nonnull
     TextNodeSelection reduceToText();

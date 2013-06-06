@@ -99,11 +99,6 @@ public class ElementNode extends AbstractNode<ElementNode> implements IDomElemen
 
     @Nonnull
     @Override
-    public <N2 extends AbstractNode<N2>> List<N2> getChildren(@Nonnull INodeFilter<N2> nodeFilter) {
-    }
-
-    @Nonnull
-    @Override
     public ElementNode addChild(int index, @Nonnull CharSequence tagName) {
         return addChild(index, new ElementNode(tagName));
     }
@@ -464,13 +459,13 @@ public class ElementNode extends AbstractNode<ElementNode> implements IDomElemen
 
     @Nonnull
     @Override
-    public <N2 extends AbstractNode<N2>, C2 extends NodeSelection<N2, C2>> NodeSelection<N2, C2> findByFilter(@Nonnull INodeFilter<N2> nodeFilter) {
+    public <N2 extends AbstractNode, C2 extends NodeSelection<N2, C2>> NodeSelection<N2, C2> findByFilter(@Nonnull INodeFilter<N2> nodeFilter) {
         return findByFilter(nodeFilter, Integer.MAX_VALUE);
     }
 
     @Nonnull
     @Override
-    public <N2 extends AbstractNode<N2>, C2 extends NodeSelection<N2, C2>> NodeSelection<N2, C2> findByFilter(@Nonnull INodeFilter<N2> nodeFilter, int maxDepth) {
+    public <N2 extends AbstractNode, C2 extends NodeSelection<N2, C2>> NodeSelection<N2, C2> findByFilter(@Nonnull INodeFilter<N2> nodeFilter, int maxDepth) {
         return new NodeSelection<N2, C2>(NodeFilterSupport.getInstance().filter(this, nodeFilter, maxDepth));
     }
 

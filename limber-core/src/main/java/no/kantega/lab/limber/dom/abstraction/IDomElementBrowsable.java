@@ -17,7 +17,7 @@ public interface IDomElementBrowsable<N extends AbstractNode<?>> extends IDomNod
     List<AbstractNode<?>> getChildren();
 
     @Nonnull
-    <N2 extends AbstractNode<N2>> List<N2> getChildren(@Nonnull INodeFilter<N2> nodeFilter);
+    <N2 extends AbstractNode> List<N2> getChildren(@Nonnull INodeFilter<N2> nodeFilter);
 
     @Nonnull
     ElementNodeSelection findByTag(@Nonnull CharSequence tagName);
@@ -48,10 +48,10 @@ public interface IDomElementBrowsable<N extends AbstractNode<?>> extends IDomNod
     ElementNodeSelection findByAttr(@Nonnull CharSequence key, CharSequence value, @Nonnull QueryMatchMode queryMatchMode, int maxDepth);
 
     @Nonnull
-    <N2 extends AbstractNode<N2>, C2 extends NodeSelection<N2, C2>> NodeSelection<?, C2> findByFilter(@Nonnull INodeFilter<N2> nodeFilter);
+    <N2 extends AbstractNode, C2 extends NodeSelection<N2, C2>> NodeSelection<?, C2> findByFilter(@Nonnull INodeFilter<N2> nodeFilter);
 
     @Nonnull
-    <N2 extends AbstractNode<N2>, C2 extends NodeSelection<N2, C2>> NodeSelection<?, C2> findByFilter(@Nonnull INodeFilter<N2> nodeFilter, int maxDepth);
+    <N2 extends AbstractNode, C2 extends NodeSelection<N2, C2>> NodeSelection<?, C2> findByFilter(@Nonnull INodeFilter<N2> nodeFilter, int maxDepth);
 
     @Nonnull
     TextNodeSelection findTextNodes();
