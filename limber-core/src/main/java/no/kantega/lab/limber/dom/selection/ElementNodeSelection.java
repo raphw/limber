@@ -10,12 +10,12 @@ import no.kantega.lab.limber.dom.filter.util.NodeFilterSupport;
 import no.kantega.lab.limber.dom.filter.util.QueryMatchMode;
 
 import javax.annotation.Nonnull;
-import java.util.LinkedList;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 
 public class ElementNodeSelection extends NodeSelection<ElementNode, ElementNodeSelection>
-        implements IDomElementMorphable<ElementNodeSelection>, IDomElementBrowsable<ElementNode> {
+        implements IDomElementMorphable<ElementNodeSelection>, IDomElementBrowsable<ElementNode, ElementNodeSelection> {
 
     public ElementNodeSelection(@Nonnull List<ElementNode> selected) {
         super(selected);
@@ -23,6 +23,10 @@ public class ElementNodeSelection extends NodeSelection<ElementNode, ElementNode
 
     public ElementNodeSelection(@Nonnull NodeSelection<ElementNode, ?> that) {
         super(that);
+    }
+
+    public ElementNodeSelection(@Nonnull LinkedHashSet<ElementNode> selected) {
+        super(selected);
     }
 
     @Nonnull
@@ -36,108 +40,108 @@ public class ElementNodeSelection extends NodeSelection<ElementNode, ElementNode
 
     @Nonnull
     @Override
-    public ElementNodeSelection addChild(int index, @Nonnull AbstractNode<?> prototype) {
+    public ElementNodeSelection addChildAndStay(int index, @Nonnull AbstractNode<?> prototype) {
         for (ElementNode elementNode : getSelected()) {
-            elementNode.addChild(index, prototype.clone());
+            elementNode.addChildAndStay(index, prototype.clone());
         }
         return this;
     }
 
     @Nonnull
     @Override
-    public ElementNodeSelection appendChild(@Nonnull AbstractNode<?> prototype) {
+    public ElementNodeSelection appendChildAndStay(@Nonnull AbstractNode<?> prototype) {
         for (ElementNode elementNode : getSelected()) {
-            elementNode.appendChild(prototype.clone());
+            elementNode.appendChildAndStay(prototype.clone());
         }
         return this;
     }
 
     @Nonnull
     @Override
-    public ElementNodeSelection prependChild(@Nonnull AbstractNode<?> prototype) {
+    public ElementNodeSelection prependChildAndStay(@Nonnull AbstractNode<?> prototype) {
         for (ElementNode elementNode : getSelected()) {
-            elementNode.prependChild(prototype.clone());
+            elementNode.prependChildAndStay(prototype.clone());
         }
         return this;
     }
 
     @Nonnull
     @Override
-    public ElementNodeSelection addChild(int index, @Nonnull CharSequence tagName) {
+    public ElementNodeSelection addChildAndStay(int index, @Nonnull CharSequence tagName) {
         for (ElementNode elementNode : getSelected()) {
-            elementNode.addChild(index, tagName);
+            elementNode.addChildAndStay(index, tagName);
         }
         return this;
     }
 
     @Nonnull
     @Override
-    public ElementNodeSelection appendChild(@Nonnull CharSequence tagName) {
+    public ElementNodeSelection appendChildAndStay(@Nonnull CharSequence tagName) {
         for (ElementNode elementNode : getSelected()) {
-            elementNode.appendChild(tagName);
+            elementNode.appendChildAndStay(tagName);
         }
         return this;
     }
 
     @Nonnull
     @Override
-    public ElementNodeSelection prependChild(@Nonnull CharSequence tagName) {
+    public ElementNodeSelection prependChildAndStay(@Nonnull CharSequence tagName) {
         for (ElementNode elementNode : getSelected()) {
-            elementNode.prependChild(tagName);
+            elementNode.prependChildAndStay(tagName);
         }
         return this;
     }
 
     @Nonnull
     @Override
-    public ElementNodeSelection addText(int index, @Nonnull CharSequence text) {
+    public ElementNodeSelection addTextAndStay(int index, @Nonnull CharSequence text) {
         for (ElementNode elementNode : getSelected()) {
-            elementNode.addText(index, text);
+            elementNode.addTextAndStay(index, text);
         }
         return this;
     }
 
     @Nonnull
     @Override
-    public ElementNodeSelection addText(int index, @Nonnull CharSequence text, @Nonnull ContentEscapeMode contentEscapeMode) {
+    public ElementNodeSelection addTextAndStay(int index, @Nonnull CharSequence text, @Nonnull ContentEscapeMode contentEscapeMode) {
         for (ElementNode elementNode : getSelected()) {
-            elementNode.addText(index, text, contentEscapeMode);
+            elementNode.addTextAndStay(index, text, contentEscapeMode);
         }
         return this;
     }
 
     @Nonnull
     @Override
-    public ElementNodeSelection appendText(@Nonnull CharSequence text) {
+    public ElementNodeSelection appendTextAndStay(@Nonnull CharSequence text) {
         for (ElementNode elementNode : getSelected()) {
-            elementNode.appendText(text);
+            elementNode.appendTextAndStay(text);
         }
         return this;
     }
 
     @Nonnull
     @Override
-    public ElementNodeSelection appendText(@Nonnull CharSequence text, @Nonnull ContentEscapeMode contentEscapeMode) {
+    public ElementNodeSelection appendTextAndStay(@Nonnull CharSequence text, @Nonnull ContentEscapeMode contentEscapeMode) {
         for (ElementNode elementNode : getSelected()) {
-            elementNode.appendText(text, contentEscapeMode);
+            elementNode.appendTextAndStay(text, contentEscapeMode);
         }
         return this;
     }
 
     @Nonnull
     @Override
-    public ElementNodeSelection prependText(@Nonnull CharSequence text) {
+    public ElementNodeSelection prependTextAndStay(@Nonnull CharSequence text) {
         for (ElementNode elementNode : getSelected()) {
-            elementNode.prependText(text);
+            elementNode.prependTextAndStay(text);
         }
         return this;
     }
 
     @Nonnull
     @Override
-    public ElementNodeSelection prependText(@Nonnull CharSequence text, @Nonnull ContentEscapeMode contentEscapeMode) {
+    public ElementNodeSelection prependTextAndStay(@Nonnull CharSequence text, @Nonnull ContentEscapeMode contentEscapeMode) {
         for (ElementNode elementNode : getSelected()) {
-            elementNode.prependText(text, contentEscapeMode);
+            elementNode.prependTextAndStay(text, contentEscapeMode);
         }
         return this;
     }
@@ -323,16 +327,32 @@ public class ElementNodeSelection extends NodeSelection<ElementNode, ElementNode
 
     @Nonnull
     @Override
-    public <N2 extends AbstractNode<N2>, C2 extends NodeSelection<N2, C2>> NodeSelection<N2, C2> findByFilter(@Nonnull INodeFilter<N2> nodeFilter) {
+    public <N2 extends AbstractNode<?>> NodeSelection<N2, ?> getChildren() {
+        return getChildren(new BooleanRepeaterFilter<N2>(true));
+    }
+
+    @Nonnull
+    @Override
+    public <N2 extends AbstractNode<?>> NodeSelection<N2, ?> getChildren(@Nonnull INodeFilter<N2> nodeFilter) {
+        LinkedHashSet<N2> resultSelection = new LinkedHashSet<N2>();
+        for (ElementNode elementNode : getSelected()) {
+            resultSelection.addAll(NodeFilterSupport.getInstance().filterNodeList(elementNode.getChildren().getSelected(), nodeFilter));
+        }
+        return new NodeSelection<N2, NodeSelection<N2, ?>>(resultSelection);
+    }
+
+    @Nonnull
+    @Override
+    public <N2 extends AbstractNode<?>, C2 extends NodeSelection<N2, C2>> NodeSelection<N2, C2> findByFilter(@Nonnull INodeFilter<N2> nodeFilter) {
         return findByFilter(nodeFilter, Integer.MAX_VALUE);
     }
 
     @Nonnull
     @Override
-    public <N2 extends AbstractNode<N2>, C2 extends NodeSelection<N2, C2>> NodeSelection<N2, C2> findByFilter(@Nonnull INodeFilter<N2> nodeFilter, int maxDepth) {
-        List<N2> resultSelection = new LinkedList<N2>();
+    public <N2 extends AbstractNode<?>, C2 extends NodeSelection<N2, C2>> NodeSelection<N2, C2> findByFilter(@Nonnull INodeFilter<N2> nodeFilter, int maxDepth) {
+        LinkedHashSet<N2> resultSelection = new LinkedHashSet<N2>();
         for (ElementNode elementNode : getSelected()) {
-            resultSelection.addAll(NodeFilterSupport.getInstance().filter(elementNode, nodeFilter, maxDepth));
+            resultSelection.addAll(NodeFilterSupport.getInstance().filterBreadthFirst(elementNode, nodeFilter, maxDepth));
         }
         return new NodeSelection<N2, C2>(resultSelection);
     }

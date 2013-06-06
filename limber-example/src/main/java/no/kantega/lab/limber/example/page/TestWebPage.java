@@ -13,14 +13,14 @@ public class TestWebPage extends WebPage {
 
         dom().setTile("Limber framework");
 
-        dom().findByTag("h2").clear().appendText("Hello limber framework");
+        dom().findByTag("h2").clear().appendTextAndStay("Hello limber framework");
 
         ElementNodeSelection list = dom().findByTag("ul").clear();
         for (String s : new String[]{"It is easy to use", "It is elegant to use", "Supports jQuery"}) {
-            list.appendChild(new ElementNode("li").appendChild(new TextNode(s)));
+            list.appendChildAndStay(new ElementNode("li").appendChildAndStay(new TextNode(s)));
         }
 
-        dom().findByTag("button").clear().appendText("Ajax demo");
+        dom().findByTag("button").clear().appendTextAndStay("Ajax demo");
 //        .ajax(
 //                AjaxEventTrigger.CLICK, new IAjaxCallback() {
 //            @Override

@@ -43,7 +43,7 @@ public class HtmlDocumentSelection extends ElementNodeSelection implements IDomH
     @Nonnull
     @Override
     public HtmlDocumentSelection setTile(@Nonnull CharSequence charSequence) {
-        getTitleNode().clear().appendText(charSequence);
+        getTitleNode().clear().appendTextAndStay(charSequence);
         return this;
     }
 

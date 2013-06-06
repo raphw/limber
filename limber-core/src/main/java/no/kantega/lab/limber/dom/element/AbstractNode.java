@@ -8,42 +8,50 @@ import no.kantega.lab.limber.dom.filter.ConjunctionFilter;
 import no.kantega.lab.limber.dom.filter.INodeFilter;
 import no.kantega.lab.limber.dom.filter.NodeExclusionFilter;
 import no.kantega.lab.limber.dom.filter.util.NodeFilterSupport;
+import no.kantega.lab.limber.dom.selection.NodeSelection;
 
 import javax.annotation.Nonnull;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
-import java.util.List;
 
 public abstract class AbstractNode<N extends AbstractNode<N>> implements IDomNodeMorphable<N, N>,
-        IDomNodeQueryable, IDomNodeBrowsable {
+        IDomNodeQueryable, IDomNodeBrowsable<ElementNode> {
 
     private boolean rendered;
     private ElementNode parent;
-    private List<NodeAttachment<? extends N>> nodeAttachments;
+
+//    private Map<IDomNodeVisitor<? super N>, IDomNodeVisitor.VisitingStickyMode> nodeAttachments;
 
     protected AbstractNode() {
         this.rendered = true;
     }
 
-    @Nonnull
-    @Override
-    @SuppressWarnings("unchecked")
-    public N addNodeAttachment(@Nonnull NodeAttachment<? extends N> nodeAttachment) {
-        if (nodeAttachments == null) nodeAttachments = new ArrayList<NodeAttachment<? extends N>>();
-        nodeAttachments.add(nodeAttachment);
-        return (N) this;
-    }
-
-    @Nonnull
-    @Override
-    @SuppressWarnings("unchecked")
-    public N removeNodeAttachment(@Nonnull NodeAttachment<? extends N> nodeAttachment) {
-        if (nodeAttachments == null) return (N) this;
-        nodeAttachments.remove(nodeAttachment);
-        if (nodeAttachments.size() == 0) nodeAttachments = null;
-        return (N) this;
-    }
+//    @Nonnull
+//    @Override
+//    @SuppressWarnings("unchecked")
+//    public N visit(@Nonnull IDomNodeVisitor<? super N> nodeVisitor) {
+//        nodeVisitor.visit(this);
+//        return (N) this;
+//    }
+//
+//    @Nonnull
+//    @Override
+//    @SuppressWarnings("unchecked")
+//    public N addStickyNodeVisitor(@Nonnull IDomNodeVisitor<? super N> nodeVisitor, @Nonnull IDomNodeVisitor.VisitingStickyMode visitingStickyMode) {
+//        if (nodeAttachments == null)
+//            nodeAttachments = new LinkedHashMap<IDomNodeVisitor<? super N>, IDomNodeVisitor.VisitingStickyMode>();
+//        nodeAttachments.put(nodeVisitor, visitingStickyMode);
+//        return (N) this;
+//    }
+//
+//    @Nonnull
+//    @Override
+//    @SuppressWarnings("unchecked")
+//    public N removeStickyNodeVisitor(@Nonnull IDomNodeVisitor<?> nodeVisitor) {
+//        if (nodeAttachments == null) return (N) this;
+//        nodeAttachments.remove(nodeVisitor);
+//        if (nodeAttachments.size() == 0) nodeAttachments = null;
+//        return (N) this;
+//    }
 
     @Nonnull
     @Override
@@ -75,36 +83,39 @@ public abstract class AbstractNode<N extends AbstractNode<N>> implements IDomNod
 
     @Nonnull
     @Override
-    public List<AbstractNode<?>> getSiblings() {
+    public NodeSelection<AbstractNode<?>, ?> getSiblings() {
         return getSiblings(false);
     }
 
     @Nonnull
     @Override
-    public List<AbstractNode<?>> getSiblings(boolean includeMe) {
+    public NodeSelection<AbstractNode<?>, ?> getSiblings(boolean includeMe) {
         return getSiblings(new BooleanRepeaterFilter<AbstractNode<?>>(true), includeMe);
     }
 
+
     @Nonnull
     @Override
-    public <N2 extends AbstractNode> List<N2> getSiblings(@Nonnull INodeFilter<N2> nodeFilter) {
+    public <N2 extends AbstractNode<?>, C2 extends NodeSelection<N2, C2>> NodeSelection<N2, C2> getSiblings(@Nonnull INodeFilter<N2> nodeFilter) {
         return getSiblings(nodeFilter, false);
     }
 
     @Nonnull
     @Override
-    public <N2 extends AbstractNode> List<N2> getSiblings(@Nonnull INodeFilter<N2> nodeFilter, boolean includeMe) {
+    public <N2 extends AbstractNode<?>, C2 extends NodeSelection<N2, C2>> NodeSelection<N2, C2> getSiblings(@Nonnull INodeFilter<N2> nodeFilter, boolean includeMe) {
+        NodeSelection<N2, ?> siblingSelection;
         if (getParent() != null) {
             if (!includeMe) nodeFilter = new ConjunctionFilter<N2>(nodeFilter, new NodeExclusionFilter<N2>(this));
-            return getParent().getChildren(nodeFilter);
+            siblingSelection = getParent().getChildren(nodeFilter);
+        } else if (!includeMe) {
+            siblingSelection = new NodeSelection<N2, C2>(Collections.<N2>emptyList());
         } else {
-            if (!includeMe) {
-                return Collections.emptyList();
-            } else {
-                N2 filterResultNode = NodeFilterSupport.getInstance().filterNode(this, nodeFilter);
-                return filterResultNode == null ? Collections.<N2>emptyList() : Arrays.asList(filterResultNode);
-            }
+            N2 filterResultNode = NodeFilterSupport.getInstance().filterNode(this, nodeFilter);
+            siblingSelection = new NodeSelection<N2, C2>(filterResultNode == null
+                    ? Collections.<N2>emptyList()
+                    : Collections.singletonList(filterResultNode));
         }
+        return new NodeSelection<N2, C2>(siblingSelection);
     }
 
     @Nonnull

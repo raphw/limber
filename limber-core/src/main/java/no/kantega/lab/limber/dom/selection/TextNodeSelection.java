@@ -4,6 +4,7 @@ import no.kantega.lab.limber.dom.abstraction.IDomTextNodeMorphable;
 import no.kantega.lab.limber.dom.element.TextNode;
 
 import javax.annotation.Nonnull;
+import java.util.LinkedHashSet;
 import java.util.List;
 
 public class TextNodeSelection extends NodeSelection<TextNode, TextNodeSelection> implements IDomTextNodeMorphable<TextNodeSelection> {
@@ -14,6 +15,10 @@ public class TextNodeSelection extends NodeSelection<TextNode, TextNodeSelection
 
     public TextNodeSelection(@Nonnull NodeSelection<TextNode, ?> that) {
         super(that);
+    }
+
+    public TextNodeSelection(@Nonnull LinkedHashSet<TextNode> selected) {
+        super(selected);
     }
 
     @Nonnull

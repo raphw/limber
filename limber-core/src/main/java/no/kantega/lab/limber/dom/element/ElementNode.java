@@ -15,7 +15,7 @@ import javax.annotation.Nonnull;
 import java.util.*;
 
 public class ElementNode extends AbstractNode<ElementNode> implements IDomElementMorphable<ElementNode>,
-        IDomElementBrowsable<AbstractNode<?>>, IDomElementQueryable {
+        IDomElementBrowsable<AbstractNode<?>, ElementNode>, IDomElementQueryable {
 
     private static final String HTML_ATTR_CLASS = "class";
     private static final String HTML_ATTR_STYLE = "style";
@@ -60,7 +60,7 @@ public class ElementNode extends AbstractNode<ElementNode> implements IDomElemen
 
     @Nonnull
     @Override
-    public ElementNode addChild(int index, @Nonnull AbstractNode<?> node) {
+    public ElementNode addChildAndStay(int index, @Nonnull AbstractNode<?> node) {
         if (index < 0 || index > (children == null ? 0 : children.size())) {
             throw new IllegalArgumentException();
         }
@@ -71,14 +71,14 @@ public class ElementNode extends AbstractNode<ElementNode> implements IDomElemen
 
     @Nonnull
     @Override
-    public ElementNode prependChild(@Nonnull AbstractNode<?> node) {
-        return addChild(0, node);
+    public ElementNode prependChildAndStay(@Nonnull AbstractNode<?> node) {
+        return addChildAndStay(0, node);
     }
 
     @Nonnull
     @Override
-    public ElementNode appendChild(@Nonnull AbstractNode<?> node) {
-        return addChild(children == null ? 0 : children.size(), node);
+    public ElementNode appendChildAndStay(@Nonnull AbstractNode<?> node) {
+        return addChildAndStay(children == null ? 0 : children.size(), node);
     }
 
     protected void removeChild(AbstractNode<?> node) {
@@ -89,66 +89,72 @@ public class ElementNode extends AbstractNode<ElementNode> implements IDomElemen
 
     @Nonnull
     @Override
-    public List<AbstractNode<?>> getChildren() {
+    public <N2 extends AbstractNode<?>> NodeSelection<N2, ?> getChildren() {
+        return getChildren(new BooleanRepeaterFilter<N2>(true));
+    }
+
+    @Nonnull
+    @Override
+    public <N2 extends AbstractNode<?>> NodeSelection<N2, ?> getChildren(@Nonnull INodeFilter<N2> nodeFilter) {
         if (children == null) {
-            return Collections.emptyList();
+            return new NodeSelection<N2, NodeSelection<N2, ?>>(Collections.<N2>emptyList());
         } else {
-            return Collections.unmodifiableList(children);
+            return new NodeSelection<N2, NodeSelection<N2, ?>>(NodeFilterSupport.getInstance().filterNodeList(children, nodeFilter));
         }
     }
 
     @Nonnull
     @Override
-    public ElementNode addChild(int index, @Nonnull CharSequence tagName) {
-        return addChild(index, new ElementNode(tagName));
+    public ElementNode addChildAndStay(int index, @Nonnull CharSequence tagName) {
+        return addChildAndStay(index, new ElementNode(tagName));
     }
 
     @Nonnull
     @Override
-    public ElementNode addText(int index, @Nonnull CharSequence text) {
-        return addChild(index, new TextNode(text));
+    public ElementNode addTextAndStay(int index, @Nonnull CharSequence text) {
+        return addChildAndStay(index, new TextNode(text));
     }
 
     @Nonnull
     @Override
-    public ElementNode addText(int index, @Nonnull CharSequence text, @Nonnull ContentEscapeMode contentEscapeMode) {
-        return addChild(index, new TextNode(text, contentEscapeMode));
+    public ElementNode addTextAndStay(int index, @Nonnull CharSequence text, @Nonnull ContentEscapeMode contentEscapeMode) {
+        return addChildAndStay(index, new TextNode(text, contentEscapeMode));
     }
 
     @Nonnull
     @Override
-    public ElementNode appendChild(@Nonnull CharSequence tagName) {
-        return appendChild(new ElementNode(tagName));
+    public ElementNode appendChildAndStay(@Nonnull CharSequence tagName) {
+        return appendChildAndStay(new ElementNode(tagName));
     }
 
     @Nonnull
     @Override
-    public ElementNode appendText(@Nonnull CharSequence text) {
-        return appendChild(new TextNode(text));
+    public ElementNode appendTextAndStay(@Nonnull CharSequence text) {
+        return appendChildAndStay(new TextNode(text));
     }
 
     @Nonnull
     @Override
-    public ElementNode appendText(@Nonnull CharSequence text, @Nonnull ContentEscapeMode contentEscapeMode) {
-        return appendChild(new TextNode(text, contentEscapeMode));
+    public ElementNode appendTextAndStay(@Nonnull CharSequence text, @Nonnull ContentEscapeMode contentEscapeMode) {
+        return appendChildAndStay(new TextNode(text, contentEscapeMode));
     }
 
     @Nonnull
     @Override
-    public ElementNode prependChild(@Nonnull CharSequence tagName) {
-        return prependChild(new ElementNode(tagName));
+    public ElementNode prependChildAndStay(@Nonnull CharSequence tagName) {
+        return prependChildAndStay(new ElementNode(tagName));
     }
 
     @Nonnull
     @Override
-    public ElementNode prependText(@Nonnull CharSequence text) {
-        return prependChild(new TextNode(text));
+    public ElementNode prependTextAndStay(@Nonnull CharSequence text) {
+        return prependChildAndStay(new TextNode(text));
     }
 
     @Nonnull
     @Override
-    public ElementNode prependText(@Nonnull CharSequence text, @Nonnull ContentEscapeMode contentEscapeMode) {
-        return prependChild(new TextNode(text, contentEscapeMode));
+    public ElementNode prependTextAndStay(@Nonnull CharSequence text, @Nonnull ContentEscapeMode contentEscapeMode) {
+        return prependChildAndStay(new TextNode(text, contentEscapeMode));
     }
 
     @Nonnull
@@ -161,7 +167,7 @@ public class ElementNode extends AbstractNode<ElementNode> implements IDomElemen
     @Override
     public ElementNode setContent(CharSequence content, @Nonnull ContentEscapeMode contentEscapeMode) {
         clear();
-        appendText(content, contentEscapeMode);
+        appendTextAndStay(content, contentEscapeMode);
         return this;
     }
 
@@ -459,14 +465,14 @@ public class ElementNode extends AbstractNode<ElementNode> implements IDomElemen
 
     @Nonnull
     @Override
-    public <N2 extends AbstractNode, C2 extends NodeSelection<N2, C2>> NodeSelection<N2, C2> findByFilter(@Nonnull INodeFilter<N2> nodeFilter) {
+    public <N2 extends AbstractNode<?>, C2 extends NodeSelection<N2, C2>> NodeSelection<N2, C2> findByFilter(@Nonnull INodeFilter<N2> nodeFilter) {
         return findByFilter(nodeFilter, Integer.MAX_VALUE);
     }
 
     @Nonnull
     @Override
-    public <N2 extends AbstractNode, C2 extends NodeSelection<N2, C2>> NodeSelection<N2, C2> findByFilter(@Nonnull INodeFilter<N2> nodeFilter, int maxDepth) {
-        return new NodeSelection<N2, C2>(NodeFilterSupport.getInstance().filter(this, nodeFilter, maxDepth));
+    public <N2 extends AbstractNode<?>, C2 extends NodeSelection<N2, C2>> NodeSelection<N2, C2> findByFilter(@Nonnull INodeFilter<N2> nodeFilter, int maxDepth) {
+        return new NodeSelection<N2, C2>(NodeFilterSupport.getInstance().filterBreadthFirst(this, nodeFilter, maxDepth));
     }
 
     @Nonnull

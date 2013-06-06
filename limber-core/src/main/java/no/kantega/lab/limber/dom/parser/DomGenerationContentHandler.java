@@ -54,7 +54,7 @@ public class DomGenerationContentHandler implements ContentHandler {
             root = elementNode;
         } else {
             ElementNode parentElementNode = elementNodeStack.peek();
-            parentElementNode.appendChild(elementNode);
+            parentElementNode.appendChildAndStay(elementNode);
         }
         elementNodeStack.push(elementNode);
     }
@@ -76,7 +76,7 @@ public class DomGenerationContentHandler implements ContentHandler {
 
     private void whitespace(char[] ch, int start, int length) throws SAXException {
         TextNode textNode = new TextNode(new String(ch, start, length));
-        elementNodeStack.peek().appendChild(textNode);
+        elementNodeStack.peek().appendChildAndStay(textNode);
     }
 
     @Override

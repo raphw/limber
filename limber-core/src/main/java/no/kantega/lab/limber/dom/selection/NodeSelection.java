@@ -1,11 +1,12 @@
 package no.kantega.lab.limber.dom.selection;
 
 import no.kantega.lab.limber.dom.abstraction.IDomElementFilterable;
+import no.kantega.lab.limber.dom.abstraction.IDomNodeBrowsable;
 import no.kantega.lab.limber.dom.abstraction.IDomNodeMorphable;
 import no.kantega.lab.limber.dom.abstraction.IDomSelectionQueryable;
 import no.kantega.lab.limber.dom.element.AbstractNode;
 import no.kantega.lab.limber.dom.element.ContentEscapeMode;
-import no.kantega.lab.limber.dom.element.NodeAttachment;
+import no.kantega.lab.limber.dom.element.ElementNode;
 import no.kantega.lab.limber.dom.filter.*;
 import no.kantega.lab.limber.dom.filter.util.NodeFilterSupport;
 import no.kantega.lab.limber.dom.filter.util.QueryMatchMode;
@@ -13,8 +14,8 @@ import no.kantega.lab.limber.dom.filter.util.QueryMatchMode;
 import javax.annotation.Nonnull;
 import java.util.*;
 
-public class NodeSelection<N extends AbstractNode, C extends NodeSelection<N, ?>>
-        implements IDomNodeMorphable<N, C>, IDomElementFilterable<N>, IDomSelectionQueryable {
+public class NodeSelection<N extends AbstractNode<?>, C extends NodeSelection<N, ?>>
+        implements IDomNodeMorphable<N, C>, IDomElementFilterable<N>, IDomSelectionQueryable<N>, IDomNodeBrowsable<ElementNodeSelection> {
 
     private final List<N> selected;
 
@@ -23,8 +24,13 @@ public class NodeSelection<N extends AbstractNode, C extends NodeSelection<N, ?>
         this.selected = Collections.unmodifiableList(new ArrayList<N>(selected));
     }
 
-    protected NodeSelection(@Nonnull NodeSelection<N, ?> that) {
+    public NodeSelection(@Nonnull NodeSelection<N, ?> that) {
         this.selected = that.getSelected();
+    }
+
+    public NodeSelection(@Nonnull LinkedHashSet<N> selected) {
+        if (selected.contains(null)) throw new IllegalArgumentException();
+        this.selected = Collections.unmodifiableList(new ArrayList<N>(selected));
     }
 
     protected final List<N> getSelected() {
@@ -35,7 +41,7 @@ public class NodeSelection<N extends AbstractNode, C extends NodeSelection<N, ?>
     @Override
     @SuppressWarnings("unchecked")
     public C clear() {
-        for (AbstractNode<N> node : getSelected()) {
+        for (AbstractNode<?> node : getSelected()) {
             node.clear();
         }
         return (C) this;
@@ -45,7 +51,7 @@ public class NodeSelection<N extends AbstractNode, C extends NodeSelection<N, ?>
     @Override
     @SuppressWarnings("unchecked")
     public C setRendered(boolean render) {
-        for (AbstractNode<N> node : getSelected()) {
+        for (AbstractNode<?> node : getSelected()) {
             node.setRendered(render);
         }
         return (C) this;
@@ -55,7 +61,7 @@ public class NodeSelection<N extends AbstractNode, C extends NodeSelection<N, ?>
     @Override
     @SuppressWarnings("unchecked")
     public C remove() {
-        for (AbstractNode<N> node : getSelected()) {
+        for (AbstractNode<?> node : getSelected()) {
             node.remove();
         }
         return (C) this;
@@ -70,7 +76,7 @@ public class NodeSelection<N extends AbstractNode, C extends NodeSelection<N, ?>
     @Override
     @SuppressWarnings("unchecked")
     public C setContent(CharSequence content) {
-        for (AbstractNode<N> node : getSelected()) {
+        for (AbstractNode<?> node : getSelected()) {
             node.setContent(content);
         }
         return (C) this;
@@ -80,31 +86,41 @@ public class NodeSelection<N extends AbstractNode, C extends NodeSelection<N, ?>
     @Override
     @SuppressWarnings("unchecked")
     public C setContent(CharSequence content, @Nonnull ContentEscapeMode escapeMode) {
-        for (AbstractNode<N> node : getSelected()) {
+        for (AbstractNode<?> node : getSelected()) {
             node.setContent(content, escapeMode);
         }
         return (C) this;
     }
 
-    @Nonnull
-    @Override
-    @SuppressWarnings("unchecked")
-    public C addNodeAttachment(@Nonnull NodeAttachment<? extends N> nodeAttachment) {
-        for (AbstractNode<N> node : getSelected()) {
-            node.addNodeAttachment(nodeAttachment);
-        }
-        return (C) this;
-    }
-
-    @Nonnull
-    @Override
-    @SuppressWarnings("unchecked")
-    public C removeNodeAttachment(@Nonnull NodeAttachment<? extends N> nodeAttachment) {
-        for (AbstractNode<N> node : getSelected()) {
-            node.removeNodeAttachment(nodeAttachment);
-        }
-        return (C) this;
-    }
+//    @Nonnull
+//    @Override
+//    @SuppressWarnings("unchecked")
+//    public C addStickyNodeVisitor(@Nonnull IDomNodeVisitor<? super N> nodeVisitor, @Nonnull IDomNodeVisitor.VisitingStickyMode visitingStickyMode) {
+//        for (AbstractNode<?> node : getSelected()) {
+//            node.addStickyNodeVisitor(nodeVisitor, visitingStickyMode);
+//        }
+//        return (C) this;
+//    }
+//
+//    @Nonnull
+//    @Override
+//    @SuppressWarnings("unchecked")
+//    public C visit(@Nonnull IDomNodeVisitor<? super N> nodeVisitor) {
+//        for (AbstractNode<?> node : getSelected()) {
+//            node.visit(nodeVisitor);
+//        }
+//        return (C) this;
+//    }
+//
+//    @Nonnull
+//    @Override
+//    @SuppressWarnings("unchecked")
+//    public C removeStickyNodeVisitor(@Nonnull IDomNodeVisitor<?> nodeVisitor) {
+//        for (AbstractNode<?> node : getSelected()) {
+//            node.removeStickyNodeVisitor(nodeVisitor);
+//        }
+//        return (C) this;
+//    }
 
     @Nonnull
     @Override
@@ -148,14 +164,15 @@ public class NodeSelection<N extends AbstractNode, C extends NodeSelection<N, ?>
 
     @Nonnull
     @Override
-    public <N2 extends AbstractNode<N2>, C2 extends NodeSelection<N2, C2>> NodeSelection<N2, C2> reduceByFilter(@Nonnull INodeFilter<N2> nodeFilter) {
-        Class<? extends N2> filterArgumentClass = NodeFilterSupport.getInstance().findFilterParameterClass(nodeFilter);
+    @SuppressWarnings("unchecked")
+    public <N2 extends AbstractNode<?>, C2 extends NodeSelection<N2, C2>> NodeSelection<N2, C2> reduceByFilter(@Nonnull INodeFilter<N2> nodeFilter) {
+        Class<?> filterArgumentClass = NodeFilterSupport.getInstance().evaluateFilterParameterType(nodeFilter);
         List<N2> foundNodes = new ArrayList<N2>();
         for (N node : getSelected()) {
             if (!filterArgumentClass.isAssignableFrom(filterArgumentClass)) {
                 continue;
             }
-            N2 castNode = filterArgumentClass.cast(node);
+            N2 castNode = (N2) node;
             if (nodeFilter.filter(castNode)) {
                 foundNodes.add(castNode);
             }
@@ -175,6 +192,56 @@ public class NodeSelection<N extends AbstractNode, C extends NodeSelection<N, ?>
         return new ElementNodeSelection(this.reduceByFilter(new ElementNodeFilter()));
     }
 
+    @Override
+    public ElementNodeSelection getParent() {
+        LinkedHashSet<ElementNode> parents = new LinkedHashSet<ElementNode>();
+        for (AbstractNode<?> element : getSelected()) {
+            ElementNode parent = element.getParent();
+            if (parent != null) parents.add(parent);
+        }
+        return new ElementNodeSelection(parents);
+    }
+
+    @Nonnull
+    @Override
+    public NodeSelection<AbstractNode<?>, ?> getSiblings() {
+        return getSiblings(false);
+    }
+
+
+    @Nonnull
+    @Override
+    public NodeSelection<AbstractNode<?>, ?> getSiblings(boolean includeMe) {
+        LinkedHashSet<AbstractNode<?>> siblings = new LinkedHashSet<AbstractNode<?>>();
+        for (AbstractNode<?> element : getSelected()) {
+            siblings.addAll(element.getSiblings().getSelected());
+        }
+        return new NodeSelection<AbstractNode<?>, NodeSelection<AbstractNode<?>, ?>>(siblings);
+    }
+
+    @Nonnull
+    @Override
+    public <N2 extends AbstractNode<?>, C2 extends NodeSelection<N2, C2>> NodeSelection<N2, C2> getSiblings(@Nonnull INodeFilter<N2> nodeFilter) {
+        return getSiblings(nodeFilter, false);
+    }
+
+    @Nonnull
+    @Override
+    public <N2 extends AbstractNode<?>, C2 extends NodeSelection<N2, C2>> NodeSelection<N2, C2> getSiblings(@Nonnull INodeFilter<N2> nodeFilter, boolean includeMe) {
+        LinkedHashSet<N2> siblings = new LinkedHashSet<N2>();
+        for (AbstractNode<?> element : getSelected()) {
+            siblings.addAll(element.getSiblings(nodeFilter, includeMe).getSelected());
+        }
+        return new NodeSelection<N2, C2>(siblings);
+    }
+
+    @Nonnull
+    @Override
+    public List<N> nodeList() {
+        return getSelected();
+    }
+
+    @Nonnull
     @Override
     public Iterator<N> iterator() {
         return new Iterator<N>() {

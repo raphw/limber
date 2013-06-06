@@ -11,43 +11,43 @@ import java.util.Map;
 public interface IDomElementMorphable<M extends IDomElementMorphable<M>> extends IDomNodeMorphable<ElementNode, M> {
 
     @Nonnull
+    M addChildAndStay(int index, @Nonnull AbstractNode<?> node);
+
+    @Nonnull
+    M addChildAndStay(int index, @Nonnull CharSequence tagName);
+
+    @Nonnull
+    M addTextAndStay(int index, @Nonnull CharSequence text);
+
+    @Nonnull
+    M addTextAndStay(int index, @Nonnull CharSequence text, @Nonnull ContentEscapeMode contentEscapeMode);
+
+    @Nonnull
+    M appendChildAndStay(@Nonnull AbstractNode<?> node);
+
+    @Nonnull
+    M appendChildAndStay(@Nonnull CharSequence tagName);
+
+    @Nonnull
+    M appendTextAndStay(@Nonnull CharSequence text);
+
+    @Nonnull
+    M appendTextAndStay(@Nonnull CharSequence text, @Nonnull ContentEscapeMode contentEscapeMode);
+
+    @Nonnull
+    M prependChildAndStay(@Nonnull AbstractNode<?> node);
+
+    @Nonnull
+    M prependChildAndStay(@Nonnull CharSequence tagName);
+
+    @Nonnull
+    M prependTextAndStay(@Nonnull CharSequence text);
+
+    @Nonnull
+    M prependTextAndStay(@Nonnull CharSequence text, @Nonnull ContentEscapeMode contentEscapeMode);
+
+    @Nonnull
     M setTagName(@Nonnull CharSequence tagName);
-
-    @Nonnull
-    M addChild(int index, @Nonnull AbstractNode<?> node);
-
-    @Nonnull
-    M addChild(int index, @Nonnull CharSequence tagName);
-
-    @Nonnull
-    M addText(int index, @Nonnull CharSequence text);
-
-    @Nonnull
-    M addText(int index, @Nonnull CharSequence text, @Nonnull ContentEscapeMode contentEscapeMode);
-
-    @Nonnull
-    M appendChild(@Nonnull AbstractNode<?> node);
-
-    @Nonnull
-    M appendChild(@Nonnull CharSequence tagName);
-
-    @Nonnull
-    M appendText(@Nonnull CharSequence text);
-
-    @Nonnull
-    M appendText(@Nonnull CharSequence text, @Nonnull ContentEscapeMode contentEscapeMode);
-
-    @Nonnull
-    M prependChild(@Nonnull AbstractNode<?> node);
-
-    @Nonnull
-    M prependChild(@Nonnull CharSequence tagName);
-
-    @Nonnull
-    M prependText(@Nonnull CharSequence text);
-
-    @Nonnull
-    M prependText(@Nonnull CharSequence text, @Nonnull ContentEscapeMode contentEscapeMode);
 
     @Nonnull
     M putAttr(@Nonnull CharSequence key, CharSequence value);

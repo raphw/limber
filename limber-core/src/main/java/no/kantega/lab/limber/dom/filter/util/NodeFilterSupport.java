@@ -23,11 +23,12 @@ public class NodeFilterSupport {
     }
 
     @Nonnull
-    public <N extends AbstractNode<N>> List<N> filter(@Nonnull ElementNode origin,
-                                                      @Nonnull INodeFilter<N> nodeFilter,
-                                                      int maxDepth) {
+    @SuppressWarnings("unchecked")
+    public <N extends AbstractNode<?>> List<N> filterBreadthFirst(@Nonnull ElementNode origin,
+                                                                  @Nonnull INodeFilter<N> nodeFilter,
+                                                                  int maxDepth) {
 
-        Class<? extends N> filterParameterClass = findFilterParameterClass(nodeFilter);
+        Class<?> filterParameterClass = evaluateFilterParameterType(nodeFilter);
 
         List<N> foundNodes = new ArrayList<N>();
         if (maxDepth < 1) return foundNodes;
@@ -38,7 +39,7 @@ public class NodeFilterSupport {
 
         while (!nodesToScan.isEmpty()) {
             ElementNode current = nodesToScan.poll();
-            List<ElementNode> children = findBrowsableChildren(current);
+            List<ElementNode> children = findElementNodeChildren(current);
             nextTimeToDepthIncrease += children.size();
             nodesToScan.addAll(children);
             if (--timeToDepthIncrease == 0) {
@@ -48,7 +49,7 @@ public class NodeFilterSupport {
             }
             for (AbstractNode<?> node : current.getChildren()) {
                 if (filterParameterClass.isAssignableFrom(node.getClass())) {
-                    N castNode = filterParameterClass.cast(node);
+                    N castNode = (N) node;
                     if (nodeFilter.filter(castNode)) {
                         foundNodes.add(castNode);
                     }
@@ -61,7 +62,7 @@ public class NodeFilterSupport {
     }
 
     @Nonnull
-    private List<ElementNode> findBrowsableChildren(@Nonnull ElementNode parent) {
+    private List<ElementNode> findElementNodeChildren(@Nonnull ElementNode parent) {
         List<ElementNode> elementChildren = new LinkedList<ElementNode>();
         for (AbstractNode<?> child : parent.getChildren()) {
             if (child instanceof ElementNode) {
@@ -73,23 +74,43 @@ public class NodeFilterSupport {
 
     @SuppressWarnings("unchecked")
     @Nonnull
-    public <N extends AbstractNode<N>> Class<? extends N> findFilterParameterClass(@Nonnull INodeFilter<N> filter) {
+    public <N extends AbstractNode<?>> Class<?> evaluateFilterParameterType(@Nonnull INodeFilter<N> filter) {
         Class<?> currentClass = filter.getClass();
         do {
             for (Type interfaceType : currentClass.getGenericInterfaces()) {
                 ParameterizedType parameterizedInterfaceType = (ParameterizedType) interfaceType;
                 Class<?> interfaceClass = (Class<?>) parameterizedInterfaceType.getRawType();
                 if (interfaceClass == INodeFilter.class) {
-                    return (Class<N>) parameterizedInterfaceType.getActualTypeArguments()[0];
+                    Type foundType = parameterizedInterfaceType.getActualTypeArguments()[0];
+                    if (foundType instanceof Class<?>)
+                        return (Class<?>) foundType;
+                    else {
+                        return AbstractNode.class;
+                    }
                 }
             }
         } while ((currentClass = currentClass.getSuperclass()) != null);
         throw new IllegalStateException();
     }
 
+    public <N extends AbstractNode<?>> N filterNode(@Nonnull AbstractNode<?> node, @Nonnull INodeFilter<N> nodeFilter) {
+        Class<?> filterClass = evaluateFilterParameterType(nodeFilter);
+        return filterNode(node, nodeFilter, filterClass);
+    }
+
+    @Nonnull
+    public <N extends AbstractNode<?>> List<N> filterNodeList(@Nonnull List<? extends AbstractNode<?>> nodeList, @Nonnull INodeFilter<N> nodeFilter) {
+        Class<?> filterClass = evaluateFilterParameterType(nodeFilter);
+        List<N> resultNodeList = new ArrayList<N>(nodeList.size());
+        for (AbstractNode<?> node : nodeList) {
+            N castNode = filterNode(node, nodeFilter, filterClass);
+            if (castNode != null) resultNodeList.add(castNode);
+        }
+        return resultNodeList;
+    }
+
     @SuppressWarnings("unchecked")
-    public <N extends AbstractNode<N>> N filterNode(@Nonnull AbstractNode<?> node, @Nonnull INodeFilter<N> nodeFilter) {
-        Class<? extends N> filterClass = findFilterParameterClass(nodeFilter);
+    private <N extends AbstractNode<?>> N filterNode(@Nonnull AbstractNode<?> node, @Nonnull INodeFilter<N> nodeFilter, Class<?> filterClass) {
         if (filterClass.isAssignableFrom(node.getClass())) {
             N castNode = (N) node;
             return nodeFilter.filter(castNode) ? castNode : null;

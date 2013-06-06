@@ -1,25 +1,24 @@
 package no.kantega.lab.limber.dom.abstraction;
 
 import no.kantega.lab.limber.dom.element.AbstractNode;
-import no.kantega.lab.limber.dom.element.ElementNode;
 import no.kantega.lab.limber.dom.filter.INodeFilter;
+import no.kantega.lab.limber.dom.selection.NodeSelection;
 
 import javax.annotation.Nonnull;
-import java.util.List;
 
-public interface IDomNodeBrowsable {
+public interface IDomNodeBrowsable<B extends IDomNodeBrowsable<B>> {
 
-    ElementNode getParent();
-
-    @Nonnull
-    List<AbstractNode<?>> getSiblings();
+    B getParent();
 
     @Nonnull
-    List<AbstractNode<?>> getSiblings(boolean includeMe);
+    NodeSelection<AbstractNode<?>, ?> getSiblings();
 
     @Nonnull
-    <N2 extends AbstractNode> List<N2> getSiblings(@Nonnull INodeFilter<N2> nodeFilter);
+    NodeSelection<AbstractNode<?>, ?> getSiblings(boolean includeMe);
 
     @Nonnull
-    <N2 extends AbstractNode> List<N2> getSiblings(@Nonnull INodeFilter<N2> nodeFilter, boolean includeMe);
+    <N2 extends AbstractNode<?>, C2 extends NodeSelection<N2, C2>> NodeSelection<N2, C2> getSiblings(@Nonnull INodeFilter<N2> nodeFilter);
+
+    @Nonnull
+    <N2 extends AbstractNode<?>, C2 extends NodeSelection<N2, C2>> NodeSelection<N2, C2> getSiblings(@Nonnull INodeFilter<N2> nodeFilter, boolean includeMe);
 }

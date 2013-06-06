@@ -4,7 +4,7 @@ import no.kantega.lab.limber.dom.element.AbstractNode;
 
 import javax.annotation.Nonnull;
 
-public class InversionFilter<N extends AbstractNode> implements INodeFilter<N> {
+public class InversionFilter<N extends AbstractNode<?>> implements INodeFilter<N> {
 
     private final INodeFilter<N> invertedFilter;
 

@@ -11,26 +11,30 @@ public enum QueryMatchMode {
     ENDS_WITH,
     ENDS_WITH_IGNORE_CASE,
     CONTAINS,
-    CONTAINS_IGNORE_CASE;
+    CONTAINS_IGNORE_CASE,
+    MATCHES_REGEX;
 
-    public boolean compare(CharSequence actual, CharSequence found) {
+    public boolean compare(CharSequence found, CharSequence parameter) {
         switch (this) {
             case FULL_MATCH:
-                return StringUtils.equals(actual, found);
+                return StringUtils.equals(found, parameter);
             case FULL_MATCH_IGNORE_CASE:
-                return StringUtils.equalsIgnoreCase(actual, found);
+                return StringUtils.equalsIgnoreCase(found, parameter);
             case STARTS_WITH:
-                return StringUtils.startsWith(actual, found);
+                return StringUtils.startsWith(found, parameter);
             case STARTS_WITH_IGNORE_CASE:
-                return StringUtils.startsWithIgnoreCase(actual, found);
+                return StringUtils.startsWithIgnoreCase(found, parameter);
             case ENDS_WITH:
-                return StringUtils.endsWith(actual, found);
+                return StringUtils.endsWith(found, parameter);
             case ENDS_WITH_IGNORE_CASE:
-                return StringUtils.endsWithIgnoreCase(actual, found);
+                return StringUtils.endsWithIgnoreCase(found, parameter);
             case CONTAINS:
-                return StringUtils.contains(actual, found);
+                return StringUtils.contains(found, parameter);
             case CONTAINS_IGNORE_CASE:
-                return StringUtils.containsIgnoreCase(actual, found);
+                return StringUtils.containsIgnoreCase(found, parameter);
+            case MATCHES_REGEX:
+                return found != null && parameter != null
+                        && found.toString().matches(parameter.toString());
             default:
                 throw new IllegalStateException();
         }

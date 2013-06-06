@@ -4,7 +4,7 @@ import no.kantega.lab.limber.dom.element.AbstractNode;
 
 import javax.annotation.Nonnull;
 
-public abstract class AbstractBinaryLogicalOperationFilter<N extends AbstractNode> implements INodeFilter<N> {
+public abstract class AbstractBinaryLogicalOperationFilter<N extends AbstractNode<?>> implements INodeFilter<N> {
 
     private final INodeFilter<? super N> first;
     private final INodeFilter<? super N> second;
