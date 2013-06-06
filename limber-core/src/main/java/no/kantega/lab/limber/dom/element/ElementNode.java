@@ -33,6 +33,7 @@ public class ElementNode extends AbstractNode<ElementNode> implements IDomElemen
         setTagName(tag);
     }
 
+    @Nonnull
     @Override
     public String getTagName() {
         return tagName;
@@ -43,6 +44,7 @@ public class ElementNode extends AbstractNode<ElementNode> implements IDomElemen
         return tagName.toString().toUpperCase(Locale.US);
     }
 
+    @Nonnull
     @Override
     public ElementNode setTagName(@Nonnull CharSequence tagName) {
         this.tagName = normalizeTagName(tagName);
@@ -54,6 +56,7 @@ public class ElementNode extends AbstractNode<ElementNode> implements IDomElemen
         return StringUtils.equalsIgnoreCase(this.tagName, tagName);
     }
 
+    @Nonnull
     @Override
     public ElementNode addChild(int index, @Nonnull AbstractNode<?> node) {
         if (index < 0 || index > (children == null ? 0 : children.size())) {
@@ -64,11 +67,13 @@ public class ElementNode extends AbstractNode<ElementNode> implements IDomElemen
         return this;
     }
 
+    @Nonnull
     @Override
     public ElementNode prependChild(@Nonnull AbstractNode<?> node) {
         return addChild(0, node);
     }
 
+    @Nonnull
     @Override
     public ElementNode appendChild(@Nonnull AbstractNode<?> node) {
         return addChild(children == null ? 0 : children.size(), node);
@@ -80,6 +85,7 @@ public class ElementNode extends AbstractNode<ElementNode> implements IDomElemen
         if (children.size() == 0) children = null;
     }
 
+    @Nonnull
     @Override
     public List<AbstractNode<?>> children() {
         if (children == null) {
@@ -89,56 +95,67 @@ public class ElementNode extends AbstractNode<ElementNode> implements IDomElemen
         }
     }
 
+    @Nonnull
     @Override
     public ElementNode addChild(int index, @Nonnull CharSequence tagName) {
         return addChild(index, new ElementNode(tagName));
     }
 
+    @Nonnull
     @Override
     public ElementNode addText(int index, @Nonnull CharSequence text) {
         return addChild(index, new TextNode(text));
     }
 
+    @Nonnull
     @Override
     public ElementNode addText(int index, @Nonnull CharSequence text, @Nonnull ContentEscapeMode contentEscapeMode) {
         return addChild(index, new TextNode(text, contentEscapeMode));
     }
 
+    @Nonnull
     @Override
     public ElementNode appendChild(@Nonnull CharSequence tagName) {
         return appendChild(new ElementNode(tagName));
     }
 
+    @Nonnull
     @Override
     public ElementNode appendText(@Nonnull CharSequence text) {
         return appendChild(new TextNode(text));
     }
 
+    @Nonnull
     @Override
     public ElementNode appendText(@Nonnull CharSequence text, @Nonnull ContentEscapeMode contentEscapeMode) {
         return appendChild(new TextNode(text, contentEscapeMode));
     }
 
+    @Nonnull
     @Override
     public ElementNode prependChild(@Nonnull CharSequence tagName) {
         return prependChild(new ElementNode(tagName));
     }
 
+    @Nonnull
     @Override
     public ElementNode prependText(@Nonnull CharSequence text) {
         return prependChild(new TextNode(text));
     }
 
+    @Nonnull
     @Override
     public ElementNode prependText(@Nonnull CharSequence text, @Nonnull ContentEscapeMode contentEscapeMode) {
         return prependChild(new TextNode(text, contentEscapeMode));
     }
 
+    @Nonnull
     @Override
     public ElementNode setContent(CharSequence content) {
         return setContent(content, ContentEscapeMode.getDefault());
     }
 
+    @Nonnull
     @Override
     public ElementNode setContent(CharSequence content, @Nonnull ContentEscapeMode contentEscapeMode) {
         clear();
@@ -171,6 +188,7 @@ public class ElementNode extends AbstractNode<ElementNode> implements IDomElemen
         return attr.get(normalizeAttributeKey(key));
     }
 
+    @Nonnull
     @Override
     public ElementNode putAttr(@Nonnull CharSequence key, CharSequence value) {
         if (value == null) {
@@ -182,6 +200,7 @@ public class ElementNode extends AbstractNode<ElementNode> implements IDomElemen
         return this;
     }
 
+    @Nonnull
     @Override
     public ElementNode removeAttr(@Nonnull CharSequence key) {
         if (attr == null) return this;
@@ -190,6 +209,7 @@ public class ElementNode extends AbstractNode<ElementNode> implements IDomElemen
         return this;
     }
 
+    @Nonnull
     @Override
     public Map<String, String> getAttrs() {
         if (attr == null) {
@@ -215,6 +235,7 @@ public class ElementNode extends AbstractNode<ElementNode> implements IDomElemen
         return getAttr("id") != null;
     }
 
+    @Nonnull
     @Override
     public ElementNode setId(@Nonnull CharSequence id) {
         return putAttr("id", id);
@@ -225,17 +246,20 @@ public class ElementNode extends AbstractNode<ElementNode> implements IDomElemen
         return getAttr("id");
     }
 
+    @Nonnull
     @Override
     public ElementNode setRandomId() {
         return putAttr("id", UUID.randomUUID().toString());
     }
 
+    @Nonnull
     @Override
     public ElementNode setRandomIdIfNone() {
         if (!isIdSet()) setRandomId();
         return this;
     }
 
+    @Nonnull
     @Override
     public ElementNode removeId() {
         return removeAttr("id");
@@ -251,6 +275,7 @@ public class ElementNode extends AbstractNode<ElementNode> implements IDomElemen
         return getCssClasses().contains(normalizeCssClassName(cssClassName));
     }
 
+    @Nonnull
     @Override
     public ElementNode addCssClass(@Nonnull CharSequence cssClassName) {
         List<String> cssClassList = getCssClasses();
@@ -262,6 +287,7 @@ public class ElementNode extends AbstractNode<ElementNode> implements IDomElemen
         return this;
     }
 
+    @Nonnull
     @Override
     public ElementNode removeCssClass(@Nonnull CharSequence cssClassName) {
         List<String> cssClassList = getCssClasses();
@@ -271,6 +297,7 @@ public class ElementNode extends AbstractNode<ElementNode> implements IDomElemen
         return this;
     }
 
+    @Nonnull
     @Override
     public List<String> getCssClasses() {
         String cssClassAttributeValue = getAttr(HTML_ATTR_CLASS);
@@ -282,6 +309,7 @@ public class ElementNode extends AbstractNode<ElementNode> implements IDomElemen
         return cssClassNameList;
     }
 
+    @Nonnull
     @Override
     public ElementNode setCssClasses(@Nonnull List<? extends CharSequence> cssClassNames) {
         String cssClassString = StringUtils.join(cssClassNames, HTML_SEPARATOR_CLASS);
@@ -301,6 +329,7 @@ public class ElementNode extends AbstractNode<ElementNode> implements IDomElemen
         return actualValue != null && queryMatchMode.compare(actualValue, value);
     }
 
+    @Nonnull
     @Override
     public ElementNode addCssStyle(@Nonnull CharSequence styleKey, CharSequence styleValue) {
         Map<String, String> cssStyleMap = getCssStyles();
@@ -311,6 +340,7 @@ public class ElementNode extends AbstractNode<ElementNode> implements IDomElemen
         return this;
     }
 
+    @Nonnull
     @Override
     public ElementNode removeCssStyle(@Nonnull CharSequence styleKey) {
         Map<String, String> cssStyleMap = getCssStyles();
@@ -320,6 +350,7 @@ public class ElementNode extends AbstractNode<ElementNode> implements IDomElemen
         return this;
     }
 
+    @Nonnull
     @Override
     public Map<String, String> getCssStyles() {
         String cssClassAttributeValue = getAttr(HTML_ATTR_STYLE);
@@ -339,6 +370,7 @@ public class ElementNode extends AbstractNode<ElementNode> implements IDomElemen
         return cssStyleMap;
     }
 
+    @Nonnull
     @Override
     public ElementNode setCssStyles(@Nonnull Map<? extends CharSequence, ? extends CharSequence> cssStyles) {
         StringBuilder stringBuilder = new StringBuilder();
@@ -349,6 +381,7 @@ public class ElementNode extends AbstractNode<ElementNode> implements IDomElemen
         return this;
     }
 
+    @Nonnull
     @Override
     public ElementNode clear() {
         if (children == null) return this;
@@ -357,11 +390,13 @@ public class ElementNode extends AbstractNode<ElementNode> implements IDomElemen
         return this;
     }
 
+    @Nonnull
     @Override
     public ElementNodeSelection findByTag(@Nonnull CharSequence tagName) {
         return findByTag(tagName, Integer.MAX_VALUE);
     }
 
+    @Nonnull
     @Override
     public ElementNodeSelection findByTag(@Nonnull CharSequence tagName, int maxDepth) {
         return new ElementNodeSelection(findByFilter(new TagNameFilter(tagName), maxDepth));
@@ -384,61 +419,73 @@ public class ElementNode extends AbstractNode<ElementNode> implements IDomElemen
         }
     }
 
+    @Nonnull
     @Override
     public ElementNodeSelection findByAttr(@Nonnull CharSequence key) {
         return findByAttr(key, Integer.MAX_VALUE);
     }
 
+    @Nonnull
     @Override
     public ElementNodeSelection findByAttr(@Nonnull CharSequence key, int maxDepth) {
         return new ElementNodeSelection(findByFilter(new AttributeKeyExistenceFilter(key), maxDepth));
     }
 
+    @Nonnull
     @Override
     public ElementNodeSelection findByAttr(@Nonnull CharSequence key, CharSequence value, @Nonnull QueryMatchMode queryMatchMode) {
         return findByAttr(key, value, queryMatchMode, Integer.MAX_VALUE);
     }
 
+    @Nonnull
     @Override
     public ElementNodeSelection findByAttr(@Nonnull CharSequence key, CharSequence value, @Nonnull QueryMatchMode queryMatchMode, int maxDepth) {
         return new ElementNodeSelection(findByFilter(new AttributeKeyValueFilter(key, value, queryMatchMode), maxDepth));
     }
 
+    @Nonnull
     @Override
     public ElementNodeSelection findByCssClass(@Nonnull CharSequence cssClassName) {
         return findByCssClass(cssClassName, Integer.MAX_VALUE);
     }
 
+    @Nonnull
     @Override
     public ElementNodeSelection findByCssClass(@Nonnull CharSequence cssClassName, int maxDepth) {
         return new ElementNodeSelection(findByFilter(new CssClassNameFilter(cssClassName), maxDepth));
     }
 
+    @Nonnull
     @Override
     public <N2 extends AbstractNode<N2>, C2 extends NodeSelection<N2, C2>> NodeSelection<N2, C2> findByFilter(@Nonnull INodeFilter<N2> nodeFilter) {
         return findByFilter(nodeFilter, Integer.MAX_VALUE);
     }
 
+    @Nonnull
     @Override
     public <N2 extends AbstractNode<N2>, C2 extends NodeSelection<N2, C2>> NodeSelection<N2, C2> findByFilter(@Nonnull INodeFilter<N2> nodeFilter, int maxDepth) {
         return new NodeSelection<N2, C2>(NodeFilterSupport.getInstance().filter(this, nodeFilter, maxDepth));
     }
 
+    @Nonnull
     @Override
     public TextNodeSelection findTextNodes() {
         return findTextNodes(Integer.MAX_VALUE);
     }
 
+    @Nonnull
     @Override
     public TextNodeSelection findTextNodes(int maxDepth) {
         return new TextNodeSelection(findByFilter(new TextNodeFilter(), maxDepth));
     }
 
+    @Nonnull
     @Override
     public ElementNodeSelection findElements() {
         return findElements(Integer.MAX_VALUE);
     }
 
+    @Nonnull
     @Override
     public ElementNodeSelection findElements(int maxDepth) {
         return new ElementNodeSelection(findByFilter(new ElementNodeFilter(), maxDepth));

@@ -29,6 +29,7 @@ public class NodeSelection<N extends AbstractNode<N>, C extends NodeSelection<N,
         return selected;
     }
 
+    @Nonnull
     @Override
     @SuppressWarnings("unchecked")
     public C clear() {
@@ -38,6 +39,7 @@ public class NodeSelection<N extends AbstractNode<N>, C extends NodeSelection<N,
         return (C) this;
     }
 
+    @Nonnull
     @Override
     @SuppressWarnings("unchecked")
     public C setRendered(boolean render) {
@@ -47,6 +49,7 @@ public class NodeSelection<N extends AbstractNode<N>, C extends NodeSelection<N,
         return (C) this;
     }
 
+    @Nonnull
     @Override
     @SuppressWarnings("unchecked")
     public C remove() {
@@ -61,6 +64,7 @@ public class NodeSelection<N extends AbstractNode<N>, C extends NodeSelection<N,
         return getSelected().size();
     }
 
+    @Nonnull
     @Override
     @SuppressWarnings("unchecked")
     public C setContent(CharSequence content) {
@@ -70,6 +74,7 @@ public class NodeSelection<N extends AbstractNode<N>, C extends NodeSelection<N,
         return (C) this;
     }
 
+    @Nonnull
     @Override
     @SuppressWarnings("unchecked")
     public C setContent(CharSequence content, @Nonnull ContentEscapeMode escapeMode) {
@@ -79,6 +84,7 @@ public class NodeSelection<N extends AbstractNode<N>, C extends NodeSelection<N,
         return (C) this;
     }
 
+    @Nonnull
     @Override
     @SuppressWarnings("unchecked")
     public C addNodeAttachment(@Nonnull NodeAttachment<? extends N> nodeAttachment) {
@@ -88,6 +94,7 @@ public class NodeSelection<N extends AbstractNode<N>, C extends NodeSelection<N,
         return (C) this;
     }
 
+    @Nonnull
     @Override
     @SuppressWarnings("unchecked")
     public C removeNodeAttachment(@Nonnull NodeAttachment<? extends N> nodeAttachment) {
@@ -97,6 +104,7 @@ public class NodeSelection<N extends AbstractNode<N>, C extends NodeSelection<N,
         return (C) this;
     }
 
+    @Nonnull
     @Override
     public N get(int index) {
         if (index < 0 || index >= selected.size()) {
@@ -105,6 +113,7 @@ public class NodeSelection<N extends AbstractNode<N>, C extends NodeSelection<N,
         return selected.get(index);
     }
 
+    @Nonnull
     @Override
     public NodeSelection<N, ?> get(int from, int to) {
         if (from < 0 || to < 0 || from >= selected.size() || to >= selected.size()) {
@@ -117,21 +126,25 @@ public class NodeSelection<N extends AbstractNode<N>, C extends NodeSelection<N,
         return new NodeSelection<N, NodeSelection<N, ?>>(subSelection);
     }
 
+    @Nonnull
     @Override
     public ElementNodeSelection reduceByTag(@Nonnull CharSequence tagName) {
         return new ElementNodeSelection(this.reduceByFilter(new TagNameFilter(tagName)));
     }
 
+    @Nonnull
     @Override
     public ElementNodeSelection reduceByAttr(@Nonnull CharSequence key) {
         return new ElementNodeSelection(this.reduceByFilter(new AttributeKeyExistenceFilter(key)));
     }
 
+    @Nonnull
     @Override
     public ElementNodeSelection reduceByAttr(@Nonnull CharSequence key, CharSequence value, @Nonnull QueryMatchMode queryMatchMode) {
         return new ElementNodeSelection(this.reduceByFilter(new AttributeKeyValueFilter(key, value, queryMatchMode)));
     }
 
+    @Nonnull
     @Override
     public <N2 extends AbstractNode<N2>, C2 extends NodeSelection<N2, C2>> NodeSelection<N2, C2> reduceByFilter(@Nonnull INodeFilter<N2> nodeFilter) {
         Class<? extends N2> filterArgumentClass = NodeFilterSupport.getInstance().findFilterParameterClass(nodeFilter);
@@ -148,11 +161,13 @@ public class NodeSelection<N extends AbstractNode<N>, C extends NodeSelection<N,
         return new NodeSelection<N2, C2>(foundNodes);
     }
 
+    @Nonnull
     @Override
     public TextNodeSelection reduceToText() {
         return new TextNodeSelection(this.reduceByFilter(new TextNodeFilter()));
     }
 
+    @Nonnull
     @Override
     public ElementNodeSelection reduceToElement() {
         return new ElementNodeSelection(this.reduceByFilter(new ElementNodeFilter()));
@@ -180,6 +195,7 @@ public class NodeSelection<N extends AbstractNode<N>, C extends NodeSelection<N,
         };
     }
 
+    @Nonnull
     @Override
     @SuppressWarnings("unchecked")
     public C clone() {

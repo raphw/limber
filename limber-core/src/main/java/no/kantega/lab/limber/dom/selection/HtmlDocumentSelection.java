@@ -16,6 +16,7 @@ public class HtmlDocumentSelection extends ElementNodeSelection implements IDomH
         this.rootNode = rootNode;
     }
 
+    @Nonnull
     @Override
     public ElementNode getRootNode() {
         return rootNode;
@@ -39,12 +40,14 @@ public class HtmlDocumentSelection extends ElementNodeSelection implements IDomH
         return selection.get(0);
     }
 
+    @Nonnull
     @Override
     public HtmlDocumentSelection setTile(@Nonnull CharSequence charSequence) {
         getTitleNode().clear().appendText(charSequence);
         return this;
     }
 
+    @Nonnull
     @Override
     public String getTitle() {
         ElementNode titleNode = getTitleNode();
@@ -55,6 +58,7 @@ public class HtmlDocumentSelection extends ElementNodeSelection implements IDomH
         return stringBuilder.toString();
     }
 
+    @Nonnull
     @Override
     public HtmlDocumentSelection clearTitle() {
         getTitleNode().clear();

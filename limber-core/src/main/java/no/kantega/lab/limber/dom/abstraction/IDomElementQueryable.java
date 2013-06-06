@@ -9,18 +9,23 @@ import java.util.Map;
 
 public interface IDomElementQueryable extends IDomNodeQueryable {
 
+    @Nonnull
     String getTagName();
 
+    @Nonnull
     List<AbstractNode<?>> children();
 
     String getAttr(@Nonnull CharSequence key);
 
+    @Nonnull
     Map<String, String> getAttrs();
 
     String getId();
 
+    @Nonnull
     List<String> getCssClasses();
 
+    @Nonnull
     Map<String, String> getCssStyles();
 
     boolean isTag(CharSequence tagName);

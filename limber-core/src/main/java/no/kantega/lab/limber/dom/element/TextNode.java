@@ -22,11 +22,13 @@ public class TextNode extends AbstractNode<TextNode> implements IDomTextNodeMorp
         return content;
     }
 
+    @Nonnull
     @Override
     public TextNode setContent(CharSequence content) {
         return setContent(content, ContentEscapeMode.getDefault());
     }
 
+    @Nonnull
     @Override
     public TextNode setContent(CharSequence content, @Nonnull ContentEscapeMode contentEscapeMode) {
         if (content == null) {
@@ -37,6 +39,7 @@ public class TextNode extends AbstractNode<TextNode> implements IDomTextNodeMorp
         return this;
     }
 
+    @Nonnull
     @Override
     public TextNode clear() {
         content = null;

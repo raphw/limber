@@ -23,6 +23,7 @@ public class ElementNodeSelection extends NodeSelection<ElementNode, ElementNode
         super(that);
     }
 
+    @Nonnull
     @Override
     public ElementNodeSelection setTagName(@Nonnull CharSequence tagName) {
         for (ElementNode elementNode : getSelected()) {
@@ -31,6 +32,7 @@ public class ElementNodeSelection extends NodeSelection<ElementNode, ElementNode
         return this;
     }
 
+    @Nonnull
     @Override
     public ElementNodeSelection addChild(int index, @Nonnull AbstractNode<?> prototype) {
         for (ElementNode elementNode : getSelected()) {
@@ -39,6 +41,7 @@ public class ElementNodeSelection extends NodeSelection<ElementNode, ElementNode
         return this;
     }
 
+    @Nonnull
     @Override
     public ElementNodeSelection appendChild(@Nonnull AbstractNode<?> prototype) {
         for (ElementNode elementNode : getSelected()) {
@@ -47,6 +50,7 @@ public class ElementNodeSelection extends NodeSelection<ElementNode, ElementNode
         return this;
     }
 
+    @Nonnull
     @Override
     public ElementNodeSelection prependChild(@Nonnull AbstractNode<?> prototype) {
         for (ElementNode elementNode : getSelected()) {
@@ -55,6 +59,7 @@ public class ElementNodeSelection extends NodeSelection<ElementNode, ElementNode
         return this;
     }
 
+    @Nonnull
     @Override
     public ElementNodeSelection addChild(int index, @Nonnull CharSequence tagName) {
         for (ElementNode elementNode : getSelected()) {
@@ -63,6 +68,7 @@ public class ElementNodeSelection extends NodeSelection<ElementNode, ElementNode
         return this;
     }
 
+    @Nonnull
     @Override
     public ElementNodeSelection appendChild(@Nonnull CharSequence tagName) {
         for (ElementNode elementNode : getSelected()) {
@@ -71,6 +77,7 @@ public class ElementNodeSelection extends NodeSelection<ElementNode, ElementNode
         return this;
     }
 
+    @Nonnull
     @Override
     public ElementNodeSelection prependChild(@Nonnull CharSequence tagName) {
         for (ElementNode elementNode : getSelected()) {
@@ -79,6 +86,7 @@ public class ElementNodeSelection extends NodeSelection<ElementNode, ElementNode
         return this;
     }
 
+    @Nonnull
     @Override
     public ElementNodeSelection addText(int index, @Nonnull CharSequence text) {
         for (ElementNode elementNode : getSelected()) {
@@ -87,6 +95,7 @@ public class ElementNodeSelection extends NodeSelection<ElementNode, ElementNode
         return this;
     }
 
+    @Nonnull
     @Override
     public ElementNodeSelection addText(int index, @Nonnull CharSequence text, @Nonnull ContentEscapeMode contentEscapeMode) {
         for (ElementNode elementNode : getSelected()) {
@@ -95,6 +104,7 @@ public class ElementNodeSelection extends NodeSelection<ElementNode, ElementNode
         return this;
     }
 
+    @Nonnull
     @Override
     public ElementNodeSelection appendText(@Nonnull CharSequence text) {
         for (ElementNode elementNode : getSelected()) {
@@ -103,6 +113,7 @@ public class ElementNodeSelection extends NodeSelection<ElementNode, ElementNode
         return this;
     }
 
+    @Nonnull
     @Override
     public ElementNodeSelection appendText(@Nonnull CharSequence text, @Nonnull ContentEscapeMode contentEscapeMode) {
         for (ElementNode elementNode : getSelected()) {
@@ -111,6 +122,7 @@ public class ElementNodeSelection extends NodeSelection<ElementNode, ElementNode
         return this;
     }
 
+    @Nonnull
     @Override
     public ElementNodeSelection prependText(@Nonnull CharSequence text) {
         for (ElementNode elementNode : getSelected()) {
@@ -119,6 +131,7 @@ public class ElementNodeSelection extends NodeSelection<ElementNode, ElementNode
         return this;
     }
 
+    @Nonnull
     @Override
     public ElementNodeSelection prependText(@Nonnull CharSequence text, @Nonnull ContentEscapeMode contentEscapeMode) {
         for (ElementNode elementNode : getSelected()) {
@@ -127,6 +140,7 @@ public class ElementNodeSelection extends NodeSelection<ElementNode, ElementNode
         return this;
     }
 
+    @Nonnull
     @Override
     public ElementNodeSelection putAttr(@Nonnull CharSequence key, CharSequence value) {
         for (ElementNode elementNode : getSelected()) {
@@ -135,6 +149,7 @@ public class ElementNodeSelection extends NodeSelection<ElementNode, ElementNode
         return this;
     }
 
+    @Nonnull
     @Override
     public ElementNodeSelection setId(@Nonnull CharSequence id) {
         for (ElementNode elementNode : getSelected()) {
@@ -143,6 +158,7 @@ public class ElementNodeSelection extends NodeSelection<ElementNode, ElementNode
         return this;
     }
 
+    @Nonnull
     @Override
     public ElementNodeSelection setRandomId() {
         for (ElementNode elementNode : getSelected()) {
@@ -151,6 +167,7 @@ public class ElementNodeSelection extends NodeSelection<ElementNode, ElementNode
         return this;
     }
 
+    @Nonnull
     @Override
     public ElementNodeSelection setRandomIdIfNone() {
         for (ElementNode elementNode : getSelected()) {
@@ -159,6 +176,7 @@ public class ElementNodeSelection extends NodeSelection<ElementNode, ElementNode
         return this;
     }
 
+    @Nonnull
     @Override
     public ElementNodeSelection removeId() {
         for (ElementNode elementNode : getSelected()) {
@@ -167,6 +185,7 @@ public class ElementNodeSelection extends NodeSelection<ElementNode, ElementNode
         return this;
     }
 
+    @Nonnull
     @Override
     public ElementNodeSelection removeAttr(@Nonnull CharSequence key) {
         for (ElementNode elementNode : getSelected()) {
@@ -175,6 +194,7 @@ public class ElementNodeSelection extends NodeSelection<ElementNode, ElementNode
         return this;
     }
 
+    @Nonnull
     @Override
     public ElementNodeSelection addCssClass(@Nonnull CharSequence cssClassName) {
         for (ElementNode elementNode : getSelected()) {
@@ -183,6 +203,7 @@ public class ElementNodeSelection extends NodeSelection<ElementNode, ElementNode
         return this;
     }
 
+    @Nonnull
     @Override
     public ElementNodeSelection setCssClasses(@Nonnull List<? extends CharSequence> cssClassNames) {
         for (ElementNode elementNode : getSelected()) {
@@ -191,6 +212,7 @@ public class ElementNodeSelection extends NodeSelection<ElementNode, ElementNode
         return this;
     }
 
+    @Nonnull
     @Override
     public ElementNodeSelection removeCssClass(@Nonnull CharSequence cssClassName) {
         for (ElementNode elementNode : getSelected()) {
@@ -199,6 +221,7 @@ public class ElementNodeSelection extends NodeSelection<ElementNode, ElementNode
         return this;
     }
 
+    @Nonnull
     @Override
     public ElementNodeSelection addCssStyle(@Nonnull CharSequence styleKey, CharSequence styleValue) {
         for (ElementNode elementNode : getSelected()) {
@@ -207,6 +230,7 @@ public class ElementNodeSelection extends NodeSelection<ElementNode, ElementNode
         return this;
     }
 
+    @Nonnull
     @Override
     public ElementNodeSelection setCssStyles(@Nonnull Map<? extends CharSequence, ? extends CharSequence> cssStyles) {
         for (ElementNode elementNode : getSelected()) {
@@ -215,6 +239,7 @@ public class ElementNodeSelection extends NodeSelection<ElementNode, ElementNode
         return this;
     }
 
+    @Nonnull
     @Override
     public ElementNodeSelection removeCssStyle(@Nonnull CharSequence styleKey) {
         for (ElementNode elementNode : getSelected()) {
@@ -223,16 +248,19 @@ public class ElementNodeSelection extends NodeSelection<ElementNode, ElementNode
         return this;
     }
 
+    @Nonnull
     @Override
     public ElementNodeSelection get(int from, int to) {
         return new ElementNodeSelection(super.get(from, to));
     }
 
+    @Nonnull
     @Override
     public ElementNodeSelection findByTag(@Nonnull CharSequence tagName) {
         return findByTag(tagName, Integer.MAX_VALUE);
     }
 
+    @Nonnull
     @Override
     public ElementNodeSelection findByTag(@Nonnull CharSequence tagName, int maxDepth) {
         return new ElementNodeSelection(findByFilter(new TagNameFilter(tagName), maxDepth));
@@ -255,41 +283,49 @@ public class ElementNodeSelection extends NodeSelection<ElementNode, ElementNode
         }
     }
 
+    @Nonnull
     @Override
     public ElementNodeSelection findByCssClass(@Nonnull CharSequence cssClassName) {
         return findByCssClass(cssClassName, Integer.MAX_VALUE);
     }
 
+    @Nonnull
     @Override
     public ElementNodeSelection findByCssClass(@Nonnull CharSequence cssClassName, int maxDepth) {
         return new ElementNodeSelection(findByFilter(new CssClassNameFilter(cssClassName), maxDepth));
     }
 
+    @Nonnull
     @Override
     public ElementNodeSelection findByAttr(@Nonnull CharSequence key) {
         return findByAttr(key, Integer.MAX_VALUE);
     }
 
+    @Nonnull
     @Override
     public ElementNodeSelection findByAttr(@Nonnull CharSequence key, int maxDepth) {
         return new ElementNodeSelection(findByFilter(new AttributeKeyExistenceFilter(key), maxDepth));
     }
 
+    @Nonnull
     @Override
     public ElementNodeSelection findByAttr(@Nonnull CharSequence key, CharSequence value, @Nonnull QueryMatchMode queryMatchMode) {
         return findByAttr(key, value, queryMatchMode, Integer.MAX_VALUE);
     }
 
+    @Nonnull
     @Override
     public ElementNodeSelection findByAttr(@Nonnull CharSequence key, CharSequence value, @Nonnull QueryMatchMode queryMatchMode, int maxDepth) {
         return new ElementNodeSelection(findByFilter(new AttributeKeyValueFilter(key, value, queryMatchMode), maxDepth));
     }
 
+    @Nonnull
     @Override
     public <N2 extends AbstractNode<N2>, C2 extends NodeSelection<N2, C2>> NodeSelection<N2, C2> findByFilter(@Nonnull INodeFilter<N2> nodeFilter) {
         return findByFilter(nodeFilter, Integer.MAX_VALUE);
     }
 
+    @Nonnull
     @Override
     public <N2 extends AbstractNode<N2>, C2 extends NodeSelection<N2, C2>> NodeSelection<N2, C2> findByFilter(@Nonnull INodeFilter<N2> nodeFilter, int maxDepth) {
         List<N2> resultSelection = new LinkedList<N2>();
@@ -299,21 +335,25 @@ public class ElementNodeSelection extends NodeSelection<ElementNode, ElementNode
         return new NodeSelection<N2, C2>(resultSelection);
     }
 
+    @Nonnull
     @Override
     public TextNodeSelection findTextNodes() {
         return findTextNodes(Integer.MAX_VALUE);
     }
 
+    @Nonnull
     @Override
     public TextNodeSelection findTextNodes(int maxDepth) {
         return new TextNodeSelection(findByFilter(new TextNodeFilter(), maxDepth));
     }
 
+    @Nonnull
     @Override
     public ElementNodeSelection findElements() {
         return findElements(Integer.MAX_VALUE);
     }
 
+    @Nonnull
     @Override
     public ElementNodeSelection findElements(int maxDepth) {
         return new ElementNodeSelection(findByFilter(new ElementNodeFilter(), maxDepth));

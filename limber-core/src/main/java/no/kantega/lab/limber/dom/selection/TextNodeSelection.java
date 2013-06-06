@@ -16,6 +16,7 @@ public class TextNodeSelection extends NodeSelection<TextNode, TextNodeSelection
         super(that);
     }
 
+    @Nonnull
     @Override
     public TextNodeSelection get(int from, int to) {
         return new TextNodeSelection(super.get(from, to));

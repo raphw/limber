@@ -17,6 +17,7 @@ public abstract class AbstractNode<N extends AbstractNode<N>> implements IDomNod
         this.rendered = true;
     }
 
+    @Nonnull
     @Override
     @SuppressWarnings("unchecked")
     public N addNodeAttachment(@Nonnull NodeAttachment<? extends N> nodeAttachment) {
@@ -25,6 +26,7 @@ public abstract class AbstractNode<N extends AbstractNode<N>> implements IDomNod
         return (N) this;
     }
 
+    @Nonnull
     @Override
     @SuppressWarnings("unchecked")
     public N removeNodeAttachment(@Nonnull NodeAttachment<? extends N> nodeAttachment) {
@@ -34,6 +36,7 @@ public abstract class AbstractNode<N extends AbstractNode<N>> implements IDomNod
         return (N) this;
     }
 
+    @Nonnull
     @Override
     @SuppressWarnings("unchecked")
     public N remove() {
@@ -48,6 +51,7 @@ public abstract class AbstractNode<N extends AbstractNode<N>> implements IDomNod
         return rendered;
     }
 
+    @Nonnull
     @Override
     @SuppressWarnings("unchecked")
     public N setRendered(boolean rendered) {
@@ -55,6 +59,7 @@ public abstract class AbstractNode<N extends AbstractNode<N>> implements IDomNod
         return (N) this;
     }
 
+    @Nonnull
     @Override
     @SuppressWarnings("unchecked")
     public N clone() {
