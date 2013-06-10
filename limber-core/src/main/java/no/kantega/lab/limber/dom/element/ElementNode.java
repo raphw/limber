@@ -15,7 +15,7 @@ import javax.annotation.Nonnull;
 import java.util.*;
 
 public class ElementNode extends AbstractNode<ElementNode> implements IDomElementMorphable<ElementNode>,
-        IDomElementBrowsable<AbstractNode, ElementNode>, IDomElementQueryable {
+        IDomElementBrowsable<AbstractNode<?>, ElementNode>, IDomElementQueryable {
 
     private static final String HTML_ATTR_CLASS = "class";
     private static final String HTML_ATTR_STYLE = "style";
@@ -529,8 +529,8 @@ public class ElementNode extends AbstractNode<ElementNode> implements IDomElemen
     }
 
     @Override
-    public Iterator<AbstractNode> iterator() {
-        return new Iterator<AbstractNode>() {
+    public Iterator<AbstractNode<?>> iterator() {
+        return new Iterator<AbstractNode<?>>() {
             private int iterationCount = 0;
 
             @Override
@@ -539,7 +539,7 @@ public class ElementNode extends AbstractNode<ElementNode> implements IDomElemen
             }
 
             @Override
-            public AbstractNode next() {
+            public AbstractNode<?> next() {
                 return getChildren().get(iterationCount++);
             }
 
