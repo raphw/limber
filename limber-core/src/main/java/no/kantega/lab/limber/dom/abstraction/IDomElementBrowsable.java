@@ -10,7 +10,7 @@ import no.kantega.lab.limber.dom.selection.TextNodeSelection;
 
 import javax.annotation.Nonnull;
 
-public interface IDomElementBrowsable<N extends AbstractNode<?>, B extends IDomNodeBrowsable<B>> extends IDomNodeBrowsable<B>, Iterable<N> {
+public interface IDomElementBrowsable<N extends AbstractNode, B extends IDomNodeBrowsable<B>> extends IDomNodeBrowsable<B>, Iterable<N> {
 
     @Nonnull
     ElementNodeSelection findByTag(@Nonnull CharSequence tagName);
@@ -41,16 +41,25 @@ public interface IDomElementBrowsable<N extends AbstractNode<?>, B extends IDomN
     ElementNodeSelection findByAttr(@Nonnull CharSequence key, CharSequence value, @Nonnull QueryMatchMode queryMatchMode, int maxDepth);
 
     @Nonnull
-    <N2 extends AbstractNode<?>, C2 extends NodeSelection<N2, C2>> NodeSelection<N2, C2> findByFilter(@Nonnull INodeFilter<N2> nodeFilter);
+    NodeSelection<AbstractNode, ?> findByFilter(@Nonnull INodeFilter<AbstractNode> nodeFilter);
 
     @Nonnull
-    <N2 extends AbstractNode<?>, C2 extends NodeSelection<N2, C2>> NodeSelection<N2, C2> findByFilter(@Nonnull INodeFilter<N2> nodeFilter, int maxDepth);
+    NodeSelection<AbstractNode, ?> findByFilter(@Nonnull INodeFilter<AbstractNode> nodeFilter, int maxDepth);
 
     @Nonnull
-    <N2 extends AbstractNode<?>> NodeSelection<N2, ?> getChildren();
+    <N2 extends AbstractNode> NodeSelection<N2, ?> findByFilter(@Nonnull INodeFilter<N2> nodeFilter, @Nonnull Class<? extends N2> filterBoundary);
 
     @Nonnull
-    <N2 extends AbstractNode<?>> NodeSelection<N2, ?> getChildren(@Nonnull INodeFilter<N2> nodeFilter);
+    <N2 extends AbstractNode> NodeSelection<N2, ?> findByFilter(@Nonnull INodeFilter<N2> nodeFilter, @Nonnull Class<? extends N2> filterBoundary, int maxDepth);
+
+    @Nonnull
+    NodeSelection<AbstractNode, ?> getChildren();
+
+    @Nonnull
+    NodeSelection<AbstractNode, ?> getChildren(@Nonnull INodeFilter<AbstractNode> nodeFilter);
+
+    @Nonnull
+    <N2 extends AbstractNode> NodeSelection<N2, ?> getChildren(@Nonnull INodeFilter<N2> nodeFilter, Class<? extends N2> filterBoundary);
 
     @Nonnull
     TextNodeSelection findTextNodes();

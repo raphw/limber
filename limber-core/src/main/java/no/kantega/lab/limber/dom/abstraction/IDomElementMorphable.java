@@ -2,13 +2,12 @@ package no.kantega.lab.limber.dom.abstraction;
 
 import no.kantega.lab.limber.dom.element.AbstractNode;
 import no.kantega.lab.limber.dom.element.ContentEscapeMode;
-import no.kantega.lab.limber.dom.element.ElementNode;
 
 import javax.annotation.Nonnull;
 import java.util.List;
 import java.util.Map;
 
-public interface IDomElementMorphable<M extends IDomElementMorphable<M>> extends IDomNodeMorphable<ElementNode, M> {
+public interface IDomElementMorphable<M extends IDomElementMorphable<M>> extends IDomNodeMorphable<M> {
 
     @Nonnull
     M addChildAndStay(int index, @Nonnull AbstractNode<?> node);

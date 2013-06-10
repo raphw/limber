@@ -9,7 +9,7 @@ import no.kantega.lab.limber.dom.selection.TextNodeSelection;
 
 import javax.annotation.Nonnull;
 
-public interface IDomElementFilterable<N extends AbstractNode<?>> extends Iterable<N> {
+public interface IDomElementFilterable<N extends AbstractNode> extends Iterable<N> {
 
     @Nonnull
     N get(int index);
@@ -27,7 +27,10 @@ public interface IDomElementFilterable<N extends AbstractNode<?>> extends Iterab
     ElementNodeSelection reduceByAttr(@Nonnull CharSequence key, CharSequence value, @Nonnull QueryMatchMode queryMatchMode);
 
     @Nonnull
-    <N2 extends AbstractNode<?>, C2 extends NodeSelection<N2, C2>> NodeSelection<N2, C2> reduceByFilter(@Nonnull INodeFilter<N2> nodeFilter);
+    NodeSelection<AbstractNode, ?> reduceByFilter(@Nonnull INodeFilter<AbstractNode> nodeFilter);
+
+    @Nonnull
+    <N2 extends AbstractNode> NodeSelection<N2, ?> reduceByFilter(@Nonnull INodeFilter<N2> nodeFilter, Class<? extends N2> filterBoundary);
 
     @Nonnull
     TextNodeSelection reduceToText();

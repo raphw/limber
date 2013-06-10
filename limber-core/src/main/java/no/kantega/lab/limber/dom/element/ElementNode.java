@@ -15,7 +15,7 @@ import javax.annotation.Nonnull;
 import java.util.*;
 
 public class ElementNode extends AbstractNode<ElementNode> implements IDomElementMorphable<ElementNode>,
-        IDomElementBrowsable<AbstractNode<?>, ElementNode>, IDomElementQueryable {
+        IDomElementBrowsable<AbstractNode, ElementNode>, IDomElementQueryable {
 
     private static final String HTML_ATTR_CLASS = "class";
     private static final String HTML_ATTR_STYLE = "style";
@@ -89,17 +89,23 @@ public class ElementNode extends AbstractNode<ElementNode> implements IDomElemen
 
     @Nonnull
     @Override
-    public <N2 extends AbstractNode<?>> NodeSelection<N2, ?> getChildren() {
-        return getChildren(new BooleanRepeaterFilter<N2>(true));
+    public NodeSelection<AbstractNode, ?> getChildren() {
+        return getChildren(new BooleanRepeaterFilter<AbstractNode>(true));
     }
 
     @Nonnull
     @Override
-    public <N2 extends AbstractNode<?>> NodeSelection<N2, ?> getChildren(@Nonnull INodeFilter<N2> nodeFilter) {
+    public NodeSelection<AbstractNode, ?> getChildren(@Nonnull INodeFilter<AbstractNode> nodeFilter) {
+        return getChildren(nodeFilter, AbstractNode.class);
+    }
+
+    @Nonnull
+    @Override
+    public <N2 extends AbstractNode> NodeSelection<N2, ?> getChildren(@Nonnull INodeFilter<N2> nodeFilter, Class<? extends N2> filterBoundary) {
         if (children == null) {
             return new NodeSelection<N2, NodeSelection<N2, ?>>(Collections.<N2>emptyList());
         } else {
-            return new NodeSelection<N2, NodeSelection<N2, ?>>(NodeFilterSupport.getInstance().filterNodeList(children, nodeFilter));
+            return new NodeSelection<N2, NodeSelection<N2, ?>>(NodeFilterSupport.getInstance().filterNodeList(children, nodeFilter, filterBoundary));
         }
     }
 
@@ -178,6 +184,11 @@ public class ElementNode extends AbstractNode<ElementNode> implements IDomElemen
         } else {
             return children.size();
         }
+    }
+
+    @Override
+    public boolean isRoot() {
+        return getParent() == null;
     }
 
     @Override
@@ -407,7 +418,7 @@ public class ElementNode extends AbstractNode<ElementNode> implements IDomElemen
     @Nonnull
     @Override
     public ElementNodeSelection findByTag(@Nonnull CharSequence tagName, int maxDepth) {
-        return new ElementNodeSelection(findByFilter(new TagNameFilter(tagName), maxDepth));
+        return new ElementNodeSelection(findByFilter(new TagNameFilter(tagName), ElementNode.class, maxDepth));
     }
 
     @Override
@@ -436,7 +447,7 @@ public class ElementNode extends AbstractNode<ElementNode> implements IDomElemen
     @Nonnull
     @Override
     public ElementNodeSelection findByAttr(@Nonnull CharSequence key, int maxDepth) {
-        return new ElementNodeSelection(findByFilter(new AttributeKeyExistenceFilter(key), maxDepth));
+        return new ElementNodeSelection(findByFilter(new AttributeKeyExistenceFilter(key), ElementNode.class, maxDepth));
     }
 
     @Nonnull
@@ -448,7 +459,7 @@ public class ElementNode extends AbstractNode<ElementNode> implements IDomElemen
     @Nonnull
     @Override
     public ElementNodeSelection findByAttr(@Nonnull CharSequence key, CharSequence value, @Nonnull QueryMatchMode queryMatchMode, int maxDepth) {
-        return new ElementNodeSelection(findByFilter(new AttributeKeyValueFilter(key, value, queryMatchMode), maxDepth));
+        return new ElementNodeSelection(findByFilter(new AttributeKeyValueFilter(key, value, queryMatchMode), ElementNode.class, maxDepth));
     }
 
     @Nonnull
@@ -460,19 +471,37 @@ public class ElementNode extends AbstractNode<ElementNode> implements IDomElemen
     @Nonnull
     @Override
     public ElementNodeSelection findByCssClass(@Nonnull CharSequence cssClassName, int maxDepth) {
-        return new ElementNodeSelection(findByFilter(new CssClassNameFilter(cssClassName), maxDepth));
+        return new ElementNodeSelection(findByFilter(new CssClassNameFilter(cssClassName), ElementNode.class, maxDepth));
+    }
+
+//    @Nonnull
+//    @Override
+//    public <N2 extends AbstractNode<?>, C2 extends NodeSelection<N2, C2>> NodeSelection<N2, C2> findByFilter(@Nonnull INodeFilter<N2> nodeFilter, int maxDepth) {
+//        return new NodeSelection<N2, C2>(NodeFilterSupport.getInstance().filterNodeTree(this, nodeFilter, maxDepth));
+//    }
+
+    @Nonnull
+    @Override
+    public NodeSelection<AbstractNode, ?> findByFilter(@Nonnull INodeFilter<AbstractNode> nodeFilter) {
+        return findByFilter(nodeFilter, AbstractNode.class);
     }
 
     @Nonnull
     @Override
-    public <N2 extends AbstractNode<?>, C2 extends NodeSelection<N2, C2>> NodeSelection<N2, C2> findByFilter(@Nonnull INodeFilter<N2> nodeFilter) {
-        return findByFilter(nodeFilter, Integer.MAX_VALUE);
+    public NodeSelection<AbstractNode, ?> findByFilter(@Nonnull INodeFilter<AbstractNode> nodeFilter, int maxDepth) {
+        return findByFilter(nodeFilter, AbstractNode.class, maxDepth);
     }
 
     @Nonnull
     @Override
-    public <N2 extends AbstractNode<?>, C2 extends NodeSelection<N2, C2>> NodeSelection<N2, C2> findByFilter(@Nonnull INodeFilter<N2> nodeFilter, int maxDepth) {
-        return new NodeSelection<N2, C2>(NodeFilterSupport.getInstance().filterNodeTree(this, nodeFilter, maxDepth));
+    public <N2 extends AbstractNode> NodeSelection<N2, ?> findByFilter(@Nonnull INodeFilter<N2> nodeFilter, @Nonnull Class<? extends N2> filterBoundary) {
+        return findByFilter(nodeFilter, filterBoundary, Integer.MAX_VALUE);
+    }
+
+    @Nonnull
+    @Override
+    public <N2 extends AbstractNode> NodeSelection<N2, ?> findByFilter(@Nonnull INodeFilter<N2> nodeFilter, @Nonnull Class<? extends N2> filterBoundary, int maxDepth) {
+        return new NodeSelection<N2, NodeSelection<N2, ?>>(NodeFilterSupport.getInstance().filterNodeTree(this, nodeFilter, filterBoundary, maxDepth));
     }
 
     @Nonnull
@@ -484,7 +513,7 @@ public class ElementNode extends AbstractNode<ElementNode> implements IDomElemen
     @Nonnull
     @Override
     public TextNodeSelection findTextNodes(int maxDepth) {
-        return new TextNodeSelection(findByFilter(new TextNodeFilter(), maxDepth));
+        return new TextNodeSelection(findByFilter(new TextNodeFilter(), TextNode.class, maxDepth));
     }
 
     @Nonnull
@@ -496,12 +525,12 @@ public class ElementNode extends AbstractNode<ElementNode> implements IDomElemen
     @Nonnull
     @Override
     public ElementNodeSelection findElements(int maxDepth) {
-        return new ElementNodeSelection(findByFilter(new ElementNodeFilter(), maxDepth));
+        return new ElementNodeSelection(findByFilter(new ElementNodeFilter(), ElementNode.class, maxDepth));
     }
 
     @Override
-    public Iterator<AbstractNode<?>> iterator() {
-        return new Iterator<AbstractNode<?>>() {
+    public Iterator<AbstractNode> iterator() {
+        return new Iterator<AbstractNode>() {
             private int iterationCount = 0;
 
             @Override
@@ -510,7 +539,7 @@ public class ElementNode extends AbstractNode<ElementNode> implements IDomElemen
             }
 
             @Override
-            public AbstractNode<?> next() {
+            public AbstractNode next() {
                 return getChildren().get(iterationCount++);
             }
 

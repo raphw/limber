@@ -13,7 +13,7 @@ import no.kantega.lab.limber.dom.selection.NodeSelection;
 import javax.annotation.Nonnull;
 import java.util.Collections;
 
-public abstract class AbstractNode<N extends AbstractNode<N>> implements IDomNodeMorphable<N, N>,
+public abstract class AbstractNode<N extends AbstractNode> implements IDomNodeMorphable<N>,
         IDomNodeQueryable, IDomNodeBrowsable<ElementNode> {
 
     private boolean rendered;
@@ -81,41 +81,68 @@ public abstract class AbstractNode<N extends AbstractNode<N>> implements IDomNod
         return parent;
     }
 
+    @Override
+    public ElementNode getRoot() {
+        ElementNode root = getParent();
+        while (root.getParent() != null) {
+            root = root.getParent();
+        }
+        return root;
+    }
+
     @Nonnull
     @Override
-    public NodeSelection<AbstractNode<?>, ?> getSiblings() {
+    public NodeSelection<AbstractNode, ?> getSiblings() {
         return getSiblings(false);
     }
 
     @Nonnull
     @Override
-    public NodeSelection<AbstractNode<?>, ?> getSiblings(boolean includeMe) {
-        return getSiblings(new BooleanRepeaterFilter<AbstractNode<?>>(true), includeMe);
-    }
-
-
-    @Nonnull
-    @Override
-    public <N2 extends AbstractNode<?>, C2 extends NodeSelection<N2, C2>> NodeSelection<N2, C2> getSiblings(@Nonnull INodeFilter<N2> nodeFilter) {
-        return getSiblings(nodeFilter, false);
+    public NodeSelection<AbstractNode, ?> getSiblings(boolean includeMe) {
+        return getSiblings(new BooleanRepeaterFilter<AbstractNode>(true), includeMe);
     }
 
     @Nonnull
     @Override
-    public <N2 extends AbstractNode<?>, C2 extends NodeSelection<N2, C2>> NodeSelection<N2, C2> getSiblings(@Nonnull INodeFilter<N2> nodeFilter, boolean includeMe) {
+    public NodeSelection<AbstractNode, ?> getSiblings(@Nonnull INodeFilter<AbstractNode> nodeFilter) {
+        return getSiblings(nodeFilter, AbstractNode.class);
+    }
+
+    @Nonnull
+    @Override
+    public NodeSelection<AbstractNode, ?> getSiblings(@Nonnull INodeFilter<AbstractNode> nodeFilter, boolean includeMe) {
+        return getSiblings(nodeFilter, AbstractNode.class, false);
+    }
+
+    @Nonnull
+    @Override
+    public <N2 extends AbstractNode> NodeSelection<N2, ?> getSiblings(@Nonnull INodeFilter<N2> nodeFilter, Class<? extends N2> filterBoundary) {
+        return getSiblings(nodeFilter, filterBoundary, false);
+    }
+
+    @Nonnull
+    @Override
+    public <N2 extends AbstractNode> NodeSelection<N2, ?> getSiblings(@Nonnull INodeFilter<N2> nodeFilter, Class<? extends N2> filterBoundary, boolean includeMe) {
         NodeSelection<N2, ?> siblingSelection;
+        // Parent existent, find children of parent and exclude myself, if not required.
         if (getParent() != null) {
             if (!includeMe) nodeFilter = new ConjunctionFilter<N2>(nodeFilter, new NodeExclusionFilter<N2>(this));
-            siblingSelection = getParent().getChildren(nodeFilter);
-        } else if (!includeMe) {
-            siblingSelection = new NodeSelection<N2, C2>(Collections.<N2>emptyList());
-        } else {
-            N2 filterResultNode = NodeFilterSupport.getInstance().filterNode(this, nodeFilter);
-            siblingSelection = new NodeSelection<N2, C2>(filterResultNode == null
-                    ? Collections.<N2>emptyList()
-                    : Collections.singletonList(filterResultNode));
+            siblingSelection = getParent().getChildren(nodeFilter, filterBoundary);
         }
-        return new NodeSelection<N2, C2>(siblingSelection);
+        // No parent exists, if node should not be included, this yields an empty list.
+        else if (!includeMe) {
+            siblingSelection = new NodeSelection<N2, NodeSelection<N2, ?>>(Collections.<N2>emptyList());
+        }
+        // No parent exists, this node should be included if filter matches it.
+        else {
+            N2 filterResultNode = NodeFilterSupport.getInstance().filterNode(this, nodeFilter, filterBoundary);
+            siblingSelection = new NodeSelection<N2, NodeSelection<N2, ?>>(
+                    filterResultNode == null
+                            ? Collections.<N2>emptyList()
+                            : Collections.singletonList(filterResultNode));
+
+        }
+        return new NodeSelection<N2, NodeSelection<N2, ?>>(siblingSelection);
     }
 
     @Nonnull

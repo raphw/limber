@@ -1,11 +1,10 @@
 package no.kantega.lab.limber.dom.abstraction;
 
-import no.kantega.lab.limber.dom.element.AbstractNode;
 import no.kantega.lab.limber.dom.element.ContentEscapeMode;
 
 import javax.annotation.Nonnull;
 
-public interface IDomNodeMorphable<N extends AbstractNode<?>, M extends IDomNodeMorphable<N, ?>> extends Cloneable {
+public interface IDomNodeMorphable<M extends IDomNodeMorphable> extends Cloneable {
 
     @Nonnull
     M clear();

@@ -10,15 +10,23 @@ public interface IDomNodeBrowsable<B extends IDomNodeBrowsable<B>> {
 
     B getParent();
 
-    @Nonnull
-    NodeSelection<AbstractNode<?>, ?> getSiblings();
+    B getRoot();
 
     @Nonnull
-    NodeSelection<AbstractNode<?>, ?> getSiblings(boolean includeMe);
+    NodeSelection<AbstractNode, ?> getSiblings();
 
     @Nonnull
-    <N2 extends AbstractNode<?>, C2 extends NodeSelection<N2, C2>> NodeSelection<N2, C2> getSiblings(@Nonnull INodeFilter<N2> nodeFilter);
+    NodeSelection<AbstractNode, ?> getSiblings(boolean includeMe);
 
     @Nonnull
-    <N2 extends AbstractNode<?>, C2 extends NodeSelection<N2, C2>> NodeSelection<N2, C2> getSiblings(@Nonnull INodeFilter<N2> nodeFilter, boolean includeMe);
+    NodeSelection<AbstractNode, ?> getSiblings(@Nonnull INodeFilter<AbstractNode> nodeFilter);
+
+    @Nonnull
+    NodeSelection<AbstractNode, ?> getSiblings(@Nonnull INodeFilter<AbstractNode> nodeFilter, boolean includeMe);
+
+    @Nonnull
+    <N2 extends AbstractNode> NodeSelection<N2, ?> getSiblings(@Nonnull INodeFilter<N2> nodeFilter, Class<? extends N2> filterBoundary);
+
+    @Nonnull
+    <N2 extends AbstractNode> NodeSelection<N2, ?> getSiblings(@Nonnull INodeFilter<N2> nodeFilter, Class<? extends N2> filterBoundary, boolean includeMe);
 }
