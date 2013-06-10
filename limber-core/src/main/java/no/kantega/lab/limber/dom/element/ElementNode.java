@@ -1,8 +1,8 @@
 package no.kantega.lab.limber.dom.element;
 
-import no.kantega.lab.limber.dom.abstraction.IDomElementBrowsable;
-import no.kantega.lab.limber.dom.abstraction.IDomElementMorphable;
-import no.kantega.lab.limber.dom.abstraction.IDomElementQueryable;
+import no.kantega.lab.limber.dom.abstraction.IDomElementNodeBrowsable;
+import no.kantega.lab.limber.dom.abstraction.IDomElementNodeMorphable;
+import no.kantega.lab.limber.dom.abstraction.IDomElementNodeQueryable;
 import no.kantega.lab.limber.dom.filter.*;
 import no.kantega.lab.limber.dom.filter.util.NodeFilterSupport;
 import no.kantega.lab.limber.dom.filter.util.QueryMatchMode;
@@ -14,8 +14,9 @@ import org.apache.commons.lang3.StringUtils;
 import javax.annotation.Nonnull;
 import java.util.*;
 
-public class ElementNode extends AbstractNode<ElementNode> implements IDomElementMorphable<ElementNode>,
-        IDomElementBrowsable<AbstractNode<?>, ElementNode>, IDomElementQueryable {
+public class ElementNode extends AbstractNode<ElementNode> implements
+        IDomElementNodeMorphable<ElementNode>, IDomElementNodeBrowsable<AbstractNode<?>, ElementNode>,
+        IDomElementNodeQueryable {
 
     private static final String HTML_ATTR_CLASS = "class";
     private static final String HTML_ATTR_STYLE = "style";

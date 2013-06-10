@@ -7,7 +7,7 @@ import no.kantega.lab.limber.ajax.abstraction.IAjaxEvent;
 import no.kantega.lab.limber.dom.element.ElementNode;
 import no.kantega.lab.limber.dom.parser.DomTreeProvider;
 import no.kantega.lab.limber.dom.renderer.DomTreeRenderer;
-import no.kantega.lab.limber.dom.selection.HtmlDocumentSelection;
+import no.kantega.lab.limber.dom.selection.HtmlDocumentRootSelection;
 import no.kantega.lab.limber.servlet.IRenderable;
 import no.kantega.lab.limber.servlet.IResponseContainer;
 import no.kantega.lab.limber.servlet.meta.IDomSelectable;
@@ -22,9 +22,9 @@ import java.util.Map;
 import java.util.UUID;
 
 @ResourceIdentification(ResourceType.HTML)
-public class WebPage implements IRenderable, IDomSelectable<HtmlDocumentSelection, ElementNode> {
+public class WebPage implements IRenderable, IDomSelectable<HtmlDocumentRootSelection, ElementNode> {
 
-    private final HtmlDocumentSelection htmlDocumentSelection;
+    private final HtmlDocumentRootSelection htmlDocumentSelection;
     private final Map<UUID, IAjaxEvent> ajaxEventRegister;
 
     // TODO: Remove this hack and replace by actual solution (annotation methods)
@@ -36,7 +36,7 @@ public class WebPage implements IRenderable, IDomSelectable<HtmlDocumentSelectio
     }
 
     @Override
-    public final HtmlDocumentSelection dom() {
+    public final HtmlDocumentRootSelection dom() {
         return htmlDocumentSelection;
     }
 

@@ -1,7 +1,7 @@
 package no.kantega.lab.limber.dom.selection;
 
-import no.kantega.lab.limber.dom.abstraction.IDomElementBrowsable;
-import no.kantega.lab.limber.dom.abstraction.IDomElementMorphable;
+import no.kantega.lab.limber.dom.abstraction.IDomElementNodeBrowsable;
+import no.kantega.lab.limber.dom.abstraction.IDomElementNodeMorphable;
 import no.kantega.lab.limber.dom.element.AbstractNode;
 import no.kantega.lab.limber.dom.element.ContentEscapeMode;
 import no.kantega.lab.limber.dom.element.ElementNode;
@@ -16,8 +16,8 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 
-public class ElementNodeSelection extends NodeSelection<ElementNode, ElementNodeSelection>
-        implements IDomElementMorphable<ElementNodeSelection>, IDomElementBrowsable<ElementNode, ElementNodeSelection> {
+public class ElementNodeSelection extends NodeSelection<ElementNode, ElementNodeSelection> implements
+        IDomElementNodeMorphable<ElementNodeSelection>, IDomElementNodeBrowsable<ElementNode, ElementNodeSelection> {
 
     public ElementNodeSelection(@Nonnull List<ElementNode> selected) {
         super(selected);

@@ -1,9 +1,9 @@
 package no.kantega.lab.limber.dom.selection;
 
-import no.kantega.lab.limber.dom.abstraction.IDomElementReduceable;
 import no.kantega.lab.limber.dom.abstraction.IDomNodeBrowsable;
 import no.kantega.lab.limber.dom.abstraction.IDomNodeMorphable;
 import no.kantega.lab.limber.dom.abstraction.IDomSelectionQueryable;
+import no.kantega.lab.limber.dom.abstraction.IDomSelectionReduceable;
 import no.kantega.lab.limber.dom.element.AbstractNode;
 import no.kantega.lab.limber.dom.element.ContentEscapeMode;
 import no.kantega.lab.limber.dom.element.ElementNode;
@@ -15,8 +15,9 @@ import no.kantega.lab.limber.dom.filter.util.QueryMatchMode;
 import javax.annotation.Nonnull;
 import java.util.*;
 
-public class NodeSelection<N extends AbstractNode, C extends NodeSelection<N, ?>>
-        implements IDomNodeMorphable<C>, IDomElementReduceable<N>, IDomSelectionQueryable<N>, IDomNodeBrowsable<ElementNodeSelection> {
+public class NodeSelection<N extends AbstractNode, C extends NodeSelection<N, ?>> implements
+        IDomNodeMorphable<C>, IDomNodeBrowsable<ElementNodeSelection>,
+        IDomSelectionQueryable<N>, IDomSelectionReduceable<N> {
 
     private final List<N> selected;
 

@@ -1,6 +1,6 @@
 package no.kantega.lab.limber.dom.parser;
 
-import no.kantega.lab.limber.dom.selection.HtmlDocumentSelection;
+import no.kantega.lab.limber.dom.selection.HtmlDocumentRootSelection;
 import no.kantega.lab.limber.servlet.IRenderable;
 import org.apache.xerces.parsers.AbstractSAXParser;
 import org.apache.xerces.xni.parser.XMLParserConfiguration;
@@ -26,7 +26,7 @@ public class DomTreeProvider {
         renderableResourceLocator = new RenderableResourceLocator();
     }
 
-    public HtmlDocumentSelection provideDocumentSelection(@Nonnull Class<? extends IRenderable> renderableClass) {
+    public HtmlDocumentRootSelection provideDocumentSelection(@Nonnull Class<? extends IRenderable> renderableClass) {
         InputStream resourceInputStream = renderableResourceLocator.locateResource(renderableClass);
         HTMLConfiguration htmlConfiguration = new HTMLConfiguration();
         htmlConfiguration.setFeature("http://cyberneko.org/html/features/balance-tags", true);
@@ -35,7 +35,7 @@ public class DomTreeProvider {
         htmlSAXParser.setContentHandler(domContentHandler);
         try {
             htmlSAXParser.parse(new InputSource(resourceInputStream));
-            return new HtmlDocumentSelection(domContentHandler.getRoot());
+            return new HtmlDocumentRootSelection(domContentHandler.getRoot());
         } catch (SAXException e) {
             e.printStackTrace();
             return null;

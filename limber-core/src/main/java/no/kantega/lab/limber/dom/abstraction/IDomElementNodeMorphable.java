@@ -8,7 +8,7 @@ import javax.annotation.Nonnull;
 import java.util.List;
 import java.util.Map;
 
-public interface IDomElementMorphable<M extends IDomElementMorphable> extends IDomNodeMorphable<M> {
+public interface IDomElementNodeMorphable<M extends IDomElementNodeMorphable> extends IDomNodeMorphable<M> {
 
     @Nonnull
     <N extends AbstractNode> Object addChild(int index, @Nonnull N node);

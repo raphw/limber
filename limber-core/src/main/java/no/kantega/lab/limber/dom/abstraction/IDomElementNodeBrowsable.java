@@ -10,7 +10,7 @@ import no.kantega.lab.limber.dom.selection.TextNodeSelection;
 
 import javax.annotation.Nonnull;
 
-public interface IDomElementBrowsable<N extends AbstractNode, B extends IDomNodeBrowsable<B>>
+public interface IDomElementNodeBrowsable<N extends AbstractNode, B extends IDomNodeBrowsable<B>>
         extends IDomNodeBrowsable<B>, Iterable<N> {
 
     @Nonnull

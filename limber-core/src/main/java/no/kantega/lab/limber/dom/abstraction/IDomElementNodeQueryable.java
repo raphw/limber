@@ -7,7 +7,7 @@ import javax.annotation.Nonnull;
 import java.util.List;
 import java.util.Map;
 
-public interface IDomElementQueryable extends IDomNodeQueryable {
+public interface IDomElementNodeQueryable extends IDomNodeQueryable {
 
     @Nonnull
     String getTagName();

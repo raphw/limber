@@ -7,11 +7,11 @@ import no.kantega.lab.limber.dom.element.TextNode;
 import javax.annotation.Nonnull;
 import java.util.Arrays;
 
-public class HtmlDocumentSelection extends ElementNodeSelection implements IDomHtmlRootSteerable<HtmlDocumentSelection> {
+public class HtmlDocumentRootSelection extends ElementNodeSelection implements IDomHtmlRootSteerable<HtmlDocumentRootSelection> {
 
     private final ElementNode rootNode;
 
-    public HtmlDocumentSelection(@Nonnull ElementNode rootNode) {
+    public HtmlDocumentRootSelection(@Nonnull ElementNode rootNode) {
         super(Arrays.asList(rootNode));
         this.rootNode = rootNode;
     }
@@ -42,7 +42,7 @@ public class HtmlDocumentSelection extends ElementNodeSelection implements IDomH
 
     @Nonnull
     @Override
-    public HtmlDocumentSelection setTile(@Nonnull CharSequence charSequence) {
+    public HtmlDocumentRootSelection setTile(@Nonnull CharSequence charSequence) {
         getTitleNode().clear().appendTextAndStay(charSequence);
         return this;
     }
@@ -60,7 +60,7 @@ public class HtmlDocumentSelection extends ElementNodeSelection implements IDomH
 
     @Nonnull
     @Override
-    public HtmlDocumentSelection clearTitle() {
+    public HtmlDocumentRootSelection clearTitle() {
         getTitleNode().clear();
         return this;
     }

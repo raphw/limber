@@ -13,8 +13,9 @@ import no.kantega.lab.limber.dom.selection.NodeSelection;
 import javax.annotation.Nonnull;
 import java.util.Collections;
 
-public abstract class AbstractNode<N extends AbstractNode> implements IDomNodeMorphable<N>,
-        IDomNodeQueryable, IDomNodeBrowsable<ElementNode> {
+public abstract class AbstractNode<N extends AbstractNode> implements
+        IDomNodeMorphable<N>, IDomNodeBrowsable<ElementNode>,
+        IDomNodeQueryable {
 
     private boolean rendered;
     private ElementNode parent;
