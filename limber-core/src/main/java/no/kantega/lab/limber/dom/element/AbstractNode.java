@@ -19,39 +19,9 @@ public abstract class AbstractNode<N extends AbstractNode> implements IDomNodeMo
     private boolean rendered;
     private ElementNode parent;
 
-//    private Map<IDomNodeVisitor<? super N>, IDomNodeVisitor.VisitingStickyMode> nodeAttachments;
-
     protected AbstractNode() {
         this.rendered = true;
     }
-
-//    @Nonnull
-//    @Override
-//    @SuppressWarnings("unchecked")
-//    public N visit(@Nonnull IDomNodeVisitor<? super N> nodeVisitor) {
-//        nodeVisitor.visit(this);
-//        return (N) this;
-//    }
-//
-//    @Nonnull
-//    @Override
-//    @SuppressWarnings("unchecked")
-//    public N addStickyNodeVisitor(@Nonnull IDomNodeVisitor<? super N> nodeVisitor, @Nonnull IDomNodeVisitor.VisitingStickyMode visitingStickyMode) {
-//        if (nodeAttachments == null)
-//            nodeAttachments = new LinkedHashMap<IDomNodeVisitor<? super N>, IDomNodeVisitor.VisitingStickyMode>();
-//        nodeAttachments.put(nodeVisitor, visitingStickyMode);
-//        return (N) this;
-//    }
-//
-//    @Nonnull
-//    @Override
-//    @SuppressWarnings("unchecked")
-//    public N removeStickyNodeVisitor(@Nonnull IDomNodeVisitor<?> nodeVisitor) {
-//        if (nodeAttachments == null) return (N) this;
-//        nodeAttachments.remove(nodeVisitor);
-//        if (nodeAttachments.size() == 0) nodeAttachments = null;
-//        return (N) this;
-//    }
 
     @Nonnull
     @Override
@@ -143,6 +113,26 @@ public abstract class AbstractNode<N extends AbstractNode> implements IDomNodeMo
 
         }
         return new NodeSelection<N2, NodeSelection<N2, ?>>(siblingSelection);
+    }
+
+    @Nonnull
+    @Override
+    public <N extends AbstractNode> N replaceBy(@Nonnull N node) {
+        if (getParent() == null) {
+            throw new IllegalStateException();
+        }
+        int currentNodeIndex = getParent().getChildIndex(this);
+        getParent().removeChild(this);
+        getParent().addChild(currentNodeIndex, node);
+        return node;
+    }
+
+    @Nonnull
+    @Override
+    @SuppressWarnings("unchecked")
+    public N replaceByAndStay(@Nonnull AbstractNode<?> node) {
+        replaceBy(node);
+        return (N) this;
     }
 
     @Nonnull

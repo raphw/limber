@@ -1,6 +1,6 @@
 package no.kantega.lab.limber.dom.selection;
 
-import no.kantega.lab.limber.dom.abstraction.IDomElementFilterable;
+import no.kantega.lab.limber.dom.abstraction.IDomElementReduceable;
 import no.kantega.lab.limber.dom.abstraction.IDomNodeBrowsable;
 import no.kantega.lab.limber.dom.abstraction.IDomNodeMorphable;
 import no.kantega.lab.limber.dom.abstraction.IDomSelectionQueryable;
@@ -16,7 +16,7 @@ import javax.annotation.Nonnull;
 import java.util.*;
 
 public class NodeSelection<N extends AbstractNode, C extends NodeSelection<N, ?>>
-        implements IDomNodeMorphable<C>, IDomElementFilterable<N>, IDomSelectionQueryable<N>, IDomNodeBrowsable<ElementNodeSelection> {
+        implements IDomNodeMorphable<C>, IDomElementReduceable<N>, IDomSelectionQueryable<N>, IDomNodeBrowsable<ElementNodeSelection> {
 
     private final List<N> selected;
 
@@ -283,6 +283,24 @@ public class NodeSelection<N extends AbstractNode, C extends NodeSelection<N, ?>
                 throw new IllegalStateException();
             }
         };
+    }
+
+    @Nonnull
+    @Override
+    public <N extends AbstractNode> NodeSelection<N, ?> replaceBy(@Nonnull N prototype) {
+        List<N> elements = new ArrayList<N>();
+        for (AbstractNode<?> element : getSelected()) {
+            elements.add(element.replaceBy(prototype));
+        }
+        return new NodeSelection<N, NodeSelection<N, ?>>(elements);
+    }
+
+    @Nonnull
+    @Override
+    @SuppressWarnings("unchecked")
+    public C replaceByAndStay(@Nonnull AbstractNode<?> prototype) {
+        replaceBy(prototype);
+        return (C) this;
     }
 
     @Nonnull

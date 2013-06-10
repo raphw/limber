@@ -1,7 +1,5 @@
 package no.kantega.lab.limber.example.page;
 
-import no.kantega.lab.limber.dom.element.ElementNode;
-import no.kantega.lab.limber.dom.element.TextNode;
 import no.kantega.lab.limber.dom.selection.ElementNodeSelection;
 import no.kantega.lab.limber.page.WebPage;
 import no.kantega.lab.limber.servlet.meta.RequestMapping;
@@ -13,21 +11,15 @@ public class TestWebPage extends WebPage {
 
         dom().setTile("Limber framework");
 
-        dom().findByTag("h2").clear().appendTextAndStay("Hello limber framework");
+        dom().findByTag("h2").setContent("Hello limber framework");
+        dom().findByTag("h2").setContent(String.valueOf(dom().getBodyNode().getChildren().reduceToElement().size()));
 
         ElementNodeSelection list = dom().findByTag("ul").clear();
         for (String s : new String[]{"It is easy to use", "It is elegant to use", "Supports jQuery"}) {
-            list.appendChildAndStay(new ElementNode("li").appendChildAndStay(new TextNode(s)));
+            list.appendChild("li").setContent(s);
         }
-
-        dom().findByTag("button").clear().appendTextAndStay("Ajax demo");
-//        .ajax(
-//                AjaxEventTrigger.CLICK, new IAjaxCallback() {
-//            @Override
-//            public void onEvent(AjaxEventTrigger ajaxEventTrigger, Element eventTarget) {
-//                System.out.println("Ajax Event");
-//            }
-//        });
+//
+//        dom().findByTag("button").setContent("Ajax demo");
 
     }
 }

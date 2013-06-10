@@ -1,5 +1,6 @@
 package no.kantega.lab.limber.dom.abstraction;
 
+import no.kantega.lab.limber.dom.element.AbstractNode;
 import no.kantega.lab.limber.dom.filter.util.QueryMatchMode;
 
 import javax.annotation.Nonnull;
@@ -35,6 +36,8 @@ public interface IDomElementQueryable extends IDomNodeQueryable {
     boolean isIdSet();
 
     boolean isRoot();
+
+    int getChildIndex(@Nonnull AbstractNode<?> node);
 
     int size();
 

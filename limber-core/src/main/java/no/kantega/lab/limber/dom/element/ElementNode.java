@@ -60,19 +60,38 @@ public class ElementNode extends AbstractNode<ElementNode> implements IDomElemen
 
     @Nonnull
     @Override
-    public ElementNode addChildAndStay(int index, @Nonnull AbstractNode<?> node) {
+    public <N extends AbstractNode> N addChild(int index, @Nonnull N node) {
         if (index < 0 || index > (children == null ? 0 : children.size())) {
             throw new IllegalArgumentException();
         }
         if (children == null) children = new ArrayList<AbstractNode<?>>();
         children.add(index, node);
+        return node;
+    }
+
+    @Nonnull
+    @Override
+    public ElementNode addChildAndStay(int index, @Nonnull AbstractNode<?> node) {
+        addChild(index, node);
         return this;
+    }
+
+    @Nonnull
+    @Override
+    public <N extends AbstractNode> N prependChild(@Nonnull N node) {
+        return addChild(0, node);
     }
 
     @Nonnull
     @Override
     public ElementNode prependChildAndStay(@Nonnull AbstractNode<?> node) {
         return addChildAndStay(0, node);
+    }
+
+    @Nonnull
+    @Override
+    public <N extends AbstractNode> N appendChild(@Nonnull N node) {
+        return addChild(children == null ? 0 : children.size(), node);
     }
 
     @Nonnull
@@ -111,56 +130,149 @@ public class ElementNode extends AbstractNode<ElementNode> implements IDomElemen
 
     @Nonnull
     @Override
+    public ElementNode addChild(int index, @Nonnull CharSequence tagName) {
+        return addChild(index, new ElementNode(tagName));
+    }
+
+    @Nonnull
+    @Override
     public ElementNode addChildAndStay(int index, @Nonnull CharSequence tagName) {
-        return addChildAndStay(index, new ElementNode(tagName));
+        addChild(index, tagName);
+        return this;
+    }
+
+    @Nonnull
+    @Override
+    public TextNode addText(int index, @Nonnull CharSequence text) {
+        TextNode textNode = new TextNode(text);
+        addChild(index, textNode);
+        return textNode;
     }
 
     @Nonnull
     @Override
     public ElementNode addTextAndStay(int index, @Nonnull CharSequence text) {
-        return addChildAndStay(index, new TextNode(text));
+        addText(index, text);
+        return this;
+    }
+
+    @Nonnull
+    @Override
+    public TextNode addText(int index, @Nonnull CharSequence text, @Nonnull ContentEscapeMode contentEscapeMode) {
+        return addChild(index, new TextNode(text, contentEscapeMode));
     }
 
     @Nonnull
     @Override
     public ElementNode addTextAndStay(int index, @Nonnull CharSequence text, @Nonnull ContentEscapeMode contentEscapeMode) {
-        return addChildAndStay(index, new TextNode(text, contentEscapeMode));
+        addText(index, text, contentEscapeMode);
+        return this;
+    }
+
+    @Nonnull
+    @Override
+    public ElementNode appendChild(@Nonnull CharSequence tagName) {
+        return appendChild(new ElementNode(tagName));
     }
 
     @Nonnull
     @Override
     public ElementNode appendChildAndStay(@Nonnull CharSequence tagName) {
-        return appendChildAndStay(new ElementNode(tagName));
+        appendChild(tagName);
+        return this;
+    }
+
+    @Nonnull
+    @Override
+    public TextNode appendText(@Nonnull CharSequence text) {
+        return appendChild(new TextNode(text));
     }
 
     @Nonnull
     @Override
     public ElementNode appendTextAndStay(@Nonnull CharSequence text) {
-        return appendChildAndStay(new TextNode(text));
+        appendText(text);
+        return this;
+    }
+
+    @Nonnull
+    @Override
+    public TextNode appendText(@Nonnull CharSequence text, @Nonnull ContentEscapeMode contentEscapeMode) {
+        return appendChild(new TextNode(text, contentEscapeMode));
     }
 
     @Nonnull
     @Override
     public ElementNode appendTextAndStay(@Nonnull CharSequence text, @Nonnull ContentEscapeMode contentEscapeMode) {
-        return appendChildAndStay(new TextNode(text, contentEscapeMode));
+        appendText(text, contentEscapeMode);
+        return this;
+    }
+
+    @Nonnull
+    @Override
+    public ElementNode prependChild(@Nonnull CharSequence tagName) {
+        return prependChild(new ElementNode(tagName));
     }
 
     @Nonnull
     @Override
     public ElementNode prependChildAndStay(@Nonnull CharSequence tagName) {
-        return prependChildAndStay(new ElementNode(tagName));
+        prependChild(tagName);
+        return this;
+    }
+
+    @Nonnull
+    @Override
+    public TextNode prependText(@Nonnull CharSequence text) {
+        return prependChild(new TextNode(text));
     }
 
     @Nonnull
     @Override
     public ElementNode prependTextAndStay(@Nonnull CharSequence text) {
-        return prependChildAndStay(new TextNode(text));
+        prependText(text);
+        return this;
+    }
+
+    @Nonnull
+    @Override
+    public TextNode prependText(@Nonnull CharSequence text, @Nonnull ContentEscapeMode contentEscapeMode) {
+        return prependChild(new TextNode(text, contentEscapeMode));
     }
 
     @Nonnull
     @Override
     public ElementNode prependTextAndStay(@Nonnull CharSequence text, @Nonnull ContentEscapeMode contentEscapeMode) {
-        return prependChildAndStay(new TextNode(text, contentEscapeMode));
+        prependText(text, contentEscapeMode);
+        return this;
+    }
+
+    @Nonnull
+    @Override
+    public ElementNode wrap(@Nonnull ElementNode elementNode) {
+        replaceBy(elementNode);
+        elementNode.appendChild(this);
+        return elementNode;
+    }
+
+    @Nonnull
+    @Override
+    public ElementNode wrapAndStay(@Nonnull ElementNode elementNode) {
+        wrap(elementNode);
+        return this;
+    }
+
+    @Nonnull
+    @Override
+    public ElementNode wrap(@Nonnull CharSequence tagName) {
+        return wrap(new ElementNode(tagName));
+    }
+
+    @Nonnull
+    @Override
+    public ElementNode wrapAndStay(@Nonnull CharSequence tagName) {
+        wrap(tagName);
+        return this;
     }
 
     @Nonnull
@@ -175,6 +287,18 @@ public class ElementNode extends AbstractNode<ElementNode> implements IDomElemen
         clear();
         appendTextAndStay(content, contentEscapeMode);
         return this;
+    }
+
+    @Override
+    public int getChildIndex(@Nonnull AbstractNode<?> node) {
+        int i = 0;
+        for (AbstractNode<?> child : getChildren()) {
+            if (child == node) {
+                return i;
+            }
+            i++;
+        }
+        throw new IllegalArgumentException();
     }
 
     @Override
@@ -473,12 +597,6 @@ public class ElementNode extends AbstractNode<ElementNode> implements IDomElemen
     public ElementNodeSelection findByCssClass(@Nonnull CharSequence cssClassName, int maxDepth) {
         return new ElementNodeSelection(findByFilter(new CssClassNameFilter(cssClassName), ElementNode.class, maxDepth));
     }
-
-//    @Nonnull
-//    @Override
-//    public <N2 extends AbstractNode<?>, C2 extends NodeSelection<N2, C2>> NodeSelection<N2, C2> findByFilter(@Nonnull INodeFilter<N2> nodeFilter, int maxDepth) {
-//        return new NodeSelection<N2, C2>(NodeFilterSupport.getInstance().filterNodeTree(this, nodeFilter, maxDepth));
-//    }
 
     @Nonnull
     @Override

@@ -9,7 +9,7 @@ import no.kantega.lab.limber.dom.selection.TextNodeSelection;
 
 import javax.annotation.Nonnull;
 
-public interface IDomElementFilterable<N extends AbstractNode> extends Iterable<N> {
+public interface IDomElementReduceable<N extends AbstractNode> extends Iterable<N> {
 
     @Nonnull
     N get(int index);

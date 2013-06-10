@@ -1,5 +1,6 @@
 package no.kantega.lab.limber.dom.abstraction;
 
+import no.kantega.lab.limber.dom.element.AbstractNode;
 import no.kantega.lab.limber.dom.element.ContentEscapeMode;
 
 import javax.annotation.Nonnull;
@@ -21,14 +22,11 @@ public interface IDomNodeMorphable<M extends IDomNodeMorphable> extends Cloneabl
     @Nonnull
     M remove();
 
-//    @Nonnull
-//    M visit(@Nonnull IDomNodeVisitor<? super N> nodeVisitor);
-//
-//    @Nonnull
-//    M addStickyNodeVisitor(@Nonnull IDomNodeVisitor<? super N> nodeVisitor, @Nonnull IDomNodeVisitor.VisitingStickyMode visitingStickyMode);
-//
-//    @Nonnull
-//    M removeStickyNodeVisitor(@Nonnull IDomNodeVisitor<?> nodeVisitor);
+    @Nonnull
+    <N extends AbstractNode> Object replaceBy(@Nonnull N node);
+
+    @Nonnull
+    M replaceByAndStay(@Nonnull AbstractNode<?> node);
 
     @Nonnull
     M clone();
