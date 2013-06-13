@@ -17,6 +17,7 @@ import java.io.BufferedOutputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.Arrays;
 import java.util.Map;
 import java.util.UUID;
 
@@ -76,7 +77,7 @@ public class WebPage implements IRenderable, IDomSelectable<HtmlDocumentRootSele
         }
         IAjaxCallback ajaxCallback = ajaxEvent.getAjaxCallback();
         ajaxCallback.onEvent(ajaxEvent.getAjaxEventTrigger(), ajaxEvent.getElement());
-        JQueryRenderSupport.getInstance().makeJsonResponeJavascript(outputStream, htmlDocumentSelection.getBodyNode(), response);
+        JQueryRenderSupport.getInstance().makeUpdateResponse(outputStream, Arrays.asList(htmlDocumentSelection.findByTag("ul").get(0)), response);
         outputStream.close();
         return true;
     }

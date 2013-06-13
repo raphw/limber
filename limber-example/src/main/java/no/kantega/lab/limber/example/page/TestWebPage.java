@@ -21,7 +21,7 @@ public class TestWebPage extends WebPage {
             list.appendChild("li").setContent(s);
         }
 
-        dom().getBodyNode().setRandomIdIfNone();
+        list.setRandomIdIfNone();
         dom().findByTag("button").setContent("Ajax demo").addAjaxEvent(AjaxEventTrigger.CLICK, new IAjaxCallback<ElementNode>() {
             @Override
             public void onEvent(AjaxEventTrigger ajaxEventTrigger, ElementNode eventTarget) {
