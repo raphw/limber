@@ -1,12 +1,10 @@
 package no.kantega.lab.limber.page;
 
-import no.kantega.lab.limber.ajax.abstraction.AjaxEventTrigger;
-import no.kantega.lab.limber.ajax.abstraction.DefaultAjaxEvent;
 import no.kantega.lab.limber.ajax.abstraction.IAjaxCallback;
-import no.kantega.lab.limber.ajax.abstraction.IAjaxEvent;
+import no.kantega.lab.limber.ajax.container.AjaxCallbackEventTriggerElementNodeTupel;
+import no.kantega.lab.limber.ajax.jquery.JQueryRenderSupport;
 import no.kantega.lab.limber.dom.element.ElementNode;
 import no.kantega.lab.limber.dom.parser.DomTreeProvider;
-import no.kantega.lab.limber.dom.renderer.DomTreeRenderer;
 import no.kantega.lab.limber.dom.selection.HtmlDocumentRootSelection;
 import no.kantega.lab.limber.servlet.IRenderable;
 import no.kantega.lab.limber.servlet.IResponseContainer;
@@ -15,9 +13,10 @@ import no.kantega.lab.limber.servlet.meta.ResourceIdentification;
 import no.kantega.lab.limber.servlet.meta.ResourceType;
 
 import javax.annotation.Nonnull;
+import java.io.BufferedOutputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
@@ -25,14 +24,12 @@ import java.util.UUID;
 public class WebPage implements IRenderable, IDomSelectable<HtmlDocumentRootSelection, ElementNode> {
 
     private final HtmlDocumentRootSelection htmlDocumentSelection;
-    private final Map<UUID, IAjaxEvent> ajaxEventRegister;
 
-    // TODO: Remove this hack and replace by actual solution (annotation methods)
-    private boolean renderedAjax = false;
+    private Map<UUID, AjaxCallbackEventTriggerElementNodeTupel> ajaxEventRegister;
+    private ElementNode limberScriptNode;
 
     public WebPage() {
         htmlDocumentSelection = DomTreeProvider.getInstance().provideDocumentSelection(getClass());
-        ajaxEventRegister = new HashMap<UUID, IAjaxEvent>();
     }
 
     @Override
@@ -42,63 +39,45 @@ public class WebPage implements IRenderable, IDomSelectable<HtmlDocumentRootSele
 
     @Override
     public final boolean render(@Nonnull OutputStream outputStream, @Nonnull IResponseContainer response) throws IOException {
-
-        if (response.getRequest().isAjax()) {
-            UUID ajaxId = response.getRequest().getAjaxId();
-            IAjaxEvent ajaxEvent = ajaxEventRegister.get(ajaxId);
-            if (ajaxEvent == null) {
-                return false;
-            }
-            IAjaxCallback ajaxCallback = ajaxEvent.getCallback();
-            ajaxCallback.onEvent(ajaxEvent.getEventTrigger(), ajaxEvent.getEventTarget());
-            return true;
+        if (response.getRequest().isSubroutine()) {
+            return renderAjaxResponse(outputStream, response);
+        } else {
+            return renderFullPage(outputStream, response);
         }
+    }
 
-        if (!renderedAjax) {
-            appendAjaxEvents(response);
-            renderedAjax = true;
-        }
-
-        DomTreeRenderer.getInstance().render(dom().getRootNode(), outputStream);
+    private boolean renderFullPage(@Nonnull OutputStream outputStream, @Nonnull IResponseContainer response) throws IOException {
+        ajaxEventRegister = WebPageRenderSupport.getInstance().makeAjaxEventMap(htmlDocumentSelection.getRootNode());
+        ElementNode scriptNode = getOrMakeLimberScriptNode();
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+        JQueryRenderSupport.getInstance().makeEventJavascript(byteArrayOutputStream, response, ajaxEventRegister);
+        scriptNode.setContent(byteArrayOutputStream.toString());
+        scriptNode.setRendered(!scriptNode.isEmpty());
+        outputStream = new BufferedOutputStream(outputStream);
+        htmlDocumentSelection.getDoctypeDeclaration().render(outputStream, response);
+        htmlDocumentSelection.getRootNode().render(outputStream, response);
+        outputStream.close();
         return true;
     }
 
-    public final void registerAjaxEvent(ElementNode ajaxEventTarget,
-                                        AjaxEventTrigger ajaxEventTrigger,
-                                        IAjaxCallback ajaxCallback) {
-        ajaxEventRegister.put(
-                UUID.randomUUID(),
-                new DefaultAjaxEvent(
-                        ajaxEventTrigger,
-                        ajaxCallback,
-                        ajaxEventTarget));
+    private ElementNode getOrMakeLimberScriptNode() {
+        if (limberScriptNode == null || limberScriptNode.getRoot() == htmlDocumentSelection.getRootNode()) {
+            limberScriptNode = htmlDocumentSelection.getHeadNode().appendChild("script").putAttr("type", "text/javascript");
+        }
+        return limberScriptNode;
     }
 
-    private void appendAjaxEvents(IResponseContainer response) {
-        StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append("jQuery(document).ready(function(){");
-        for (Map.Entry<UUID, IAjaxEvent> entry : ajaxEventRegister.entrySet()) {
-
-            IAjaxEvent ajax = entry.getValue();
-            UUID ajaxId = entry.getKey();
-
-            stringBuilder.append("jQuery('");
-            stringBuilder.append(ajax.getEventTarget().setRandomIdIfNone().getId());
-            stringBuilder.append("').bind('");
-            stringBuilder.append("click"); // Prelim.
-            stringBuilder.append("',function(){");
-            stringBuilder.append("jQuery.ajax(");
-            stringBuilder.append("'");
-            stringBuilder.append(response.decodeLink(
-                    response.getRequest().getRenderableClass(),
-                    response.getRequest().getVersionId(),
-                    ajaxId).toASCIIString());
-            stringBuilder.append("'");
-
-            stringBuilder.append(");");
-            stringBuilder.append("})");
+    @SuppressWarnings("unchecked")
+    private boolean renderAjaxResponse(@Nonnull OutputStream outputStream, @Nonnull IResponseContainer response) throws IOException {
+        UUID ajaxId = response.getRequest().getSubroutineId();
+        AjaxCallbackEventTriggerElementNodeTupel ajaxEvent = ajaxEventRegister.get(ajaxId);
+        if (ajaxEvent == null) {
+            return false;
         }
-        stringBuilder.append("})");
-//        domSelection.addEmbededResource(HeadResource.JS, stringBuilder.toString());
+        IAjaxCallback ajaxCallback = ajaxEvent.getAjaxCallback();
+        ajaxCallback.onEvent(ajaxEvent.getAjaxEventTrigger(), ajaxEvent.getElement());
+        JQueryRenderSupport.getInstance().makeJsonResponeJavascript(outputStream, htmlDocumentSelection.getBodyNode(), response);
+        outputStream.close();
+        return true;
     }
 }

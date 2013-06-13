@@ -8,6 +8,7 @@ import java.util.UUID;
 
 public interface IResponseContainer {
 
+    @Nonnull
     ILimberRequest getRequest();
 
     void setStatusCode(int code);

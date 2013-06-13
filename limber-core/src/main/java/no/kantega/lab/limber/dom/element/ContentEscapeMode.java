@@ -26,4 +26,5 @@ public enum ContentEscapeMode {
     public static ContentEscapeMode getDefault() {
         return HTML4;
     }
+
 }

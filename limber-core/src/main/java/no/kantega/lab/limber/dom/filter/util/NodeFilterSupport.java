@@ -9,11 +9,11 @@ import java.util.*;
 
 public class NodeFilterSupport {
 
-    private static final NodeFilterSupport instance = new NodeFilterSupport();
+    private static final NodeFilterSupport INSTANCE = new NodeFilterSupport();
 
     @Nonnull
     public static NodeFilterSupport getInstance() {
-        return instance;
+        return INSTANCE;
     }
 
     private NodeFilterSupport() {

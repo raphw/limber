@@ -4,10 +4,7 @@ import no.kantega.lab.limber.dom.abstraction.IDomNodeBrowsable;
 import no.kantega.lab.limber.dom.abstraction.IDomNodeMorphable;
 import no.kantega.lab.limber.dom.abstraction.IDomSelectionQueryable;
 import no.kantega.lab.limber.dom.abstraction.IDomSelectionReduceable;
-import no.kantega.lab.limber.dom.element.AbstractNode;
-import no.kantega.lab.limber.dom.element.ContentEscapeMode;
-import no.kantega.lab.limber.dom.element.ElementNode;
-import no.kantega.lab.limber.dom.element.TextNode;
+import no.kantega.lab.limber.dom.element.*;
 import no.kantega.lab.limber.dom.filter.*;
 import no.kantega.lab.limber.dom.filter.util.NodeFilterSupport;
 import no.kantega.lab.limber.dom.filter.util.QueryMatchMode;
@@ -16,7 +13,7 @@ import javax.annotation.Nonnull;
 import java.util.*;
 
 public class NodeSelection<N extends AbstractNode, C extends NodeSelection<N, ?>> implements
-        IDomNodeMorphable<C>, IDomNodeBrowsable<ElementNodeSelection>,
+        IDomNodeMorphable<N, C>, IDomNodeBrowsable<ElementNodeSelection>,
         IDomSelectionQueryable<N>, IDomSelectionReduceable<N> {
 
     private final List<N> selected;
@@ -44,7 +41,7 @@ public class NodeSelection<N extends AbstractNode, C extends NodeSelection<N, ?>
     @Override
     @SuppressWarnings("unchecked")
     public C clear() {
-        for (AbstractNode<?> node : getSelected()) {
+        for (N node : getSelected()) {
             node.clear();
         }
         return (C) this;
@@ -54,7 +51,7 @@ public class NodeSelection<N extends AbstractNode, C extends NodeSelection<N, ?>
     @Override
     @SuppressWarnings("unchecked")
     public C setRendered(boolean render) {
-        for (AbstractNode<?> node : getSelected()) {
+        for (N node : getSelected()) {
             node.setRendered(render);
         }
         return (C) this;
@@ -64,7 +61,7 @@ public class NodeSelection<N extends AbstractNode, C extends NodeSelection<N, ?>
     @Override
     @SuppressWarnings("unchecked")
     public C remove() {
-        for (AbstractNode<?> node : getSelected()) {
+        for (N node : getSelected()) {
             node.remove();
         }
         return (C) this;
@@ -80,7 +77,7 @@ public class NodeSelection<N extends AbstractNode, C extends NodeSelection<N, ?>
     @Override
     @SuppressWarnings("unchecked")
     public C setContent(CharSequence content) {
-        for (AbstractNode<?> node : getSelected()) {
+        for (N node : getSelected()) {
             node.setContent(content);
         }
         return (C) this;
@@ -90,41 +87,11 @@ public class NodeSelection<N extends AbstractNode, C extends NodeSelection<N, ?>
     @Override
     @SuppressWarnings("unchecked")
     public C setContent(CharSequence content, @Nonnull ContentEscapeMode escapeMode) {
-        for (AbstractNode<?> node : getSelected()) {
+        for (N node : getSelected()) {
             node.setContent(content, escapeMode);
         }
         return (C) this;
     }
-
-//    @Nonnull
-//    @Override
-//    @SuppressWarnings("unchecked")
-//    public C addStickyNodeVisitor(@Nonnull IDomNodeVisitor<? super N> nodeVisitor, @Nonnull IDomNodeVisitor.VisitingStickyMode visitingStickyMode) {
-//        for (AbstractNode<?> node : getSelected()) {
-//            node.addStickyNodeVisitor(nodeVisitor, visitingStickyMode);
-//        }
-//        return (C) this;
-//    }
-//
-//    @Nonnull
-//    @Override
-//    @SuppressWarnings("unchecked")
-//    public C visit(@Nonnull IDomNodeVisitor<? super N> nodeVisitor) {
-//        for (AbstractNode<?> node : getSelected()) {
-//            node.visit(nodeVisitor);
-//        }
-//        return (C) this;
-//    }
-//
-//    @Nonnull
-//    @Override
-//    @SuppressWarnings("unchecked")
-//    public C removeStickyNodeVisitor(@Nonnull IDomNodeVisitor<?> nodeVisitor) {
-//        for (AbstractNode<?> node : getSelected()) {
-//            node.removeStickyNodeVisitor(nodeVisitor);
-//        }
-//        return (C) this;
-//    }
 
     @Nonnull
     @Override
@@ -194,7 +161,7 @@ public class NodeSelection<N extends AbstractNode, C extends NodeSelection<N, ?>
     @Override
     public ElementNodeSelection getParent() {
         LinkedHashSet<ElementNode> parents = new LinkedHashSet<ElementNode>();
-        for (AbstractNode<?> element : getSelected()) {
+        for (N element : getSelected()) {
             ElementNode parent = element.getParent();
             if (parent != null) parents.add(parent);
         }
@@ -205,7 +172,7 @@ public class NodeSelection<N extends AbstractNode, C extends NodeSelection<N, ?>
     @Override
     public ElementNodeSelection getRoot() {
         LinkedHashSet<ElementNode> roots = new LinkedHashSet<ElementNode>();
-        for (AbstractNode<?> element : getSelected()) {
+        for (N element : getSelected()) {
             ElementNode root = element.getRoot();
             if (root != null) roots.add(root);
         }
@@ -313,5 +280,33 @@ public class NodeSelection<N extends AbstractNode, C extends NodeSelection<N, ?>
         } catch (CloneNotSupportedException e) {
             throw new IllegalStateException();
         }
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        NodeSelection that = (NodeSelection) o;
+        return selected.equals(that.selected);
+    }
+
+    @Override
+    public int hashCode() {
+        return selected.hashCode();
+    }
+
+    @Override
+    public String toString() {
+        return String.format("%s[size=%d]", getClass().getSimpleName(), getSelected().size());
+    }
+
+    @Nonnull
+    @Override
+    @SuppressWarnings("unchecked")
+    public C visit(@Nonnull IDomNodeVisitor<? super N> visitor) {
+        for (N element : getSelected()) {
+            element.visit(visitor);
+        }
+        return (C) this;
     }
 }

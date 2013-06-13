@@ -45,11 +45,15 @@
     </modules>
 
     <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <version.servlet-api>2.5</version.servlet-api>
         <version.commons.lang3>3.1</version.commons.lang3>
+        <version.commons.io>2.4</version.commons.io>
         <version.reflections>0.9.9-RC1</version.reflections>
         <version.xerces>2.11.0</version.xerces>
         <version.neko>1.9.18</version.neko>
+        <version.guava>14.0.1</version.guava>
+        <version.findbugs>2.0.1</version.findbugs>
     </properties>
 
     <dependencyManagement>
@@ -71,6 +75,12 @@
             </dependency>
 
             <dependency>
+                <groupId>commons-io</groupId>
+                <artifactId>commons-io</artifactId>
+                <version>${version.commons.io}</version>
+            </dependency>
+
+            <dependency>
                 <groupId>org.reflections</groupId>
                 <artifactId>reflections</artifactId>
                 <version>${version.reflections}</version>
@@ -87,6 +97,12 @@
                 <groupId>xerces</groupId>
                 <artifactId>xercesImpl</artifactId>
                 <version>${version.xerces}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.google.code.findbugs</groupId>
+                <artifactId>jsr305</artifactId>
+                <version>${version.findbugs}</version>
             </dependency>
 
         </dependencies>

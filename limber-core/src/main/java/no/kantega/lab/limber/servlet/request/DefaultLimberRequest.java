@@ -32,12 +32,12 @@ public class DefaultLimberRequest implements ILimberRequest {
     }
 
     @Override
-    public UUID getAjaxId() {
+    public UUID getSubroutineId() {
         return ajaxIdentificator;
     }
 
     @Override
-    public boolean isAjax() {
+    public boolean isSubroutine() {
         return ajaxIdentificator != null;
     }
 

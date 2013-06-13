@@ -6,15 +6,15 @@ import java.util.UUID;
 
 public interface ILimberRequest {
 
+    String getSessionId();
+
     Class<? extends IRenderable> getRenderableClass();
 
     UUID getVersionId();
 
     boolean isVersioned();
 
-    UUID getAjaxId();
+    UUID getSubroutineId();
 
-    boolean isAjax();
-
-    String getSessionId();
+    boolean isSubroutine();
 }

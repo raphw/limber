@@ -7,7 +7,7 @@ import javax.annotation.Nonnull;
 import java.util.LinkedHashSet;
 import java.util.List;
 
-public class TextNodeSelection extends NodeSelection<TextNode, TextNodeSelection> implements IDomTextNodeMorphable<TextNodeSelection> {
+public class TextNodeSelection extends NodeSelection<TextNode, TextNodeSelection> implements IDomTextNodeMorphable<TextNode, TextNodeSelection> {
 
     public TextNodeSelection(@Nonnull List<TextNode> selected) {
         super(selected);

@@ -1,5 +1,8 @@
 package no.kantega.lab.limber.dom.element;
 
+import no.kantega.lab.limber.ajax.abstraction.AjaxEventTrigger;
+import no.kantega.lab.limber.ajax.abstraction.IAjaxCallback;
+import no.kantega.lab.limber.ajax.container.AjaxCallbackEventTriggerTupel;
 import no.kantega.lab.limber.dom.abstraction.IDomElementNodeBrowsable;
 import no.kantega.lab.limber.dom.abstraction.IDomElementNodeMorphable;
 import no.kantega.lab.limber.dom.abstraction.IDomElementNodeQueryable;
@@ -9,14 +12,18 @@ import no.kantega.lab.limber.dom.filter.util.QueryMatchMode;
 import no.kantega.lab.limber.dom.selection.ElementNodeSelection;
 import no.kantega.lab.limber.dom.selection.NodeSelection;
 import no.kantega.lab.limber.dom.selection.TextNodeSelection;
+import no.kantega.lab.limber.servlet.IResponseContainer;
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import javax.annotation.Nonnull;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.util.*;
 
 public class ElementNode extends AbstractNode<ElementNode> implements
-        IDomElementNodeMorphable<ElementNode>, IDomElementNodeBrowsable<AbstractNode<?>, ElementNode>,
-        IDomElementNodeQueryable {
+        IDomElementNodeMorphable<ElementNode, ElementNode>, IDomElementNodeBrowsable<AbstractNode<?>, ElementNode>,
+        IDomElementNodeQueryable<ElementNode> {
 
     private static final String HTML_ATTR_CLASS = "class";
     private static final String HTML_ATTR_STYLE = "style";
@@ -31,6 +38,8 @@ public class ElementNode extends AbstractNode<ElementNode> implements
     private Map<String, String> attr;
 
     private List<AbstractNode<?>> children;
+
+    private List<AjaxCallbackEventTriggerTupel<? super ElementNode>> ajaxEvents;
 
     public ElementNode(@Nonnull CharSequence tag) {
         setTagName(tag);
@@ -286,7 +295,7 @@ public class ElementNode extends AbstractNode<ElementNode> implements
     @Override
     public ElementNode setContent(CharSequence content, @Nonnull ContentEscapeMode contentEscapeMode) {
         clear();
-        appendTextAndStay(content, contentEscapeMode);
+        if (content != null) appendTextAndStay(content, contentEscapeMode);
         return this;
     }
 
@@ -671,21 +680,73 @@ public class ElementNode extends AbstractNode<ElementNode> implements
 
     @Override
     public String toString() {
-        StringBuilder stringBuilder = new StringBuilder("ElementNode[");
-        stringBuilder.append(isRendered());
-        stringBuilder.append(',');
-        stringBuilder.append(getTagName());
-        if (attr != null) {
-            for (Map.Entry<String, String> entry : attr.entrySet()) {
-                stringBuilder.append(',');
-                stringBuilder.append(entry.getKey()).append('=').append(entry.getValue());
-            }
+        return String.format("%s[tag=%s,rendered=%b,children=%d]", getClass().getSimpleName(), getTagName(), isRendered(), getChildren().size());
+    }
+
+    @Override
+    public boolean onRender(@Nonnull OutputStream outputStream, @Nonnull IResponseContainer response) throws IOException {
+        IOUtils.write("<", outputStream);
+        IOUtils.write(getTagName(), outputStream);
+        for (Map.Entry<String, String> attr : getAttrs().entrySet()) {
+            IOUtils.write(" ", outputStream);
+            IOUtils.write(attr.getKey(), outputStream);
+            IOUtils.write("=\"", outputStream);
+            IOUtils.write(attr.getValue(), outputStream);
+            IOUtils.write("\"", outputStream);
         }
-        for (AbstractNode<?> node : getChildren()) {
-            stringBuilder.append('\n');
-            stringBuilder.append(node.toString());
+
+        IOUtils.write(">", outputStream);
+        for (AbstractNode<?> child : getChildren()) {
+            if (child instanceof ElementNode) IOUtils.write("\n", outputStream);
+            child.render(outputStream, response);
         }
-        stringBuilder.append("]");
-        return stringBuilder.toString();
+        IOUtils.write("</", outputStream);
+        IOUtils.write(getTagName(), outputStream);
+        IOUtils.write(">", outputStream);
+        IOUtils.write("\n", outputStream);
+
+        return true;
+    }
+
+    @Override
+    @Nonnull
+    public ElementNode addAjaxEvent(@Nonnull AjaxEventTrigger ajaxEventTrigger, @Nonnull IAjaxCallback<? super ElementNode> ajaxCallback) {
+        if (ajaxEvents == null) ajaxEvents = new ArrayList<AjaxCallbackEventTriggerTupel<? super ElementNode>>();
+        ajaxEvents.add(new AjaxCallbackEventTriggerTupel<ElementNode>(ajaxCallback, ajaxEventTrigger));
+        return this;
+    }
+
+    @Override
+    @Nonnull
+    public ElementNode removeAjaxEvent(@Nonnull IAjaxCallback<?> ajaxCallback) {
+        if (ajaxEvents == null) return this;
+        Iterator<AjaxCallbackEventTriggerTupel<? super ElementNode>> it = ajaxEvents.iterator();
+        while (it.hasNext()) {
+            if (it.next().getAjaxCallback() == ajaxCallback) it.remove();
+        }
+        if (ajaxEvents.size() == 0) ajaxEvents = null;
+        return this;
+    }
+
+    @Nonnull
+    @Override
+    public ElementNode removeAjaxEvent(@Nonnull AjaxEventTrigger ajaxEventTrigger) {
+        if (ajaxEvents == null) return this;
+        Iterator<AjaxCallbackEventTriggerTupel<? super ElementNode>> it = ajaxEvents.iterator();
+        while (it.hasNext()) {
+            if (it.next().getAjaxEventTrigger() == ajaxEventTrigger) it.remove();
+        }
+        if (ajaxEvents.size() == 0) ajaxEvents = null;
+        return this;
+    }
+
+    @Nonnull
+    @Override
+    public List<AjaxCallbackEventTriggerTupel<? super ElementNode>> getAjaxEvents() {
+        if (ajaxEvents == null) {
+            return Collections.emptyList();
+        } else {
+            return Collections.unmodifiableList(ajaxEvents);
+        }
     }
 }

@@ -1,5 +1,7 @@
 package no.kantega.lab.limber.dom.abstraction;
 
+import no.kantega.lab.limber.ajax.abstraction.AjaxEventTrigger;
+import no.kantega.lab.limber.ajax.abstraction.IAjaxCallback;
 import no.kantega.lab.limber.dom.element.AbstractNode;
 import no.kantega.lab.limber.dom.element.ContentEscapeMode;
 import no.kantega.lab.limber.dom.element.ElementNode;
@@ -8,10 +10,10 @@ import javax.annotation.Nonnull;
 import java.util.List;
 import java.util.Map;
 
-public interface IDomElementNodeMorphable<M extends IDomElementNodeMorphable> extends IDomNodeMorphable<M> {
+public interface IDomElementNodeMorphable<N extends ElementNode, M extends IDomElementNodeMorphable> extends IDomNodeMorphable<N, M> {
 
     @Nonnull
-    <N extends AbstractNode> Object addChild(int index, @Nonnull N node);
+    <N2 extends AbstractNode> Object addChild(int index, @Nonnull N2 node);
 
     @Nonnull
     M addChildAndStay(int index, @Nonnull AbstractNode<?> node);
@@ -35,7 +37,7 @@ public interface IDomElementNodeMorphable<M extends IDomElementNodeMorphable> ex
     M addTextAndStay(int index, @Nonnull CharSequence text, @Nonnull ContentEscapeMode contentEscapeMode);
 
     @Nonnull
-    <N extends AbstractNode> Object appendChild(@Nonnull N node);
+    <N2 extends AbstractNode> Object appendChild(@Nonnull N2 node);
 
     @Nonnull
     M appendChildAndStay(@Nonnull AbstractNode<?> node);
@@ -59,7 +61,7 @@ public interface IDomElementNodeMorphable<M extends IDomElementNodeMorphable> ex
     M appendTextAndStay(@Nonnull CharSequence text, @Nonnull ContentEscapeMode contentEscapeMode);
 
     @Nonnull
-    <N extends AbstractNode> Object prependChild(@Nonnull N node);
+    <N2 extends AbstractNode> Object prependChild(@Nonnull N2 node);
 
     @Nonnull
     M prependChildAndStay(@Nonnull AbstractNode<?> node);
@@ -132,4 +134,14 @@ public interface IDomElementNodeMorphable<M extends IDomElementNodeMorphable> ex
 
     @Nonnull
     M removeCssStyle(@Nonnull CharSequence styleKey);
+
+    @Nonnull
+    M addAjaxEvent(@Nonnull AjaxEventTrigger ajaxEventTrigger, @Nonnull IAjaxCallback<? super N> ajaxCallback);
+
+    @Nonnull
+    M removeAjaxEvent(@Nonnull IAjaxCallback<?> ajaxCallback);
+
+    @Nonnull
+    M removeAjaxEvent(@Nonnull AjaxEventTrigger ajaxEventTrigger);
+
 }

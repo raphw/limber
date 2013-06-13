@@ -1,5 +1,6 @@
 package no.kantega.lab.limber.dom.selection;
 
+import no.kantega.lab.limber.doctype.DoctypeDeclaration;
 import no.kantega.lab.limber.dom.abstraction.IDomHtmlRootSteerable;
 import no.kantega.lab.limber.dom.element.ElementNode;
 import no.kantega.lab.limber.dom.element.TextNode;
@@ -11,9 +12,16 @@ public class HtmlDocumentRootSelection extends ElementNodeSelection implements I
 
     private final ElementNode rootNode;
 
+    private DoctypeDeclaration doctypeDeclaration;
+
     public HtmlDocumentRootSelection(@Nonnull ElementNode rootNode) {
+        this(rootNode, null);
+    }
+
+    public HtmlDocumentRootSelection(@Nonnull ElementNode rootNode, DoctypeDeclaration doctypeDeclaration) {
         super(Arrays.asList(rootNode));
         this.rootNode = rootNode;
+        this.doctypeDeclaration = doctypeDeclaration;
     }
 
     @Nonnull
@@ -72,5 +80,16 @@ public class HtmlDocumentRootSelection extends ElementNodeSelection implements I
             throw new IllegalStateException();
         }
         return titleNodeSelection.get(0);
+    }
+
+    @Override
+    public DoctypeDeclaration getDoctypeDeclaration() {
+        return doctypeDeclaration;
+    }
+
+    @Override
+    public HtmlDocumentRootSelection setDoctypeDeclaration(DoctypeDeclaration doctypeDeclaration) {
+        this.doctypeDeclaration = doctypeDeclaration;
+        return this;
     }
 }

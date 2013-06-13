@@ -2,8 +2,7 @@ package no.kantega.lab.limber.ajax.abstraction;
 
 import no.kantega.lab.limber.dom.element.ElementNode;
 
-public interface IAjaxCallback {
+public interface IAjaxCallback<N extends ElementNode> {
 
-    void onEvent(AjaxEventTrigger ajaxEventTrigger, ElementNode eventTarget);
-
+    void onEvent(AjaxEventTrigger ajaxEventTrigger, N eventTarget);
 }

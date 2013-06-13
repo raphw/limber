@@ -6,7 +6,7 @@ import no.kantega.lab.limber.dom.selection.NodeSelection;
 
 import javax.annotation.Nonnull;
 
-public interface IDomNodeBrowsable<B extends IDomNodeBrowsable<B>> {
+public interface IDomNodeBrowsable<B extends IDomNodeBrowsable> {
 
     B getParent();
 

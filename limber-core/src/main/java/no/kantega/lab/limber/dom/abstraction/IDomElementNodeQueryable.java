@@ -1,13 +1,15 @@
 package no.kantega.lab.limber.dom.abstraction;
 
+import no.kantega.lab.limber.ajax.container.AjaxCallbackEventTriggerTupel;
 import no.kantega.lab.limber.dom.element.AbstractNode;
+import no.kantega.lab.limber.dom.element.ElementNode;
 import no.kantega.lab.limber.dom.filter.util.QueryMatchMode;
 
 import javax.annotation.Nonnull;
 import java.util.List;
 import java.util.Map;
 
-public interface IDomElementNodeQueryable extends IDomNodeQueryable {
+public interface IDomElementNodeQueryable<N extends ElementNode> extends IDomNodeQueryable {
 
     @Nonnull
     String getTagName();
@@ -44,4 +46,7 @@ public interface IDomElementNodeQueryable extends IDomNodeQueryable {
     boolean isCssStyle(CharSequence key);
 
     boolean isCssStyle(@Nonnull CharSequence key, CharSequence value, @Nonnull QueryMatchMode queryMatchMode);
+
+    @Nonnull
+    List<AjaxCallbackEventTriggerTupel<? super N>> getAjaxEvents();
 }

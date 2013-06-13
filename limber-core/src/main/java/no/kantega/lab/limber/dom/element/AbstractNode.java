@@ -9,19 +9,32 @@ import no.kantega.lab.limber.dom.filter.INodeFilter;
 import no.kantega.lab.limber.dom.filter.NodeExclusionFilter;
 import no.kantega.lab.limber.dom.filter.util.NodeFilterSupport;
 import no.kantega.lab.limber.dom.selection.NodeSelection;
+import no.kantega.lab.limber.servlet.IRenderable;
+import no.kantega.lab.limber.servlet.IResponseContainer;
 
 import javax.annotation.Nonnull;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.util.Collections;
 
 public abstract class AbstractNode<N extends AbstractNode> implements
-        IDomNodeMorphable<N>, IDomNodeBrowsable<ElementNode>,
-        IDomNodeQueryable {
+        IDomNodeMorphable<N, N>, IDomNodeBrowsable<ElementNode>,
+        IDomNodeQueryable, IRenderable {
 
     private boolean rendered;
     private ElementNode parent;
 
     protected AbstractNode() {
         this.rendered = true;
+    }
+
+    @Nonnull
+    @Override
+    @SuppressWarnings("unchecked")
+    public N visit(@Nonnull IDomNodeVisitor<? super N> visitor) {
+        N castThis = (N) this;
+        visitor.visit(castThis);
+        return castThis;
     }
 
     @Nonnull
@@ -55,7 +68,7 @@ public abstract class AbstractNode<N extends AbstractNode> implements
     @Override
     public ElementNode getRoot() {
         ElementNode root = getParent();
-        while (root.getParent() != null) {
+        while (root != null) {
             root = root.getParent();
         }
         return root;
@@ -149,6 +162,13 @@ public abstract class AbstractNode<N extends AbstractNode> implements
 
     @Override
     public String toString() {
-        return String.format("%s[%b]", getClass().getName(), rendered);
+        return String.format("%s[rendered=%b]", getClass().getName(), rendered);
     }
+
+    @Override
+    public final boolean render(@Nonnull OutputStream outputStream, @Nonnull IResponseContainer response) throws IOException {
+        return isRendered() && onRender(outputStream, response);
+    }
+
+    protected abstract boolean onRender(@Nonnull OutputStream outputStream, @Nonnull IResponseContainer response) throws IOException;
 }

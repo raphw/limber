@@ -105,6 +105,7 @@ public class LimberRequestHandler {
         }
 
         @Override
+        @Nonnull
         public ILimberRequest getRequest() {
             return limberRequest;
         }

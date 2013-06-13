@@ -1,5 +1,7 @@
 package no.kantega.lab.limber.dom.selection;
 
+import no.kantega.lab.limber.ajax.abstraction.AjaxEventTrigger;
+import no.kantega.lab.limber.ajax.abstraction.IAjaxCallback;
 import no.kantega.lab.limber.dom.abstraction.IDomElementNodeBrowsable;
 import no.kantega.lab.limber.dom.abstraction.IDomElementNodeMorphable;
 import no.kantega.lab.limber.dom.element.AbstractNode;
@@ -17,7 +19,7 @@ import java.util.List;
 import java.util.Map;
 
 public class ElementNodeSelection extends NodeSelection<ElementNode, ElementNodeSelection> implements
-        IDomElementNodeMorphable<ElementNodeSelection>, IDomElementNodeBrowsable<ElementNode, ElementNodeSelection> {
+        IDomElementNodeMorphable<ElementNode, ElementNodeSelection>, IDomElementNodeBrowsable<ElementNode, ElementNodeSelection> {
 
     public ElementNodeSelection(@Nonnull List<ElementNode> selected) {
         super(selected);
@@ -496,5 +498,30 @@ public class ElementNodeSelection extends NodeSelection<ElementNode, ElementNode
         return new ElementNodeSelection(findByFilter(new ElementNodeFilter(), ElementNode.class, maxDepth));
     }
 
+    @Nonnull
+    @Override
+    public ElementNodeSelection addAjaxEvent(@Nonnull AjaxEventTrigger ajaxEventTrigger, @Nonnull IAjaxCallback<? super ElementNode> ajaxCallback) {
+        for (ElementNode elementNode : getSelected()) {
+            elementNode.addAjaxEvent(ajaxEventTrigger, ajaxCallback);
+        }
+        return this;
+    }
 
+    @Nonnull
+    @Override
+    public ElementNodeSelection removeAjaxEvent(@Nonnull IAjaxCallback<?> ajaxCallback) {
+        for (ElementNode elementNode : getSelected()) {
+            elementNode.removeAjaxEvent(ajaxCallback);
+        }
+        return this;
+    }
+
+    @Nonnull
+    @Override
+    public ElementNodeSelection removeAjaxEvent(@Nonnull AjaxEventTrigger ajaxEventTrigger) {
+        for (ElementNode elementNode : getSelected()) {
+            elementNode.removeAjaxEvent(ajaxEventTrigger);
+        }
+        return this;
+    }
 }

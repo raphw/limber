@@ -1,5 +1,6 @@
 package no.kantega.lab.limber.dom.abstraction;
 
+import no.kantega.lab.limber.doctype.DoctypeDeclaration;
 import no.kantega.lab.limber.dom.element.ElementNode;
 
 import javax.annotation.Nonnull;
@@ -23,4 +24,8 @@ public interface IDomHtmlRootSteerable<R extends IDomHtmlRootSteerable<R>> {
     ElementNode getBodyNode();
 
     ElementNode getHeadNode();
+
+    DoctypeDeclaration getDoctypeDeclaration();
+
+    R setDoctypeDeclaration(DoctypeDeclaration doctypeDeclaration);
 }
