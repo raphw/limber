@@ -1,7 +1,7 @@
 package no.kantega.lab.limber.dom.element;
 
-import no.kantega.lab.limber.dom.abstraction.IDomTextNodeMorphable;
 import no.kantega.lab.limber.dom.abstraction.IDomTextNodeQueryable;
+import no.kantega.lab.limber.dom.abstraction.IDomTextNodeRepresentable;
 import no.kantega.lab.limber.servlet.IResponseContainer;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -10,7 +10,7 @@ import javax.annotation.Nonnull;
 import java.io.IOException;
 import java.io.OutputStream;
 
-public class TextNode extends AbstractNode<TextNode> implements IDomTextNodeMorphable<TextNode, TextNode>, IDomTextNodeQueryable {
+public class TextNode extends AbstractNode<TextNode> implements IDomTextNodeRepresentable, IDomTextNodeQueryable {
 
     private static final String[] searchChars = {"\n", "\r"}, replaceChars = {"\\n", "\\r"};
 

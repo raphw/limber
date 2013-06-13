@@ -10,138 +10,138 @@ import javax.annotation.Nonnull;
 import java.util.List;
 import java.util.Map;
 
-public interface IDomElementNodeMorphable<N extends ElementNode, M extends IDomElementNodeMorphable> extends IDomNodeMorphable<N, M> {
+public interface IDomElementNodeMorphable extends IDomNodeMorphable<ElementNode> {
 
     @Nonnull
-    <N2 extends AbstractNode> Object addChild(int index, @Nonnull N2 node);
+    <N2 extends AbstractNode<? extends N2>> Object addChild(int index, @Nonnull N2 node);
 
     @Nonnull
-    M addChildAndStay(int index, @Nonnull AbstractNode<?> node);
+    IDomElementNodeRepresentable addChildAndStay(int index, @Nonnull AbstractNode<?> node);
 
     @Nonnull
     Object addChild(int index, @Nonnull CharSequence tagName);
 
     @Nonnull
-    M addChildAndStay(int index, @Nonnull CharSequence tagName);
+    IDomElementNodeRepresentable addChildAndStay(int index, @Nonnull CharSequence tagName);
 
     @Nonnull
     Object addText(int index, @Nonnull CharSequence text);
 
     @Nonnull
-    M addTextAndStay(int index, @Nonnull CharSequence text);
+    IDomElementNodeRepresentable addTextAndStay(int index, @Nonnull CharSequence text);
 
     @Nonnull
     Object addText(int index, @Nonnull CharSequence text, @Nonnull ContentEscapeMode contentEscapeMode);
 
     @Nonnull
-    M addTextAndStay(int index, @Nonnull CharSequence text, @Nonnull ContentEscapeMode contentEscapeMode);
+    IDomElementNodeRepresentable addTextAndStay(int index, @Nonnull CharSequence text, @Nonnull ContentEscapeMode contentEscapeMode);
 
     @Nonnull
-    <N2 extends AbstractNode> Object appendChild(@Nonnull N2 node);
+    <N2 extends AbstractNode<? extends N2>> Object appendChild(@Nonnull N2 node);
 
     @Nonnull
-    M appendChildAndStay(@Nonnull AbstractNode<?> node);
+    IDomElementNodeRepresentable appendChildAndStay(@Nonnull AbstractNode<?> node);
 
     @Nonnull
     Object appendChild(@Nonnull CharSequence tagName);
 
     @Nonnull
-    M appendChildAndStay(@Nonnull CharSequence tagName);
+    IDomElementNodeRepresentable appendChildAndStay(@Nonnull CharSequence tagName);
 
     @Nonnull
     Object appendText(@Nonnull CharSequence text);
 
     @Nonnull
-    M appendTextAndStay(@Nonnull CharSequence text);
+    IDomElementNodeRepresentable appendTextAndStay(@Nonnull CharSequence text);
 
     @Nonnull
     Object appendText(@Nonnull CharSequence text, @Nonnull ContentEscapeMode contentEscapeMode);
 
     @Nonnull
-    M appendTextAndStay(@Nonnull CharSequence text, @Nonnull ContentEscapeMode contentEscapeMode);
+    IDomElementNodeRepresentable appendTextAndStay(@Nonnull CharSequence text, @Nonnull ContentEscapeMode contentEscapeMode);
 
     @Nonnull
-    <N2 extends AbstractNode> Object prependChild(@Nonnull N2 node);
+    <N2 extends AbstractNode<? extends N2>> Object prependChild(@Nonnull N2 node);
 
     @Nonnull
-    M prependChildAndStay(@Nonnull AbstractNode<?> node);
+    IDomElementNodeRepresentable prependChildAndStay(@Nonnull AbstractNode<?> node);
 
     @Nonnull
     Object prependChild(@Nonnull CharSequence tagName);
 
     @Nonnull
-    M prependChildAndStay(@Nonnull CharSequence tagName);
+    IDomElementNodeRepresentable prependChildAndStay(@Nonnull CharSequence tagName);
 
     @Nonnull
     Object prependText(@Nonnull CharSequence text);
 
     @Nonnull
-    M prependTextAndStay(@Nonnull CharSequence text);
+    IDomElementNodeRepresentable prependTextAndStay(@Nonnull CharSequence text);
 
     @Nonnull
     Object prependText(@Nonnull CharSequence text, @Nonnull ContentEscapeMode contentEscapeMode);
 
     @Nonnull
-    M prependTextAndStay(@Nonnull CharSequence text, @Nonnull ContentEscapeMode contentEscapeMode);
+    IDomElementNodeRepresentable prependTextAndStay(@Nonnull CharSequence text, @Nonnull ContentEscapeMode contentEscapeMode);
 
     @Nonnull
     Object wrap(@Nonnull ElementNode elementNode);
 
     @Nonnull
-    M wrapAndStay(@Nonnull ElementNode elementNode);
+    IDomElementNodeRepresentable wrapAndStay(@Nonnull ElementNode elementNode);
 
     @Nonnull
     Object wrap(@Nonnull CharSequence tagName);
 
     @Nonnull
-    M wrapAndStay(@Nonnull CharSequence tagName);
+    IDomElementNodeRepresentable wrapAndStay(@Nonnull CharSequence tagName);
 
     @Nonnull
-    M setTagName(@Nonnull CharSequence tagName);
+    IDomElementNodeRepresentable setTagName(@Nonnull CharSequence tagName);
 
     @Nonnull
-    M putAttr(@Nonnull CharSequence key, CharSequence value);
+    IDomElementNodeRepresentable putAttr(@Nonnull CharSequence key, CharSequence value);
 
     @Nonnull
-    M removeAttr(@Nonnull CharSequence key);
+    IDomElementNodeRepresentable removeAttr(@Nonnull CharSequence key);
 
     @Nonnull
-    M setId(@Nonnull CharSequence id);
+    IDomElementNodeRepresentable setId(@Nonnull CharSequence id);
 
     @Nonnull
-    M setRandomId();
+    IDomElementNodeRepresentable setRandomId();
 
     @Nonnull
-    M setRandomIdIfNone();
+    IDomElementNodeRepresentable setRandomIdIfNone();
 
     @Nonnull
-    M removeId();
+    IDomElementNodeRepresentable removeId();
 
     @Nonnull
-    M addCssClass(@Nonnull CharSequence cssClassName);
+    IDomElementNodeRepresentable addCssClass(@Nonnull CharSequence cssClassName);
 
     @Nonnull
-    M setCssClasses(@Nonnull List<? extends CharSequence> cssClassNames);
+    IDomElementNodeRepresentable setCssClasses(@Nonnull List<? extends CharSequence> cssClassNames);
 
     @Nonnull
-    M removeCssClass(@Nonnull CharSequence cssClassName);
+    IDomElementNodeRepresentable removeCssClass(@Nonnull CharSequence cssClassName);
 
     @Nonnull
-    M addCssStyle(@Nonnull CharSequence styleKey, CharSequence styleValue);
+    IDomElementNodeRepresentable addCssStyle(@Nonnull CharSequence styleKey, CharSequence styleValue);
 
     @Nonnull
-    M setCssStyles(@Nonnull Map<? extends CharSequence, ? extends CharSequence> cssStyles);
+    IDomElementNodeRepresentable setCssStyles(@Nonnull Map<? extends CharSequence, ? extends CharSequence> cssStyles);
 
     @Nonnull
-    M removeCssStyle(@Nonnull CharSequence styleKey);
+    IDomElementNodeRepresentable removeCssStyle(@Nonnull CharSequence styleKey);
 
     @Nonnull
-    M addAjaxEvent(@Nonnull AjaxEventTrigger ajaxEventTrigger, @Nonnull IAjaxCallback<? super N> ajaxCallback);
+    IDomElementNodeRepresentable addAjaxEvent(@Nonnull AjaxEventTrigger ajaxEventTrigger, @Nonnull IAjaxCallback<? super ElementNode> ajaxCallback);
 
     @Nonnull
-    M removeAjaxEvent(@Nonnull IAjaxCallback<?> ajaxCallback);
+    IDomElementNodeRepresentable removeAjaxEvent(@Nonnull IAjaxCallback<?> ajaxCallback);
 
     @Nonnull
-    M removeAjaxEvent(@Nonnull AjaxEventTrigger ajaxEventTrigger);
+    IDomElementNodeRepresentable removeAjaxEvent(@Nonnull AjaxEventTrigger ajaxEventTrigger);
 
 }

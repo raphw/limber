@@ -10,8 +10,7 @@ import no.kantega.lab.limber.dom.selection.TextNodeSelection;
 
 import javax.annotation.Nonnull;
 
-public interface IDomElementNodeBrowsable<N extends AbstractNode, B extends IDomNodeBrowsable<B>>
-        extends IDomNodeBrowsable<B>, Iterable<N> {
+public interface IDomElementNodeBrowsable extends IDomNodeBrowsable {
 
     @Nonnull
     ElementNodeSelection findByTag(@Nonnull CharSequence tagName);
@@ -42,25 +41,25 @@ public interface IDomElementNodeBrowsable<N extends AbstractNode, B extends IDom
     ElementNodeSelection findByAttr(@Nonnull CharSequence key, CharSequence value, @Nonnull QueryMatchMode queryMatchMode, int maxDepth);
 
     @Nonnull
-    NodeSelection<AbstractNode, ?> findByFilter(@Nonnull INodeFilter<AbstractNode> nodeFilter);
+    NodeSelection<?, ?> findByFilter(@Nonnull INodeFilter<AbstractNode<?>> nodeFilter);
 
     @Nonnull
-    NodeSelection<AbstractNode, ?> findByFilter(@Nonnull INodeFilter<AbstractNode> nodeFilter, int maxDepth);
+    NodeSelection<?, ?> findByFilter(@Nonnull INodeFilter<AbstractNode<?>> nodeFilter, int maxDepth);
 
     @Nonnull
-    <N2 extends AbstractNode> NodeSelection<N2, ?> findByFilter(@Nonnull INodeFilter<N2> nodeFilter, @Nonnull Class<? extends N2> filterBoundary);
+    <N2 extends AbstractNode<? extends N2>, N3 extends N2> NodeSelection<N2, ?> findByFilter(@Nonnull INodeFilter<N2> nodeFilter, @Nonnull Class<? extends N3> filterBoundary);
 
     @Nonnull
-    <N2 extends AbstractNode> NodeSelection<N2, ?> findByFilter(@Nonnull INodeFilter<N2> nodeFilter, @Nonnull Class<? extends N2> filterBoundary, int maxDepth);
+    <N2 extends AbstractNode<? extends N2>, N3 extends N2> NodeSelection<N2, ?> findByFilter(@Nonnull INodeFilter<N2> nodeFilter, @Nonnull Class<? extends N3> filterBoundary, int maxDepth);
 
     @Nonnull
-    NodeSelection<AbstractNode, ?> getChildren();
+    NodeSelection<?, ?> getChildren();
 
     @Nonnull
-    NodeSelection<AbstractNode, ?> getChildren(@Nonnull INodeFilter<AbstractNode> nodeFilter);
+    NodeSelection<?, ?> getChildren(@Nonnull INodeFilter<AbstractNode<?>> nodeFilter);
 
     @Nonnull
-    <N2 extends AbstractNode> NodeSelection<N2, ?> getChildren(@Nonnull INodeFilter<N2> nodeFilter, Class<? extends N2> filterBoundary);
+    <N2 extends AbstractNode<? extends N2>, N3 extends N2> NodeSelection<N2, ?> getChildren(@Nonnull INodeFilter<N2> nodeFilter, Class<? extends N3> filterBoundary);
 
     @Nonnull
     TextNodeSelection findTextNodes();

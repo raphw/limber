@@ -6,27 +6,27 @@ import no.kantega.lab.limber.dom.selection.NodeSelection;
 
 import javax.annotation.Nonnull;
 
-public interface IDomNodeBrowsable<B extends IDomNodeBrowsable> {
+public interface IDomNodeBrowsable {
 
-    B getParent();
+    IDomElementNodeRepresentable getParent();
 
-    B getRoot();
-
-    @Nonnull
-    NodeSelection<AbstractNode, ?> getSiblings();
+    IDomElementNodeRepresentable getRoot();
 
     @Nonnull
-    NodeSelection<AbstractNode, ?> getSiblings(boolean includeMe);
+    NodeSelection<?, ?> getSiblings();
 
     @Nonnull
-    NodeSelection<AbstractNode, ?> getSiblings(@Nonnull INodeFilter<AbstractNode> nodeFilter);
+    NodeSelection<?, ?> getSiblings(boolean includeMe);
 
     @Nonnull
-    NodeSelection<AbstractNode, ?> getSiblings(@Nonnull INodeFilter<AbstractNode> nodeFilter, boolean includeMe);
+    NodeSelection<?, ?> getSiblings(@Nonnull INodeFilter<AbstractNode<?>> nodeFilter);
 
     @Nonnull
-    <N2 extends AbstractNode> NodeSelection<N2, ?> getSiblings(@Nonnull INodeFilter<N2> nodeFilter, Class<? extends N2> filterBoundary);
+    NodeSelection<?, ?> getSiblings(@Nonnull INodeFilter<AbstractNode<?>> nodeFilter, boolean includeMe);
 
     @Nonnull
-    <N2 extends AbstractNode> NodeSelection<N2, ?> getSiblings(@Nonnull INodeFilter<N2> nodeFilter, Class<? extends N2> filterBoundary, boolean includeMe);
+    <N2 extends AbstractNode<? extends N2>, N3 extends N2> NodeSelection<N2, ?> getSiblings(@Nonnull INodeFilter<N2> nodeFilter, Class<? extends N3> filterBoundary);
+
+    @Nonnull
+    <N2 extends AbstractNode<? extends N2>, N3 extends N2> NodeSelection<N2, ?> getSiblings(@Nonnull INodeFilter<N2> nodeFilter, Class<? extends N3> filterBoundary, boolean includeMe);
 }

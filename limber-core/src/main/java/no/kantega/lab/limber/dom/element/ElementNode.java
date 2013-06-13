@@ -3,9 +3,8 @@ package no.kantega.lab.limber.dom.element;
 import no.kantega.lab.limber.ajax.abstraction.AjaxEventTrigger;
 import no.kantega.lab.limber.ajax.abstraction.IAjaxCallback;
 import no.kantega.lab.limber.ajax.container.AjaxCallbackEventTriggerTupel;
-import no.kantega.lab.limber.dom.abstraction.IDomElementNodeBrowsable;
-import no.kantega.lab.limber.dom.abstraction.IDomElementNodeMorphable;
 import no.kantega.lab.limber.dom.abstraction.IDomElementNodeQueryable;
+import no.kantega.lab.limber.dom.abstraction.IDomElementNodeRepresentable;
 import no.kantega.lab.limber.dom.filter.*;
 import no.kantega.lab.limber.dom.filter.util.NodeFilterSupport;
 import no.kantega.lab.limber.dom.filter.util.QueryMatchMode;
@@ -21,9 +20,8 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.util.*;
 
-public class ElementNode extends AbstractNode<ElementNode> implements
-        IDomElementNodeMorphable<ElementNode, ElementNode>, IDomElementNodeBrowsable<AbstractNode<?>, ElementNode>,
-        IDomElementNodeQueryable<ElementNode> {
+public class ElementNode extends AbstractNode<ElementNode> implements IDomElementNodeRepresentable,
+        IDomElementNodeQueryable, Iterable<AbstractNode<?>> {
 
     private static final String HTML_ATTR_CLASS = "class";
     private static final String HTML_ATTR_STYLE = "style";
@@ -70,7 +68,7 @@ public class ElementNode extends AbstractNode<ElementNode> implements
 
     @Nonnull
     @Override
-    public <N extends AbstractNode> N addChild(int index, @Nonnull N node) {
+    public <N2 extends AbstractNode<? extends N2>> N2 addChild(int index, @Nonnull N2 node) {
         if (index < 0 || index > (children == null ? 0 : children.size())) {
             throw new IllegalArgumentException();
         }
@@ -78,6 +76,8 @@ public class ElementNode extends AbstractNode<ElementNode> implements
         children.add(index, node);
         return node;
     }
+
+
 
     @Nonnull
     @Override
@@ -88,7 +88,7 @@ public class ElementNode extends AbstractNode<ElementNode> implements
 
     @Nonnull
     @Override
-    public <N extends AbstractNode> N prependChild(@Nonnull N node) {
+    public <N2 extends AbstractNode<? extends N2>> N2 prependChild(@Nonnull N2 node) {
         return addChild(0, node);
     }
 
@@ -100,7 +100,7 @@ public class ElementNode extends AbstractNode<ElementNode> implements
 
     @Nonnull
     @Override
-    public <N extends AbstractNode> N appendChild(@Nonnull N node) {
+    public <N2 extends AbstractNode<? extends N2>> N2 appendChild(@Nonnull N2 node) {
         return addChild(children == null ? 0 : children.size(), node);
     }
 
@@ -118,19 +118,19 @@ public class ElementNode extends AbstractNode<ElementNode> implements
 
     @Nonnull
     @Override
-    public NodeSelection<AbstractNode, ?> getChildren() {
-        return getChildren(new BooleanRepeaterFilter<AbstractNode>(true));
+    public NodeSelection<?, ?> getChildren() {
+        return getChildren(new BooleanRepeaterFilter<AbstractNode<?>>(true));
     }
 
     @Nonnull
     @Override
-    public NodeSelection<AbstractNode, ?> getChildren(@Nonnull INodeFilter<AbstractNode> nodeFilter) {
+    public NodeSelection<?, ?> getChildren(@Nonnull INodeFilter<AbstractNode<?>> nodeFilter) {
         return getChildren(nodeFilter, AbstractNode.class);
     }
 
     @Nonnull
     @Override
-    public <N2 extends AbstractNode> NodeSelection<N2, ?> getChildren(@Nonnull INodeFilter<N2> nodeFilter, Class<? extends N2> filterBoundary) {
+    public <N2 extends AbstractNode<? extends N2>, N3 extends N2> NodeSelection<N2, ?> getChildren(@Nonnull INodeFilter<N2> nodeFilter, Class<? extends N3> filterBoundary) {
         if (children == null) {
             return new NodeSelection<N2, NodeSelection<N2, ?>>(Collections.<N2>emptyList());
         } else {
@@ -610,25 +610,25 @@ public class ElementNode extends AbstractNode<ElementNode> implements
 
     @Nonnull
     @Override
-    public NodeSelection<AbstractNode, ?> findByFilter(@Nonnull INodeFilter<AbstractNode> nodeFilter) {
-        return findByFilter(nodeFilter, AbstractNode.class);
+    public NodeSelection<?, ?> findByFilter(@Nonnull INodeFilter<AbstractNode<?>> nodeFilter) {
+        return findByFilter(nodeFilter, AbstractNode.class, Integer.MAX_VALUE);
     }
 
     @Nonnull
     @Override
-    public NodeSelection<AbstractNode, ?> findByFilter(@Nonnull INodeFilter<AbstractNode> nodeFilter, int maxDepth) {
+    public NodeSelection<?, ?> findByFilter(@Nonnull INodeFilter<AbstractNode<?>> nodeFilter, int maxDepth) {
         return findByFilter(nodeFilter, AbstractNode.class, maxDepth);
     }
 
     @Nonnull
     @Override
-    public <N2 extends AbstractNode> NodeSelection<N2, ?> findByFilter(@Nonnull INodeFilter<N2> nodeFilter, @Nonnull Class<? extends N2> filterBoundary) {
+    public <N2 extends AbstractNode<? extends N2>, N3 extends N2> NodeSelection<N2, ?> findByFilter(@Nonnull INodeFilter<N2> nodeFilter, @Nonnull Class<? extends N3> filterBoundary) {
         return findByFilter(nodeFilter, filterBoundary, Integer.MAX_VALUE);
     }
 
     @Nonnull
     @Override
-    public <N2 extends AbstractNode> NodeSelection<N2, ?> findByFilter(@Nonnull INodeFilter<N2> nodeFilter, @Nonnull Class<? extends N2> filterBoundary, int maxDepth) {
+    public <N2 extends AbstractNode<? extends N2>, N3 extends N2> NodeSelection<N2, ?> findByFilter(@Nonnull INodeFilter<N2> nodeFilter, @Nonnull Class<? extends N3> filterBoundary, int maxDepth) {
         return new NodeSelection<N2, NodeSelection<N2, ?>>(NodeFilterSupport.getInstance().filterNodeTree(this, nodeFilter, filterBoundary, maxDepth));
     }
 
@@ -656,6 +656,7 @@ public class ElementNode extends AbstractNode<ElementNode> implements
         return new ElementNodeSelection(findByFilter(new ElementNodeFilter(), ElementNode.class, maxDepth));
     }
 
+    @Nonnull
     @Override
     public Iterator<AbstractNode<?>> iterator() {
         return new Iterator<AbstractNode<?>>() {

@@ -6,32 +6,32 @@ import no.kantega.lab.limber.dom.element.IDomNodeVisitor;
 
 import javax.annotation.Nonnull;
 
-public interface IDomNodeMorphable<N extends AbstractNode, M extends IDomNodeMorphable> extends Cloneable {
+public interface IDomNodeMorphable<N extends AbstractNode<? extends N>> extends Cloneable {
 
     @Nonnull
-    M clear();
+    IDomNodeRepresentable<N> clear();
 
     @Nonnull
-    M setRendered(boolean render);
+    IDomNodeRepresentable<N> setRendered(boolean render);
 
     @Nonnull
-    M setContent(CharSequence content);
+    IDomNodeRepresentable<N> setContent(CharSequence content);
 
     @Nonnull
-    M setContent(CharSequence content, @Nonnull ContentEscapeMode escapeMode);
+    IDomNodeRepresentable<N> setContent(CharSequence content, @Nonnull ContentEscapeMode escapeMode);
 
     @Nonnull
-    M remove();
+    IDomNodeRepresentable<N> remove();
 
     @Nonnull
-    <N2 extends AbstractNode> Object replaceBy(@Nonnull N2 node);
+    <N2 extends AbstractNode<? extends N2>> Object replaceBy(@Nonnull N2 node);
 
     @Nonnull
-    M replaceByAndStay(@Nonnull AbstractNode<?> node);
+    IDomNodeRepresentable<N> replaceByAndStay(@Nonnull AbstractNode<?> node);
 
     @Nonnull
-    M clone();
+    IDomNodeRepresentable<N> clone();
 
     @Nonnull
-    M visit(@Nonnull IDomNodeVisitor<? super N> visitor);
+    IDomNodeRepresentable<N> visit(@Nonnull IDomNodeVisitor<? super N> visitor);
 }

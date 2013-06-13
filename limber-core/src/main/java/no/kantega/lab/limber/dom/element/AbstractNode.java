@@ -1,8 +1,7 @@
 package no.kantega.lab.limber.dom.element;
 
-import no.kantega.lab.limber.dom.abstraction.IDomNodeBrowsable;
-import no.kantega.lab.limber.dom.abstraction.IDomNodeMorphable;
 import no.kantega.lab.limber.dom.abstraction.IDomNodeQueryable;
+import no.kantega.lab.limber.dom.abstraction.IDomNodeRepresentable;
 import no.kantega.lab.limber.dom.filter.BooleanRepeaterFilter;
 import no.kantega.lab.limber.dom.filter.ConjunctionFilter;
 import no.kantega.lab.limber.dom.filter.INodeFilter;
@@ -17,8 +16,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Collections;
 
-public abstract class AbstractNode<N extends AbstractNode> implements
-        IDomNodeMorphable<N, N>, IDomNodeBrowsable<ElementNode>,
+public abstract class AbstractNode<N extends AbstractNode<N>> implements IDomNodeRepresentable<N>,
         IDomNodeQueryable, IRenderable {
 
     private boolean rendered;
@@ -76,37 +74,39 @@ public abstract class AbstractNode<N extends AbstractNode> implements
 
     @Nonnull
     @Override
-    public NodeSelection<AbstractNode, ?> getSiblings() {
+    public NodeSelection<?, ?> getSiblings() {
         return getSiblings(false);
     }
 
     @Nonnull
     @Override
-    public NodeSelection<AbstractNode, ?> getSiblings(boolean includeMe) {
-        return getSiblings(new BooleanRepeaterFilter<AbstractNode>(true), includeMe);
+    @SuppressWarnings("unchecked")
+    public NodeSelection<?, ?> getSiblings(boolean includeMe) {
+        new BooleanRepeaterFilter<AbstractNode<?>>(true);
+        return getSiblings(new BooleanRepeaterFilter<AbstractNode<?>>(true), AbstractNode.class, includeMe);
     }
 
     @Nonnull
     @Override
-    public NodeSelection<AbstractNode, ?> getSiblings(@Nonnull INodeFilter<AbstractNode> nodeFilter) {
-        return getSiblings(nodeFilter, AbstractNode.class);
-    }
-
-    @Nonnull
-    @Override
-    public NodeSelection<AbstractNode, ?> getSiblings(@Nonnull INodeFilter<AbstractNode> nodeFilter, boolean includeMe) {
+    public NodeSelection<?, ?> getSiblings(@Nonnull INodeFilter<AbstractNode<?>> nodeFilter) {
         return getSiblings(nodeFilter, AbstractNode.class, false);
     }
 
     @Nonnull
     @Override
-    public <N2 extends AbstractNode> NodeSelection<N2, ?> getSiblings(@Nonnull INodeFilter<N2> nodeFilter, Class<? extends N2> filterBoundary) {
+    public NodeSelection<?, ?> getSiblings(@Nonnull INodeFilter<AbstractNode<?>> nodeFilter, boolean includeMe) {
+        return getSiblings(nodeFilter, AbstractNode.class, includeMe);
+    }
+
+    @Nonnull
+    @Override
+    public <N2 extends AbstractNode<? extends N2>, N3 extends N2> NodeSelection<N2, ?> getSiblings(@Nonnull INodeFilter<N2> nodeFilter, Class<? extends N3> filterBoundary) {
         return getSiblings(nodeFilter, filterBoundary, false);
     }
 
     @Nonnull
     @Override
-    public <N2 extends AbstractNode> NodeSelection<N2, ?> getSiblings(@Nonnull INodeFilter<N2> nodeFilter, Class<? extends N2> filterBoundary, boolean includeMe) {
+    public <N2 extends AbstractNode<? extends N2>, N3 extends N2> NodeSelection<N2, ?> getSiblings(@Nonnull INodeFilter<N2> nodeFilter, Class<? extends N3> filterBoundary, boolean includeMe) {
         NodeSelection<N2, ?> siblingSelection;
         // Parent existent, find children of parent and exclude myself, if not required.
         if (getParent() != null) {
@@ -131,7 +131,7 @@ public abstract class AbstractNode<N extends AbstractNode> implements
 
     @Nonnull
     @Override
-    public <N extends AbstractNode> N replaceBy(@Nonnull N node) {
+    public <N2 extends AbstractNode<? extends N2>> N2 replaceBy(@Nonnull N2 node) {
         if (getParent() == null) {
             throw new IllegalStateException();
         }

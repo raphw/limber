@@ -2,8 +2,7 @@ package no.kantega.lab.limber.dom.selection;
 
 import no.kantega.lab.limber.ajax.abstraction.AjaxEventTrigger;
 import no.kantega.lab.limber.ajax.abstraction.IAjaxCallback;
-import no.kantega.lab.limber.dom.abstraction.IDomElementNodeBrowsable;
-import no.kantega.lab.limber.dom.abstraction.IDomElementNodeMorphable;
+import no.kantega.lab.limber.dom.abstraction.IDomElementNodeRepresentable;
 import no.kantega.lab.limber.dom.element.AbstractNode;
 import no.kantega.lab.limber.dom.element.ContentEscapeMode;
 import no.kantega.lab.limber.dom.element.ElementNode;
@@ -18,8 +17,7 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 
-public class ElementNodeSelection extends NodeSelection<ElementNode, ElementNodeSelection> implements
-        IDomElementNodeMorphable<ElementNode, ElementNodeSelection>, IDomElementNodeBrowsable<ElementNode, ElementNodeSelection> {
+public class ElementNodeSelection extends NodeSelection<ElementNode, ElementNodeSelection> implements IDomElementNodeRepresentable {
 
     public ElementNodeSelection(@Nonnull List<ElementNode> selected) {
         super(selected);
@@ -44,13 +42,12 @@ public class ElementNodeSelection extends NodeSelection<ElementNode, ElementNode
 
     @Nonnull
     @Override
-    @SuppressWarnings("unchecked")
-    public <N extends AbstractNode> NodeSelection<N, ?> addChild(int index, @Nonnull N prototype) {
-        List<N> addedChildren = new ArrayList<N>();
+    public <N2 extends AbstractNode<? extends N2>> NodeSelection<N2, ?> addChild(int index, @Nonnull N2 prototype) {
+        List<N2> addedChildren = new ArrayList<N2>();
         for (ElementNode elementNode : getSelected()) {
-            addedChildren.add(elementNode.addChild(index, (N) prototype.clone()));
+            addedChildren.add(elementNode.addChild(index, prototype.clone()));
         }
-        return new NodeSelection<N, NodeSelection<N, ?>>(addedChildren);
+        return new NodeSelection<N2, NodeSelection<N2, ?>>(addedChildren);
     }
 
     @Nonnull
@@ -62,13 +59,12 @@ public class ElementNodeSelection extends NodeSelection<ElementNode, ElementNode
 
     @Nonnull
     @Override
-    @SuppressWarnings("unchecked")
-    public <N extends AbstractNode> NodeSelection<N, ?> appendChild(@Nonnull N prototype) {
-        List<N> addedChildren = new ArrayList<N>();
+    public <N2 extends AbstractNode<? extends N2>> NodeSelection<N2, ?> appendChild(@Nonnull N2 prototype) {
+        List<N2> addedChildren = new ArrayList<N2>();
         for (ElementNode elementNode : getSelected()) {
-            addedChildren.add(elementNode.appendChild((N) prototype.clone()));
+            addedChildren.add(elementNode.appendChild(prototype.clone()));
         }
-        return new NodeSelection<N, NodeSelection<N, ?>>(addedChildren);
+        return new NodeSelection<N2, NodeSelection<N2, ?>>(addedChildren);
     }
 
     @Nonnull
@@ -81,12 +77,12 @@ public class ElementNodeSelection extends NodeSelection<ElementNode, ElementNode
     @Nonnull
     @Override
     @SuppressWarnings("unchecked")
-    public <N extends AbstractNode> NodeSelection<N, ?> prependChild(@Nonnull N prototype) {
-        List<N> addedChildren = new ArrayList<N>();
+    public <N2 extends AbstractNode<? extends N2>> NodeSelection<N2, ?> prependChild(@Nonnull N2 prototype) {
+        List<N2> addedChildren = new ArrayList<N2>();
         for (ElementNode elementNode : getSelected()) {
-            addedChildren.add(elementNode.prependChild((N) prototype.clone()));
+            addedChildren.add(elementNode.prependChild(prototype.clone()));
         }
-        return new NodeSelection<N, NodeSelection<N, ?>>(addedChildren);
+        return new NodeSelection<N2, NodeSelection<N2, ?>>(addedChildren);
     }
 
     @Nonnull
@@ -426,19 +422,19 @@ public class ElementNodeSelection extends NodeSelection<ElementNode, ElementNode
 
     @Nonnull
     @Override
-    public NodeSelection<AbstractNode, ?> getChildren() {
-        return getChildren(new BooleanRepeaterFilter<AbstractNode>(true));
+    public NodeSelection<?, ?> getChildren() {
+        return getChildren(new BooleanRepeaterFilter<AbstractNode<?>>(true));
     }
 
     @Nonnull
     @Override
-    public NodeSelection<AbstractNode, ?> getChildren(@Nonnull INodeFilter<AbstractNode> nodeFilter) {
+    public NodeSelection<?, ?> getChildren(@Nonnull INodeFilter<AbstractNode<?>> nodeFilter) {
         return getChildren(nodeFilter, AbstractNode.class);
     }
 
     @Nonnull
     @Override
-    public <N2 extends AbstractNode> NodeSelection<N2, ?> getChildren(@Nonnull INodeFilter<N2> nodeFilter, Class<? extends N2> filterBoundary) {
+    public <N2 extends AbstractNode<? extends N2>, N3 extends N2> NodeSelection<N2, ?> getChildren(@Nonnull INodeFilter<N2> nodeFilter, Class<? extends N3> filterBoundary) {
         LinkedHashSet<N2> resultSelection = new LinkedHashSet<N2>();
         for (ElementNode elementNode : getSelected()) {
             resultSelection.addAll(NodeFilterSupport.getInstance().filterNodeList(elementNode.getChildren().getSelected(), nodeFilter, filterBoundary));
@@ -448,25 +444,25 @@ public class ElementNodeSelection extends NodeSelection<ElementNode, ElementNode
 
     @Nonnull
     @Override
-    public NodeSelection<AbstractNode, ?> findByFilter(@Nonnull INodeFilter<AbstractNode> nodeFilter) {
+    public NodeSelection<?, ?> findByFilter(@Nonnull INodeFilter<AbstractNode<?>> nodeFilter) {
         return findByFilter(nodeFilter, AbstractNode.class);
     }
 
     @Nonnull
     @Override
-    public NodeSelection<AbstractNode, ?> findByFilter(@Nonnull INodeFilter<AbstractNode> nodeFilter, int maxDepth) {
-        return findByFilter(nodeFilter, AbstractNode.class, maxDepth);
+    public NodeSelection<?, ?> findByFilter(@Nonnull INodeFilter<AbstractNode<?>> nodeFilter, int maxDepth) {
+        return findByFilter(nodeFilter, AbstractNode.class, Integer.MAX_VALUE);
     }
 
     @Nonnull
     @Override
-    public <N2 extends AbstractNode> NodeSelection<N2, ?> findByFilter(@Nonnull INodeFilter<N2> nodeFilter, @Nonnull Class<? extends N2> filterBoundary) {
+    public <N2 extends AbstractNode<? extends N2>, N3 extends N2> NodeSelection<N2, ?> findByFilter(@Nonnull INodeFilter<N2> nodeFilter, @Nonnull Class<? extends N3> filterBoundary) {
         return findByFilter(nodeFilter, filterBoundary, Integer.MAX_VALUE);
     }
 
     @Nonnull
     @Override
-    public <N2 extends AbstractNode> NodeSelection<N2, ?> findByFilter(@Nonnull INodeFilter<N2> nodeFilter, @Nonnull Class<? extends N2> filterBoundary, int maxDepth) {
+    public <N2 extends AbstractNode<? extends N2>, N3 extends N2> NodeSelection<N2, ?> findByFilter(@Nonnull INodeFilter<N2> nodeFilter, @Nonnull Class<? extends N3> filterBoundary, int maxDepth) {
         LinkedHashSet<N2> resultSelection = new LinkedHashSet<N2>();
         for (ElementNode elementNode : getSelected()) {
             resultSelection.addAll(NodeFilterSupport.getInstance().filterNodeTree(elementNode, nodeFilter, filterBoundary, maxDepth));

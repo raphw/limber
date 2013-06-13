@@ -4,7 +4,7 @@ import no.kantega.lab.limber.dom.element.AbstractNode;
 
 import javax.annotation.Nonnull;
 
-public class DisjunctionFilter<N extends AbstractNode> extends AbstractBinaryLogicalOperationFilter<N> {
+public class DisjunctionFilter<N extends AbstractNode<? extends N>> extends AbstractBinaryLogicalOperationFilter<N> {
 
     public DisjunctionFilter(@Nonnull INodeFilter<? super N> first, @Nonnull INodeFilter<? super N> second) {
         super(first, second);

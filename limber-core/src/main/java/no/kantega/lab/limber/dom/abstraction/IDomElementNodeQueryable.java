@@ -9,7 +9,7 @@ import javax.annotation.Nonnull;
 import java.util.List;
 import java.util.Map;
 
-public interface IDomElementNodeQueryable<N extends ElementNode> extends IDomNodeQueryable {
+public interface IDomElementNodeQueryable extends IDomNodeQueryable {
 
     @Nonnull
     String getTagName();
@@ -48,5 +48,5 @@ public interface IDomElementNodeQueryable<N extends ElementNode> extends IDomNod
     boolean isCssStyle(@Nonnull CharSequence key, CharSequence value, @Nonnull QueryMatchMode queryMatchMode);
 
     @Nonnull
-    List<AjaxCallbackEventTriggerTupel<? super N>> getAjaxEvents();
+    List<AjaxCallbackEventTriggerTupel<? super ElementNode>> getAjaxEvents();
 }
