@@ -53,6 +53,8 @@
         <version.commons.io>2.4</version.commons.io>
         <version.findbugs>2.0.1</version.findbugs>
         <version.reflections>0.9.9-RC1</version.reflections>
+        <version.testng>6.8.5</version.testng>
+        <version.mockito>1.9.5</version.mockito>
     </properties>
 
     <dependencies>
@@ -62,6 +64,21 @@
             <groupId>com.google.code.findbugs</groupId>
             <artifactId>annotations</artifactId>
             <version>${version.findbugs}</version>
+        </dependency>
+
+        <!-- Testing -->
+        <dependency>
+            <groupId>org.testng</groupId>
+            <artifactId>testng</artifactId>
+            <version>${version.testng}</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-all</artifactId>
+            <version>${version.mockito}</version>
+            <scope>test</scope>
         </dependency>
 
     </dependencies>
