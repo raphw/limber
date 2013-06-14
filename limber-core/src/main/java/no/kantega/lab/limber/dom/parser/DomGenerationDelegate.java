@@ -3,7 +3,7 @@ package no.kantega.lab.limber.dom.parser;
 import no.kantega.lab.limber.doctype.DoctypeDeclaration;
 import no.kantega.lab.limber.doctype.DoctypeVisibility;
 import no.kantega.lab.limber.dom.element.ElementNode;
-import no.kantega.lab.limber.dom.element.PlainElementNode;
+import no.kantega.lab.limber.dom.element.ElementNodeFactory;
 import no.kantega.lab.limber.dom.element.TextNode;
 import no.kantega.lab.limber.exception.LimberParsingException;
 import no.kantega.lab.limber.util.IStack;
@@ -30,7 +30,7 @@ public class DomGenerationDelegate extends DefaultHandler2 {
 
     @Override
     public void startElement(String uri, String localName, @Nonnull String qName, @Nonnull Attributes atts) throws SAXException {
-        ElementNode<?> elementNode = new PlainElementNode(qName);
+        ElementNode<?> elementNode = ElementNodeFactory.make(qName);
         for (int i = 0; i < atts.getLength(); i++) {
             elementNode.putAttr(atts.getQName(i), atts.getValue(i));
         }

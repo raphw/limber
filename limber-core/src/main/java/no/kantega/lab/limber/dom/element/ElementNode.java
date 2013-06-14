@@ -51,7 +51,7 @@ public abstract class ElementNode<T extends ElementNode<T>> extends AbstractNode
 
     private static String normalizeTagName(CharSequence tagName) {
         if (StringUtils.isBlank(tagName)) throw new IllegalArgumentException();
-        return tagName.toString().toUpperCase(Locale.US);
+        return tagName.toString().trim().toUpperCase(Locale.US);
     }
 
     @Nonnull
@@ -141,8 +141,8 @@ public abstract class ElementNode<T extends ElementNode<T>> extends AbstractNode
 
     @Nonnull
     @Override
-    public PlainElementNode addChild(int index, @Nonnull CharSequence tagName) {
-        return addChild(index, new PlainElementNode(tagName));
+    public ElementNode<?> addChild(int index, @Nonnull CharSequence tagName) {
+        return addChild(index, ElementNodeFactory.make(tagName));
     }
 
     @Nonnull
@@ -185,8 +185,8 @@ public abstract class ElementNode<T extends ElementNode<T>> extends AbstractNode
 
     @Nonnull
     @Override
-    public PlainElementNode appendChild(@Nonnull CharSequence tagName) {
-        return appendChild(new PlainElementNode(tagName));
+    public ElementNode<?> appendChild(@Nonnull CharSequence tagName) {
+        return appendChild(ElementNodeFactory.make(tagName));
     }
 
     @Nonnull
@@ -227,8 +227,8 @@ public abstract class ElementNode<T extends ElementNode<T>> extends AbstractNode
 
     @Nonnull
     @Override
-    public PlainElementNode prependChild(@Nonnull CharSequence tagName) {
-        return prependChild(new PlainElementNode(tagName));
+    public ElementNode<?> prependChild(@Nonnull CharSequence tagName) {
+        return prependChild(ElementNodeFactory.make(tagName));
     }
 
     @Nonnull
@@ -285,8 +285,8 @@ public abstract class ElementNode<T extends ElementNode<T>> extends AbstractNode
 
     @Nonnull
     @Override
-    public PlainElementNode wrap(@Nonnull CharSequence tagName) {
-        return wrap(new PlainElementNode(tagName));
+    public ElementNode<?> wrap(@Nonnull CharSequence tagName) {
+        return wrap(ElementNodeFactory.make(tagName));
     }
 
     @Nonnull

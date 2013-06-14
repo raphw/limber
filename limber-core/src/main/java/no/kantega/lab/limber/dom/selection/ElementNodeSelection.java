@@ -96,8 +96,8 @@ public class ElementNodeSelection<N extends ElementNode<? extends N>, S extends 
 
     @Nonnull
     @Override
-    public ElementNodeSelection<PlainElementNode, ?> addChild(int index, @Nonnull CharSequence tagName) {
-        return new ElementNodeSelection<PlainElementNode, ElementNodeSelection<PlainElementNode, ?>>(addChild(index, new PlainElementNode(tagName)));
+    public ElementNodeSelection<ElementNode<?>, ?> addChild(int index, @Nonnull CharSequence tagName) {
+        return new ElementNodeSelection<ElementNode<?>, ElementNodeSelection<ElementNode<?>, ?>>(addChild(index, ElementNodeFactory.make(tagName)));
     }
 
     @Nonnull
@@ -110,8 +110,8 @@ public class ElementNodeSelection<N extends ElementNode<? extends N>, S extends 
 
     @Nonnull
     @Override
-    public ElementNodeSelection<PlainElementNode, ?> appendChild(@Nonnull CharSequence tagName) {
-        return new ElementNodeSelection<PlainElementNode, ElementNodeSelection<PlainElementNode, ?>>(appendChild(new PlainElementNode(tagName)));
+    public ElementNodeSelection<ElementNode<?>, ?> appendChild(@Nonnull CharSequence tagName) {
+        return new ElementNodeSelection<ElementNode<?>, ElementNodeSelection<ElementNode<?>, ?>>(appendChild(ElementNodeFactory.make(tagName)));
     }
 
     @Nonnull
@@ -124,8 +124,8 @@ public class ElementNodeSelection<N extends ElementNode<? extends N>, S extends 
 
     @Nonnull
     @Override
-    public ElementNodeSelection<PlainElementNode, ?> prependChild(@Nonnull CharSequence tagName) {
-        return new ElementNodeSelection<PlainElementNode, ElementNodeSelection<PlainElementNode, ?>>(appendChild(new PlainElementNode(tagName)));
+    public ElementNodeSelection<ElementNode<?>, ?> prependChild(@Nonnull CharSequence tagName) {
+        return new ElementNodeSelection<ElementNode<?>, ElementNodeSelection<ElementNode<?>, ?>>(appendChild(ElementNodeFactory.make(tagName)));
     }
 
     @Nonnull
@@ -243,7 +243,7 @@ public class ElementNodeSelection<N extends ElementNode<? extends N>, S extends 
     @Nonnull
     @Override
     public IDomElementNodeRepresentable<?> wrap(@Nonnull CharSequence tagName) {
-        return wrap(new PlainElementNode(tagName));
+        return wrap(ElementNodeFactory.make(tagName));
     }
 
     @Nonnull
