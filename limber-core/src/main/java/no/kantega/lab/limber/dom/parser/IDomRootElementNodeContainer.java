@@ -9,5 +9,5 @@ interface IDomRootElementNodeContainer {
 
     void setDoctype(@Nonnull DoctypeDeclaration doctypeDeclaration);
 
-    void setRoot(@Nonnull ElementNode elementNode);
+    void setRoot(@Nonnull ElementNode<?> elementNode);
 }
