@@ -28,5 +28,6 @@ public interface IDomHtmlRootSteerable {
 
     DoctypeDeclaration getDoctypeDeclaration();
 
+    @Nonnull
     IHtmlDocumentRootSelection setDoctypeDeclaration(DoctypeDeclaration doctypeDeclaration);
 }

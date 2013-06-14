@@ -88,6 +88,7 @@ public class HtmlDocumentRootSelection
         return doctypeDeclaration;
     }
 
+    @Nonnull
     @Override
     public HtmlDocumentRootSelection setDoctypeDeclaration(DoctypeDeclaration doctypeDeclaration) {
         this.doctypeDeclaration = doctypeDeclaration;
