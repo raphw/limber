@@ -1,7 +1,6 @@
 package no.kantega.lab.limber.page;
 
-import no.kantega.lab.limber.ajax.abstraction.IAjaxCallback;
-import no.kantega.lab.limber.ajax.container.AjaxCallbackEventTriggerElementNodeTupel;
+import no.kantega.lab.limber.ajax.AjaxBoundEventTupel;
 import no.kantega.lab.limber.ajax.jquery.JQueryRenderSupport;
 import no.kantega.lab.limber.dom.element.ElementNode;
 import no.kantega.lab.limber.dom.parser.DomTreeProvider;
@@ -25,7 +24,7 @@ public class WebPage implements IRenderable, IDomSelectable<ElementNode<?>> {
 
     private final HtmlDocumentRootSelection htmlDocumentSelection;
 
-    private Map<UUID, AjaxCallbackEventTriggerElementNodeTupel> ajaxEventRegister;
+    private Map<UUID, AjaxBoundEventTupel<?>> ajaxEventRegister;
     private ElementNode<?> limberScriptNode;
 
     public WebPage() {
@@ -70,12 +69,11 @@ public class WebPage implements IRenderable, IDomSelectable<ElementNode<?>> {
     @SuppressWarnings("unchecked")
     private boolean renderAjaxResponse(@Nonnull OutputStream outputStream, @Nonnull IResponseContainer response) throws IOException {
         UUID ajaxId = response.getRequest().getSubroutineId();
-        AjaxCallbackEventTriggerElementNodeTupel ajaxEvent = ajaxEventRegister.get(ajaxId);
+        AjaxBoundEventTupel<?> ajaxEvent = ajaxEventRegister.get(ajaxId);
         if (ajaxEvent == null) {
             return false;
         }
-        IAjaxCallback ajaxCallback = ajaxEvent.getAjaxCallback();
-        ajaxCallback.onEvent(ajaxEvent.getAjaxEventTrigger(), ajaxEvent.getElement());
+        ajaxEvent.triggerEvent();
         // TODO: Revert!
 //        JQueryRenderSupport.getInstance().makeUpdateResponse(outputStream, Arrays.asList(htmlDocumentSelection.findByTag("ul").get(0)), response);
         outputStream.close();

@@ -1,8 +1,8 @@
 package no.kantega.lab.limber.dom.element;
 
+import no.kantega.lab.limber.ajax.AjaxEventTupel;
 import no.kantega.lab.limber.ajax.abstraction.AjaxEventTrigger;
 import no.kantega.lab.limber.ajax.abstraction.IAjaxCallback;
-import no.kantega.lab.limber.ajax.container.AjaxCallbackEventTriggerTupel;
 import no.kantega.lab.limber.dom.abstraction.IDomElementNodeQueryable;
 import no.kantega.lab.limber.dom.abstraction.IDomElementNodeRepresentable;
 import no.kantega.lab.limber.dom.filter.*;
@@ -20,8 +20,8 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.util.*;
 
-public abstract class ElementNode<T extends ElementNode<T>> extends AbstractNode<T>
-        implements IDomElementNodeRepresentable<T>, IDomElementNodeQueryable, Iterable<AbstractNode<?>> {
+public abstract class ElementNode<N extends ElementNode<N>> extends AbstractNode<N>
+        implements IDomElementNodeRepresentable<N>, IDomElementNodeQueryable<N>, Iterable<AbstractNode<?>> {
 
     private static final String HTML_ATTR_CLASS = "class";
     private static final String HTML_ATTR_STYLE = "style";
@@ -37,7 +37,7 @@ public abstract class ElementNode<T extends ElementNode<T>> extends AbstractNode
 
     private List<AbstractNode<?>> children;
 
-    private List<AjaxCallbackEventTriggerTupel<? super ElementNode>> ajaxEvents;
+    private List<AjaxEventTupel<N>> ajaxEvents;
 
     public ElementNode(@Nonnull CharSequence tag) {
         setTagName(tag);
@@ -57,9 +57,9 @@ public abstract class ElementNode<T extends ElementNode<T>> extends AbstractNode
     @Nonnull
     @Override
     @SuppressWarnings("unchecked")
-    public T setTagName(@Nonnull CharSequence tagName) {
+    public N setTagName(@Nonnull CharSequence tagName) {
         this.tagName = normalizeTagName(tagName);
-        return (T) this;
+        return (N) this;
     }
 
     @Override
@@ -82,9 +82,9 @@ public abstract class ElementNode<T extends ElementNode<T>> extends AbstractNode
     @Nonnull
     @Override
     @SuppressWarnings("unchecked")
-    public T addChildAndStay(int index, @Nonnull AbstractNode<?> node) {
+    public N addChildAndStay(int index, @Nonnull AbstractNode<?> node) {
         addChild(index, node);
-        return (T) this;
+        return (N) this;
     }
 
     @Nonnull
@@ -95,7 +95,7 @@ public abstract class ElementNode<T extends ElementNode<T>> extends AbstractNode
 
     @Nonnull
     @Override
-    public T prependChildAndStay(@Nonnull AbstractNode<?> node) {
+    public N prependChildAndStay(@Nonnull AbstractNode<?> node) {
         return addChildAndStay(0, node);
     }
 
@@ -107,7 +107,7 @@ public abstract class ElementNode<T extends ElementNode<T>> extends AbstractNode
 
     @Nonnull
     @Override
-    public T appendChildAndStay(@Nonnull AbstractNode<?> node) {
+    public N appendChildAndStay(@Nonnull AbstractNode<?> node) {
         return addChildAndStay(children == null ? 0 : children.size(), node);
     }
 
@@ -148,9 +148,9 @@ public abstract class ElementNode<T extends ElementNode<T>> extends AbstractNode
     @Nonnull
     @Override
     @SuppressWarnings("unchecked")
-    public T addChildAndStay(int index, @Nonnull CharSequence tagName) {
+    public N addChildAndStay(int index, @Nonnull CharSequence tagName) {
         addChild(index, tagName);
-        return (T) this;
+        return (N) this;
     }
 
     @Nonnull
@@ -164,9 +164,9 @@ public abstract class ElementNode<T extends ElementNode<T>> extends AbstractNode
     @Nonnull
     @Override
     @SuppressWarnings("unchecked")
-    public T addTextAndStay(int index, @Nonnull CharSequence text) {
+    public N addTextAndStay(int index, @Nonnull CharSequence text) {
         addText(index, text);
-        return (T) this;
+        return (N) this;
     }
 
     @Nonnull
@@ -178,9 +178,9 @@ public abstract class ElementNode<T extends ElementNode<T>> extends AbstractNode
     @Nonnull
     @Override
     @SuppressWarnings("unchecked")
-    public T addTextAndStay(int index, @Nonnull CharSequence text, @Nonnull ContentEscapeMode contentEscapeMode) {
+    public N addTextAndStay(int index, @Nonnull CharSequence text, @Nonnull ContentEscapeMode contentEscapeMode) {
         addText(index, text, contentEscapeMode);
-        return (T) this;
+        return (N) this;
     }
 
     @Nonnull
@@ -192,9 +192,9 @@ public abstract class ElementNode<T extends ElementNode<T>> extends AbstractNode
     @Nonnull
     @Override
     @SuppressWarnings("unchecked")
-    public T appendChildAndStay(@Nonnull CharSequence tagName) {
+    public N appendChildAndStay(@Nonnull CharSequence tagName) {
         appendChild(tagName);
-        return (T) this;
+        return (N) this;
     }
 
     @Nonnull
@@ -206,9 +206,9 @@ public abstract class ElementNode<T extends ElementNode<T>> extends AbstractNode
     @Nonnull
     @Override
     @SuppressWarnings("unchecked")
-    public T appendTextAndStay(@Nonnull CharSequence text) {
+    public N appendTextAndStay(@Nonnull CharSequence text) {
         appendText(text);
-        return (T) this;
+        return (N) this;
     }
 
     @Nonnull
@@ -220,9 +220,9 @@ public abstract class ElementNode<T extends ElementNode<T>> extends AbstractNode
     @Nonnull
     @Override
     @SuppressWarnings("unchecked")
-    public T appendTextAndStay(@Nonnull CharSequence text, @Nonnull ContentEscapeMode contentEscapeMode) {
+    public N appendTextAndStay(@Nonnull CharSequence text, @Nonnull ContentEscapeMode contentEscapeMode) {
         appendText(text, contentEscapeMode);
-        return (T) this;
+        return (N) this;
     }
 
     @Nonnull
@@ -234,9 +234,9 @@ public abstract class ElementNode<T extends ElementNode<T>> extends AbstractNode
     @Nonnull
     @Override
     @SuppressWarnings("unchecked")
-    public T prependChildAndStay(@Nonnull CharSequence tagName) {
+    public N prependChildAndStay(@Nonnull CharSequence tagName) {
         prependChild(tagName);
-        return (T) this;
+        return (N) this;
     }
 
     @Nonnull
@@ -248,9 +248,9 @@ public abstract class ElementNode<T extends ElementNode<T>> extends AbstractNode
     @Nonnull
     @Override
     @SuppressWarnings("unchecked")
-    public T prependTextAndStay(@Nonnull CharSequence text) {
+    public N prependTextAndStay(@Nonnull CharSequence text) {
         prependText(text);
-        return (T) this;
+        return (N) this;
     }
 
     @Nonnull
@@ -262,9 +262,9 @@ public abstract class ElementNode<T extends ElementNode<T>> extends AbstractNode
     @Nonnull
     @Override
     @SuppressWarnings("unchecked")
-    public T prependTextAndStay(@Nonnull CharSequence text, @Nonnull ContentEscapeMode contentEscapeMode) {
+    public N prependTextAndStay(@Nonnull CharSequence text, @Nonnull ContentEscapeMode contentEscapeMode) {
         prependText(text, contentEscapeMode);
-        return (T) this;
+        return (N) this;
     }
 
     @Nonnull
@@ -278,9 +278,9 @@ public abstract class ElementNode<T extends ElementNode<T>> extends AbstractNode
     @Nonnull
     @Override
     @SuppressWarnings("unchecked")
-    public T wrapAndStay(@Nonnull ElementNode<?> elementNode) {
+    public N wrapAndStay(@Nonnull ElementNode<?> elementNode) {
         wrap(elementNode);
-        return (T) this;
+        return (N) this;
     }
 
     @Nonnull
@@ -292,24 +292,24 @@ public abstract class ElementNode<T extends ElementNode<T>> extends AbstractNode
     @Nonnull
     @Override
     @SuppressWarnings("unchecked")
-    public T wrapAndStay(@Nonnull CharSequence tagName) {
+    public N wrapAndStay(@Nonnull CharSequence tagName) {
         wrap(tagName);
-        return (T) this;
+        return (N) this;
     }
 
     @Nonnull
     @Override
-    public T setContent(CharSequence content) {
+    public N setContent(CharSequence content) {
         return setContent(content, ContentEscapeMode.getDefault());
     }
 
     @Nonnull
     @Override
     @SuppressWarnings("unchecked")
-    public T setContent(CharSequence content, @Nonnull ContentEscapeMode contentEscapeMode) {
+    public N setContent(CharSequence content, @Nonnull ContentEscapeMode contentEscapeMode) {
         clear();
         if (content != null) appendTextAndStay(content, contentEscapeMode);
-        return (T) this;
+        return (N) this;
     }
 
     @Override
@@ -357,25 +357,25 @@ public abstract class ElementNode<T extends ElementNode<T>> extends AbstractNode
     @Nonnull
     @Override
     @SuppressWarnings("unchecked")
-    public T putAttr(@Nonnull CharSequence key, CharSequence value) {
+    public N putAttr(@Nonnull CharSequence key, CharSequence value) {
         if (value == null) {
             removeAttr(key);
         } else {
             if (attr == null) attr = new HashMap<String, String>();
             attr.put(normalizeAttributeKey(key), value.toString());
         }
-        return (T) this;
+        return (N) this;
     }
 
     @Nonnull
     @Override
     @SuppressWarnings("unchecked")
-    public T removeAttr(@Nonnull CharSequence key) {
+    public N removeAttr(@Nonnull CharSequence key) {
         if (attr != null) {
             attr.remove(normalizeAttributeKey(key));
             if (attr.size() == 0) attr = null;
         }
-        return (T) this;
+        return (N) this;
     }
 
     @Nonnull
@@ -406,7 +406,7 @@ public abstract class ElementNode<T extends ElementNode<T>> extends AbstractNode
 
     @Nonnull
     @Override
-    public T setId(@Nonnull CharSequence id) {
+    public N setId(@Nonnull CharSequence id) {
         return putAttr("id", id);
     }
 
@@ -417,21 +417,21 @@ public abstract class ElementNode<T extends ElementNode<T>> extends AbstractNode
 
     @Nonnull
     @Override
-    public T setRandomId() {
+    public N setRandomId() {
         return putAttr("id", UUID.randomUUID().toString());
     }
 
     @Nonnull
     @Override
     @SuppressWarnings("unchecked")
-    public T setRandomIdIfNone() {
+    public N setRandomIdIfNone() {
         if (!isIdSet()) setRandomId();
-        return (T) this;
+        return (N) this;
     }
 
     @Nonnull
     @Override
-    public T removeId() {
+    public N removeId() {
         return removeAttr("id");
     }
 
@@ -448,25 +448,25 @@ public abstract class ElementNode<T extends ElementNode<T>> extends AbstractNode
     @Nonnull
     @Override
     @SuppressWarnings("unchecked")
-    public T addCssClass(@Nonnull CharSequence cssClassName) {
+    public N addCssClass(@Nonnull CharSequence cssClassName) {
         List<String> cssClassList = getCssClasses();
         String normalizedCssClassName = normalizeCssClassName(cssClassName);
         if (!cssClassList.contains(normalizedCssClassName)) {
             cssClassList.add(normalizedCssClassName);
             setCssClasses(cssClassList);
         }
-        return (T) this;
+        return (N) this;
     }
 
     @Nonnull
     @Override
     @SuppressWarnings("unchecked")
-    public T removeCssClass(@Nonnull CharSequence cssClassName) {
+    public N removeCssClass(@Nonnull CharSequence cssClassName) {
         List<String> cssClassList = getCssClasses();
         if (cssClassList.remove(normalizeCssClassName(cssClassName))) {
             setCssClasses(cssClassList);
         }
-        return (T) this;
+        return (N) this;
     }
 
     @Nonnull
@@ -484,10 +484,10 @@ public abstract class ElementNode<T extends ElementNode<T>> extends AbstractNode
     @Nonnull
     @Override
     @SuppressWarnings("unchecked")
-    public T setCssClasses(@Nonnull List<? extends CharSequence> cssClassNames) {
+    public N setCssClasses(@Nonnull List<? extends CharSequence> cssClassNames) {
         String cssClassString = StringUtils.join(cssClassNames, HTML_SEPARATOR_CLASS);
         putAttr(HTML_ATTR_CLASS, cssClassString);
-        return (T) this;
+        return (N) this;
     }
 
     @Override
@@ -505,24 +505,24 @@ public abstract class ElementNode<T extends ElementNode<T>> extends AbstractNode
     @Nonnull
     @Override
     @SuppressWarnings("unchecked")
-    public T addCssStyle(@Nonnull CharSequence styleKey, CharSequence styleValue) {
+    public N addCssStyle(@Nonnull CharSequence styleKey, CharSequence styleValue) {
         Map<String, String> cssStyleMap = getCssStyles();
         if (!StringUtils.equals(cssStyleMap.get(styleKey.toString()), styleKey)) {
             cssStyleMap.put(styleKey.toString(), styleValue.toString());
             setCssStyles(cssStyleMap);
         }
-        return (T) this;
+        return (N) this;
     }
 
     @Nonnull
     @Override
     @SuppressWarnings("unchecked")
-    public T removeCssStyle(@Nonnull CharSequence styleKey) {
+    public N removeCssStyle(@Nonnull CharSequence styleKey) {
         Map<String, String> cssStyleMap = getCssStyles();
         if (cssStyleMap.remove(styleKey.toString()) != null) {
             setCssStyles(cssStyleMap);
         }
-        return (T) this;
+        return (N) this;
     }
 
     @Nonnull
@@ -548,24 +548,24 @@ public abstract class ElementNode<T extends ElementNode<T>> extends AbstractNode
     @Nonnull
     @Override
     @SuppressWarnings("unchecked")
-    public T setCssStyles(@Nonnull Map<? extends CharSequence, ? extends CharSequence> cssStyles) {
+    public N setCssStyles(@Nonnull Map<? extends CharSequence, ? extends CharSequence> cssStyles) {
         StringBuilder stringBuilder = new StringBuilder();
         for (Map.Entry<? extends CharSequence, ? extends CharSequence> entry : cssStyles.entrySet()) {
             stringBuilder.append(entry.getKey()).append(HTML_SEPARATOR_STYLE_VALUE).append(entry.getValue()).append(';');
         }
         putAttr(HTML_ATTR_STYLE, stringBuilder.toString());
-        return (T) this;
+        return (N) this;
     }
 
     @Nonnull
     @Override
     @SuppressWarnings("unchecked")
-    public T clear() {
+    public N clear() {
         if (children != null) {
             children.clear();
             children = null;
         }
-        return (T) this;
+        return (N) this;
     }
 
     @Nonnull
@@ -737,43 +737,42 @@ public abstract class ElementNode<T extends ElementNode<T>> extends AbstractNode
     @Override
     @Nonnull
     @SuppressWarnings("unchecked")
-    public T addAjaxEvent(@Nonnull AjaxEventTrigger ajaxEventTrigger, @Nonnull IAjaxCallback<? super ElementNode> ajaxCallback) {
-        if (ajaxEvents == null) ajaxEvents = new ArrayList<AjaxCallbackEventTriggerTupel<? super ElementNode>>();
-        ajaxEvents.add(new AjaxCallbackEventTriggerTupel<ElementNode>(ajaxCallback, ajaxEventTrigger));
-        return (T) this;
-    }
-
-    @Override
-    @Nonnull
-    @SuppressWarnings("unchecked")
-    public T removeAjaxEvent(@Nonnull IAjaxCallback<?> ajaxCallback) {
-        if (ajaxEvents != null) {
-            Iterator<AjaxCallbackEventTriggerTupel<? super ElementNode>> it = ajaxEvents.iterator();
-            while (it.hasNext()) {
-                if (it.next().getAjaxCallback() == ajaxCallback) it.remove();
-            }
-            if (ajaxEvents.size() == 0) ajaxEvents = null;
-        }
-        return (T) this;
+    public N addAjaxEvent(@Nonnull AjaxEventTrigger ajaxEventTrigger, @Nonnull IAjaxCallback<? super N> ajaxCallback) {
+        if (ajaxEvents == null) ajaxEvents = new ArrayList<AjaxEventTupel<N>>();
+        AjaxEventTupel<N> tupel = new AjaxEventTupel<N>(ajaxEventTrigger, ajaxCallback);
+        if (!ajaxEvents.contains(tupel)) ajaxEvents.add(tupel);
+        return (N) this;
     }
 
     @Nonnull
     @Override
     @SuppressWarnings("unchecked")
-    public T removeAjaxEvent(@Nonnull AjaxEventTrigger ajaxEventTrigger) {
+    public N removeAjaxEvent(@Nonnull IAjaxCallback<? super N> ajaxCallback) {
         if (ajaxEvents != null) {
-            Iterator<AjaxCallbackEventTriggerTupel<? super ElementNode>> it = ajaxEvents.iterator();
-            while (it.hasNext()) {
-                if (it.next().getAjaxEventTrigger() == ajaxEventTrigger) it.remove();
+            Iterator<AjaxEventTupel<N>> iterator = ajaxEvents.iterator();
+            while (iterator.hasNext()) {
+                if (iterator.next().getAjaxCallback().equals(ajaxCallback)) iterator.remove();
             }
-            if (ajaxEvents.size() == 0) ajaxEvents = null;
         }
-        return (T) this;
+        return (N) this;
     }
 
     @Nonnull
     @Override
-    public List<AjaxCallbackEventTriggerTupel<? super ElementNode>> getAjaxEvents() {
+    @SuppressWarnings("unchecked")
+    public N removeAjaxEvent(@Nonnull AjaxEventTrigger ajaxEventTrigger) {
+        if (ajaxEvents != null) {
+            Iterator<AjaxEventTupel<N>> iterator = ajaxEvents.iterator();
+            while (iterator.hasNext()) {
+                if (iterator.next().getAjaxEventTrigger().equals(ajaxEventTrigger)) iterator.remove();
+            }
+        }
+        return (N) this;
+    }
+
+    @Nonnull
+    @Override
+    public List<AjaxEventTupel<N>> getAjaxEvents() {
         if (ajaxEvents == null) {
             return Collections.emptyList();
         } else {

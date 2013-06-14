@@ -1,6 +1,6 @@
 package no.kantega.lab.limber.page;
 
-import no.kantega.lab.limber.ajax.container.AjaxCallbackEventTriggerElementNodeTupel;
+import no.kantega.lab.limber.ajax.AjaxBoundEventTupel;
 import no.kantega.lab.limber.dom.element.ElementNode;
 import no.kantega.lab.limber.dom.element.IDomNodeVisitor;
 
@@ -20,8 +20,8 @@ public class WebPageRenderSupport {
         /* empty */
     }
 
-    public Map<UUID, AjaxCallbackEventTriggerElementNodeTupel> makeAjaxEventMap(ElementNode<?> root) {
-        final Map<UUID, AjaxCallbackEventTriggerElementNodeTupel> ajaxEventMap = new HashMap<UUID, AjaxCallbackEventTriggerElementNodeTupel>();
+    public Map<UUID, AjaxBoundEventTupel<?>> makeAjaxEventMap(ElementNode<?> root) {
+        final Map<UUID, AjaxBoundEventTupel<?>> ajaxEventMap = new HashMap<UUID, AjaxBoundEventTupel<?>>();
         root.findElements().visit(new IDomNodeVisitor<ElementNode<?>>() {
             @Override
             public void visit(ElementNode node) {

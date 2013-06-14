@@ -1,6 +1,6 @@
 package no.kantega.lab.limber.ajax.jquery;
 
-import no.kantega.lab.limber.ajax.container.AjaxCallbackEventTriggerElementNodeTupel;
+import no.kantega.lab.limber.ajax.AjaxBoundEventTupel;
 import no.kantega.lab.limber.dom.element.ElementNode;
 import no.kantega.lab.limber.servlet.IResponseContainer;
 import org.apache.commons.io.IOUtils;
@@ -19,7 +19,8 @@ public class JQueryRenderSupport {
         return INSTANCE;
     }
 
-    public void makeEventJavascript(OutputStream outputStream, IResponseContainer response, Map<UUID, AjaxCallbackEventTriggerElementNodeTupel> ajaxEventRegister) throws IOException {
+    public void makeEventJavascript(OutputStream outputStream, IResponseContainer response,
+                                    Map<UUID, AjaxBoundEventTupel<?>> ajaxEventRegister) throws IOException {
         if (ajaxEventRegister.size() == 0) {
             return;
         }
@@ -27,13 +28,13 @@ public class JQueryRenderSupport {
         // Start load wrapper
         IOUtils.write("jQuery(document).ready(function(){", outputStream);
 
-        for (Map.Entry<UUID, AjaxCallbackEventTriggerElementNodeTupel> entry : ajaxEventRegister.entrySet()) {
+        for (Map.Entry<UUID, AjaxBoundEventTupel<?>> entry : ajaxEventRegister.entrySet()) {
 
-            AjaxCallbackEventTriggerElementNodeTupel ajaxContainer = entry.getValue();
+            AjaxBoundEventTupel<?> ajaxContainer = entry.getValue();
 
             // Write identifier
             IOUtils.write("jQuery('#", outputStream);
-            IOUtils.write(ajaxContainer.getElement().setRandomIdIfNone().getId(), outputStream);
+            IOUtils.write(ajaxContainer.getElementNode().setRandomIdIfNone().getId(), outputStream);
             IOUtils.write("')", outputStream);
 
             // Start bind

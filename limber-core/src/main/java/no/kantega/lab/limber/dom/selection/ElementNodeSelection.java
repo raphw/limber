@@ -522,7 +522,7 @@ public class ElementNodeSelection<N extends ElementNode<? extends N>, S extends 
     @Nonnull
     @Override
     @SuppressWarnings("unchecked")
-    public S addAjaxEvent(@Nonnull AjaxEventTrigger ajaxEventTrigger, @Nonnull IAjaxCallback<? super ElementNode> ajaxCallback) {
+    public S addAjaxEvent(@Nonnull AjaxEventTrigger ajaxEventTrigger, @Nonnull IAjaxCallback<? super N> ajaxCallback) {
         for (N elementNode : getSelected()) {
             elementNode.addAjaxEvent(ajaxEventTrigger, ajaxCallback);
         }
@@ -532,7 +532,7 @@ public class ElementNodeSelection<N extends ElementNode<? extends N>, S extends 
     @Nonnull
     @Override
     @SuppressWarnings("unchecked")
-    public S removeAjaxEvent(@Nonnull IAjaxCallback<?> ajaxCallback) {
+    public S removeAjaxEvent(@Nonnull IAjaxCallback<? super N> ajaxCallback) {
         for (N elementNode : getSelected()) {
             elementNode.removeAjaxEvent(ajaxCallback);
         }

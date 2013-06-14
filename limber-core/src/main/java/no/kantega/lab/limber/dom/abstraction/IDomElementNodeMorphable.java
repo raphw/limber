@@ -136,10 +136,10 @@ public interface IDomElementNodeMorphable<N extends ElementNode<? extends N>> ex
     IDomElementNodeRepresentable<N> removeCssStyle(@Nonnull CharSequence styleKey);
 
     @Nonnull
-    IDomElementNodeRepresentable<N> addAjaxEvent(@Nonnull AjaxEventTrigger ajaxEventTrigger, @Nonnull IAjaxCallback<? super ElementNode> ajaxCallback);
+    IDomElementNodeRepresentable<N> addAjaxEvent(@Nonnull AjaxEventTrigger ajaxEventTrigger, @Nonnull IAjaxCallback<? super N> ajaxCallback);
 
     @Nonnull
-    IDomElementNodeRepresentable<N> removeAjaxEvent(@Nonnull IAjaxCallback<?> ajaxCallback);
+    IDomElementNodeRepresentable<N> removeAjaxEvent(@Nonnull IAjaxCallback<? super N> ajaxCallback);
 
     @Nonnull
     IDomElementNodeRepresentable<N> removeAjaxEvent(@Nonnull AjaxEventTrigger ajaxEventTrigger);
