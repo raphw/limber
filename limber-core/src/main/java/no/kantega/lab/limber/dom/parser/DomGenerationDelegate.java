@@ -3,6 +3,7 @@ package no.kantega.lab.limber.dom.parser;
 import no.kantega.lab.limber.doctype.DoctypeDeclaration;
 import no.kantega.lab.limber.doctype.DoctypeVisibility;
 import no.kantega.lab.limber.dom.element.ElementNode;
+import no.kantega.lab.limber.dom.element.PlainElementNode;
 import no.kantega.lab.limber.dom.element.TextNode;
 import no.kantega.lab.limber.exception.LimberParsingException;
 import no.kantega.lab.limber.util.IStack;
@@ -18,25 +19,25 @@ public class DomGenerationDelegate extends DefaultHandler2 {
 
     private final IDomRootElementNodeContainer rootNodeContainer;
 
-    private final IStack<ElementNode> elementNodeStack;
+    private final IStack<ElementNode<?>> elementNodeStack;
 
-    private ElementNode root;
+    private ElementNode<?> root;
 
     public DomGenerationDelegate(@Nonnull IDomRootElementNodeContainer rootNodeContainer) {
-        elementNodeStack = new Stack<ElementNode>();
+        elementNodeStack = new Stack<ElementNode<?>>();
         this.rootNodeContainer = rootNodeContainer;
     }
 
     @Override
     public void startElement(String uri, String localName, @Nonnull String qName, @Nonnull Attributes atts) throws SAXException {
-        ElementNode elementNode = new ElementNode(qName);
+        ElementNode<?> elementNode = new PlainElementNode(qName);
         for (int i = 0; i < atts.getLength(); i++) {
             elementNode.putAttr(atts.getQName(i), atts.getValue(i));
         }
         if (root == null) {
             root = elementNode;
         } else {
-            ElementNode parentElementNode = elementNodeStack.peek();
+            ElementNode<?> parentElementNode = elementNodeStack.peek();
             parentElementNode.appendChildAndStay(elementNode);
         }
         elementNodeStack.push(elementNode);

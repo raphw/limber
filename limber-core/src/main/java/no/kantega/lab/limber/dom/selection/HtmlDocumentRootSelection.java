@@ -1,24 +1,25 @@
 package no.kantega.lab.limber.dom.selection;
 
 import no.kantega.lab.limber.doctype.DoctypeDeclaration;
-import no.kantega.lab.limber.dom.abstraction.IDomHtmlRootSteerable;
 import no.kantega.lab.limber.dom.element.ElementNode;
 import no.kantega.lab.limber.dom.element.TextNode;
 
 import javax.annotation.Nonnull;
 import java.util.Arrays;
 
-public class HtmlDocumentRootSelection extends ElementNodeSelection implements IDomHtmlRootSteerable<HtmlDocumentRootSelection> {
+public class HtmlDocumentRootSelection
+        extends ElementNodeSelection<ElementNode<?>, IHtmlDocumentRootSelection>
+        implements IHtmlDocumentRootSelection {
 
-    private final ElementNode rootNode;
+    private final ElementNode<?> rootNode;
 
     private DoctypeDeclaration doctypeDeclaration;
 
-    public HtmlDocumentRootSelection(@Nonnull ElementNode rootNode) {
+    public HtmlDocumentRootSelection(@Nonnull ElementNode<?> rootNode) {
         this(rootNode, null);
     }
 
-    public HtmlDocumentRootSelection(@Nonnull ElementNode rootNode, DoctypeDeclaration doctypeDeclaration) {
+    public HtmlDocumentRootSelection(@Nonnull ElementNode<?> rootNode, DoctypeDeclaration doctypeDeclaration) {
         super(Arrays.asList(rootNode));
         this.rootNode = rootNode;
         this.doctypeDeclaration = doctypeDeclaration;
@@ -26,13 +27,13 @@ public class HtmlDocumentRootSelection extends ElementNodeSelection implements I
 
     @Nonnull
     @Override
-    public ElementNode getRootNode() {
+    public ElementNode<?> getRootNode() {
         return rootNode;
     }
 
     @Override
-    public ElementNode getBodyNode() {
-        ElementNodeSelection selection = this.findByTag("body");
+    public ElementNode<?> getBodyNode() {
+        ElementNodeSelection<?, ?> selection = this.findByTag("body");
         if (selection.size() != 1) {
             throw new IllegalStateException();
         }
@@ -40,8 +41,8 @@ public class HtmlDocumentRootSelection extends ElementNodeSelection implements I
     }
 
     @Override
-    public ElementNode getHeadNode() {
-        ElementNodeSelection selection = this.findByTag("head");
+    public ElementNode<?> getHeadNode() {
+        ElementNodeSelection<?, ?> selection = this.findByTag("head");
         if (selection.size() != 1) {
             throw new IllegalStateException();
         }
@@ -58,7 +59,7 @@ public class HtmlDocumentRootSelection extends ElementNodeSelection implements I
     @Nonnull
     @Override
     public String getTitle() {
-        ElementNode titleNode = getTitleNode();
+        ElementNode<?> titleNode = getTitleNode();
         StringBuilder stringBuilder = new StringBuilder();
         for (TextNode textNode : titleNode.findTextNodes()) {
             stringBuilder.append(textNode.getContent());
@@ -74,8 +75,8 @@ public class HtmlDocumentRootSelection extends ElementNodeSelection implements I
     }
 
     @Override
-    public ElementNode getTitleNode() {
-        ElementNodeSelection titleNodeSelection = getHeadNode().findByTag("title");
+    public ElementNode<?> getTitleNode() {
+        ElementNodeSelection<?, ?> titleNodeSelection = getHeadNode().findByTag("title");
         if (titleNodeSelection.size() != 1) {
             throw new IllegalStateException();
         }

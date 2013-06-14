@@ -18,7 +18,7 @@ public class AttributeKeyValueFilter extends AttributeKeyExistenceFilter {
     }
 
     @Override
-    public boolean filter(@Nonnull ElementNode element) {
+    public boolean filter(@Nonnull ElementNode<?> element) {
         if (!super.filter(element)) {
             return false;
         }

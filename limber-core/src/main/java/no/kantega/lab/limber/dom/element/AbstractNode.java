@@ -16,11 +16,12 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Collections;
 
-public abstract class AbstractNode<N extends AbstractNode<N>> implements IDomNodeRepresentable<N>,
-        IDomNodeQueryable, IRenderable {
+public abstract class AbstractNode<N extends AbstractNode<N>> 
+        implements IDomNodeRepresentable<N>, IDomNodeQueryable, IRenderable 
+{
 
     private boolean rendered;
-    private ElementNode parent;
+    private ElementNode<?> parent;
 
     protected AbstractNode() {
         this.rendered = true;
@@ -59,13 +60,13 @@ public abstract class AbstractNode<N extends AbstractNode<N>> implements IDomNod
     }
 
     @Override
-    public ElementNode getParent() {
+    public ElementNode<?> getParent() {
         return parent;
     }
 
     @Override
-    public ElementNode getRoot() {
-        ElementNode root = getParent();
+    public ElementNode<?> getRoot() {
+        ElementNode<?> root = getParent();
         while (root != null) {
             root = root.getParent();
         }

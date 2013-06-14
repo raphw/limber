@@ -17,17 +17,16 @@ import java.io.BufferedOutputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.util.Arrays;
 import java.util.Map;
 import java.util.UUID;
 
 @ResourceIdentification(ResourceType.HTML)
-public class WebPage implements IRenderable, IDomSelectable<HtmlDocumentRootSelection, ElementNode> {
+public class WebPage implements IRenderable, IDomSelectable<ElementNode<?>> {
 
     private final HtmlDocumentRootSelection htmlDocumentSelection;
 
     private Map<UUID, AjaxCallbackEventTriggerElementNodeTupel> ajaxEventRegister;
-    private ElementNode limberScriptNode;
+    private ElementNode<?> limberScriptNode;
 
     public WebPage() {
         htmlDocumentSelection = DomTreeProvider.getInstance().provideDocumentSelection(getClass());
@@ -77,7 +76,8 @@ public class WebPage implements IRenderable, IDomSelectable<HtmlDocumentRootSele
         }
         IAjaxCallback ajaxCallback = ajaxEvent.getAjaxCallback();
         ajaxCallback.onEvent(ajaxEvent.getAjaxEventTrigger(), ajaxEvent.getElement());
-        JQueryRenderSupport.getInstance().makeUpdateResponse(outputStream, Arrays.asList(htmlDocumentSelection.findByTag("ul").get(0)), response);
+        // TODO: Revert!
+//        JQueryRenderSupport.getInstance().makeUpdateResponse(outputStream, Arrays.asList(htmlDocumentSelection.findByTag("ul").get(0)), response);
         outputStream.close();
         return true;
     }

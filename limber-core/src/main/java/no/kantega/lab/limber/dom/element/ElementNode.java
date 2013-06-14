@@ -20,8 +20,8 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.util.*;
 
-public class ElementNode extends AbstractNode<ElementNode> implements IDomElementNodeRepresentable,
-        IDomElementNodeQueryable, Iterable<AbstractNode<?>> {
+public abstract class ElementNode<T extends ElementNode<T>> extends AbstractNode<T>
+        implements IDomElementNodeRepresentable<T>, IDomElementNodeQueryable, Iterable<AbstractNode<?>> {
 
     private static final String HTML_ATTR_CLASS = "class";
     private static final String HTML_ATTR_STYLE = "style";
@@ -56,9 +56,10 @@ public class ElementNode extends AbstractNode<ElementNode> implements IDomElemen
 
     @Nonnull
     @Override
-    public ElementNode setTagName(@Nonnull CharSequence tagName) {
+    @SuppressWarnings("unchecked")
+    public T setTagName(@Nonnull CharSequence tagName) {
         this.tagName = normalizeTagName(tagName);
-        return this;
+        return (T) this;
     }
 
     @Override
@@ -78,12 +79,12 @@ public class ElementNode extends AbstractNode<ElementNode> implements IDomElemen
     }
 
 
-
     @Nonnull
     @Override
-    public ElementNode addChildAndStay(int index, @Nonnull AbstractNode<?> node) {
+    @SuppressWarnings("unchecked")
+    public T addChildAndStay(int index, @Nonnull AbstractNode<?> node) {
         addChild(index, node);
-        return this;
+        return (T) this;
     }
 
     @Nonnull
@@ -94,7 +95,7 @@ public class ElementNode extends AbstractNode<ElementNode> implements IDomElemen
 
     @Nonnull
     @Override
-    public ElementNode prependChildAndStay(@Nonnull AbstractNode<?> node) {
+    public T prependChildAndStay(@Nonnull AbstractNode<?> node) {
         return addChildAndStay(0, node);
     }
 
@@ -106,7 +107,7 @@ public class ElementNode extends AbstractNode<ElementNode> implements IDomElemen
 
     @Nonnull
     @Override
-    public ElementNode appendChildAndStay(@Nonnull AbstractNode<?> node) {
+    public T appendChildAndStay(@Nonnull AbstractNode<?> node) {
         return addChildAndStay(children == null ? 0 : children.size(), node);
     }
 
@@ -140,15 +141,16 @@ public class ElementNode extends AbstractNode<ElementNode> implements IDomElemen
 
     @Nonnull
     @Override
-    public ElementNode addChild(int index, @Nonnull CharSequence tagName) {
-        return addChild(index, new ElementNode(tagName));
+    public PlainElementNode addChild(int index, @Nonnull CharSequence tagName) {
+        return addChild(index, new PlainElementNode(tagName));
     }
 
     @Nonnull
     @Override
-    public ElementNode addChildAndStay(int index, @Nonnull CharSequence tagName) {
+    @SuppressWarnings("unchecked")
+    public T addChildAndStay(int index, @Nonnull CharSequence tagName) {
         addChild(index, tagName);
-        return this;
+        return (T) this;
     }
 
     @Nonnull
@@ -161,9 +163,10 @@ public class ElementNode extends AbstractNode<ElementNode> implements IDomElemen
 
     @Nonnull
     @Override
-    public ElementNode addTextAndStay(int index, @Nonnull CharSequence text) {
+    @SuppressWarnings("unchecked")
+    public T addTextAndStay(int index, @Nonnull CharSequence text) {
         addText(index, text);
-        return this;
+        return (T) this;
     }
 
     @Nonnull
@@ -174,22 +177,24 @@ public class ElementNode extends AbstractNode<ElementNode> implements IDomElemen
 
     @Nonnull
     @Override
-    public ElementNode addTextAndStay(int index, @Nonnull CharSequence text, @Nonnull ContentEscapeMode contentEscapeMode) {
+    @SuppressWarnings("unchecked")
+    public T addTextAndStay(int index, @Nonnull CharSequence text, @Nonnull ContentEscapeMode contentEscapeMode) {
         addText(index, text, contentEscapeMode);
-        return this;
+        return (T) this;
     }
 
     @Nonnull
     @Override
-    public ElementNode appendChild(@Nonnull CharSequence tagName) {
-        return appendChild(new ElementNode(tagName));
+    public PlainElementNode appendChild(@Nonnull CharSequence tagName) {
+        return appendChild(new PlainElementNode(tagName));
     }
 
     @Nonnull
     @Override
-    public ElementNode appendChildAndStay(@Nonnull CharSequence tagName) {
+    @SuppressWarnings("unchecked")
+    public T appendChildAndStay(@Nonnull CharSequence tagName) {
         appendChild(tagName);
-        return this;
+        return (T) this;
     }
 
     @Nonnull
@@ -200,9 +205,10 @@ public class ElementNode extends AbstractNode<ElementNode> implements IDomElemen
 
     @Nonnull
     @Override
-    public ElementNode appendTextAndStay(@Nonnull CharSequence text) {
+    @SuppressWarnings("unchecked")
+    public T appendTextAndStay(@Nonnull CharSequence text) {
         appendText(text);
-        return this;
+        return (T) this;
     }
 
     @Nonnull
@@ -213,22 +219,24 @@ public class ElementNode extends AbstractNode<ElementNode> implements IDomElemen
 
     @Nonnull
     @Override
-    public ElementNode appendTextAndStay(@Nonnull CharSequence text, @Nonnull ContentEscapeMode contentEscapeMode) {
+    @SuppressWarnings("unchecked")
+    public T appendTextAndStay(@Nonnull CharSequence text, @Nonnull ContentEscapeMode contentEscapeMode) {
         appendText(text, contentEscapeMode);
-        return this;
+        return (T) this;
     }
 
     @Nonnull
     @Override
-    public ElementNode prependChild(@Nonnull CharSequence tagName) {
-        return prependChild(new ElementNode(tagName));
+    public PlainElementNode prependChild(@Nonnull CharSequence tagName) {
+        return prependChild(new PlainElementNode(tagName));
     }
 
     @Nonnull
     @Override
-    public ElementNode prependChildAndStay(@Nonnull CharSequence tagName) {
+    @SuppressWarnings("unchecked")
+    public T prependChildAndStay(@Nonnull CharSequence tagName) {
         prependChild(tagName);
-        return this;
+        return (T) this;
     }
 
     @Nonnull
@@ -239,9 +247,10 @@ public class ElementNode extends AbstractNode<ElementNode> implements IDomElemen
 
     @Nonnull
     @Override
-    public ElementNode prependTextAndStay(@Nonnull CharSequence text) {
+    @SuppressWarnings("unchecked")
+    public T prependTextAndStay(@Nonnull CharSequence text) {
         prependText(text);
-        return this;
+        return (T) this;
     }
 
     @Nonnull
@@ -252,14 +261,15 @@ public class ElementNode extends AbstractNode<ElementNode> implements IDomElemen
 
     @Nonnull
     @Override
-    public ElementNode prependTextAndStay(@Nonnull CharSequence text, @Nonnull ContentEscapeMode contentEscapeMode) {
+    @SuppressWarnings("unchecked")
+    public T prependTextAndStay(@Nonnull CharSequence text, @Nonnull ContentEscapeMode contentEscapeMode) {
         prependText(text, contentEscapeMode);
-        return this;
+        return (T) this;
     }
 
     @Nonnull
     @Override
-    public ElementNode wrap(@Nonnull ElementNode elementNode) {
+    public <T2 extends ElementNode<? extends T2>> T2 wrap(@Nonnull T2 elementNode) {
         replaceBy(elementNode);
         elementNode.appendChild(this);
         return elementNode;
@@ -267,36 +277,39 @@ public class ElementNode extends AbstractNode<ElementNode> implements IDomElemen
 
     @Nonnull
     @Override
-    public ElementNode wrapAndStay(@Nonnull ElementNode elementNode) {
+    @SuppressWarnings("unchecked")
+    public T wrapAndStay(@Nonnull ElementNode<?> elementNode) {
         wrap(elementNode);
-        return this;
+        return (T) this;
     }
 
     @Nonnull
     @Override
-    public ElementNode wrap(@Nonnull CharSequence tagName) {
-        return wrap(new ElementNode(tagName));
+    public PlainElementNode wrap(@Nonnull CharSequence tagName) {
+        return wrap(new PlainElementNode(tagName));
     }
 
     @Nonnull
     @Override
-    public ElementNode wrapAndStay(@Nonnull CharSequence tagName) {
+    @SuppressWarnings("unchecked")
+    public T wrapAndStay(@Nonnull CharSequence tagName) {
         wrap(tagName);
-        return this;
+        return (T) this;
     }
 
     @Nonnull
     @Override
-    public ElementNode setContent(CharSequence content) {
+    public T setContent(CharSequence content) {
         return setContent(content, ContentEscapeMode.getDefault());
     }
 
     @Nonnull
     @Override
-    public ElementNode setContent(CharSequence content, @Nonnull ContentEscapeMode contentEscapeMode) {
+    @SuppressWarnings("unchecked")
+    public T setContent(CharSequence content, @Nonnull ContentEscapeMode contentEscapeMode) {
         clear();
         if (content != null) appendTextAndStay(content, contentEscapeMode);
-        return this;
+        return (T) this;
     }
 
     @Override
@@ -343,23 +356,26 @@ public class ElementNode extends AbstractNode<ElementNode> implements IDomElemen
 
     @Nonnull
     @Override
-    public ElementNode putAttr(@Nonnull CharSequence key, CharSequence value) {
+    @SuppressWarnings("unchecked")
+    public T putAttr(@Nonnull CharSequence key, CharSequence value) {
         if (value == null) {
             removeAttr(key);
-            return this;
+        } else {
+            if (attr == null) attr = new HashMap<String, String>();
+            attr.put(normalizeAttributeKey(key), value.toString());
         }
-        if (attr == null) attr = new HashMap<String, String>();
-        attr.put(normalizeAttributeKey(key), value.toString());
-        return this;
+        return (T) this;
     }
 
     @Nonnull
     @Override
-    public ElementNode removeAttr(@Nonnull CharSequence key) {
-        if (attr == null) return this;
-        attr.remove(normalizeAttributeKey(key));
-        if (attr.size() == 0) attr = null;
-        return this;
+    @SuppressWarnings("unchecked")
+    public T removeAttr(@Nonnull CharSequence key) {
+        if (attr != null) {
+            attr.remove(normalizeAttributeKey(key));
+            if (attr.size() == 0) attr = null;
+        }
+        return (T) this;
     }
 
     @Nonnull
@@ -390,7 +406,7 @@ public class ElementNode extends AbstractNode<ElementNode> implements IDomElemen
 
     @Nonnull
     @Override
-    public ElementNode setId(@Nonnull CharSequence id) {
+    public T setId(@Nonnull CharSequence id) {
         return putAttr("id", id);
     }
 
@@ -401,20 +417,21 @@ public class ElementNode extends AbstractNode<ElementNode> implements IDomElemen
 
     @Nonnull
     @Override
-    public ElementNode setRandomId() {
+    public T setRandomId() {
         return putAttr("id", UUID.randomUUID().toString());
     }
 
     @Nonnull
     @Override
-    public ElementNode setRandomIdIfNone() {
+    @SuppressWarnings("unchecked")
+    public T setRandomIdIfNone() {
         if (!isIdSet()) setRandomId();
-        return this;
+        return (T) this;
     }
 
     @Nonnull
     @Override
-    public ElementNode removeId() {
+    public T removeId() {
         return removeAttr("id");
     }
 
@@ -430,24 +447,26 @@ public class ElementNode extends AbstractNode<ElementNode> implements IDomElemen
 
     @Nonnull
     @Override
-    public ElementNode addCssClass(@Nonnull CharSequence cssClassName) {
+    @SuppressWarnings("unchecked")
+    public T addCssClass(@Nonnull CharSequence cssClassName) {
         List<String> cssClassList = getCssClasses();
         String normalizedCssClassName = normalizeCssClassName(cssClassName);
         if (!cssClassList.contains(normalizedCssClassName)) {
             cssClassList.add(normalizedCssClassName);
             setCssClasses(cssClassList);
         }
-        return this;
+        return (T) this;
     }
 
     @Nonnull
     @Override
-    public ElementNode removeCssClass(@Nonnull CharSequence cssClassName) {
+    @SuppressWarnings("unchecked")
+    public T removeCssClass(@Nonnull CharSequence cssClassName) {
         List<String> cssClassList = getCssClasses();
         if (cssClassList.remove(normalizeCssClassName(cssClassName))) {
             setCssClasses(cssClassList);
         }
-        return this;
+        return (T) this;
     }
 
     @Nonnull
@@ -464,10 +483,11 @@ public class ElementNode extends AbstractNode<ElementNode> implements IDomElemen
 
     @Nonnull
     @Override
-    public ElementNode setCssClasses(@Nonnull List<? extends CharSequence> cssClassNames) {
+    @SuppressWarnings("unchecked")
+    public T setCssClasses(@Nonnull List<? extends CharSequence> cssClassNames) {
         String cssClassString = StringUtils.join(cssClassNames, HTML_SEPARATOR_CLASS);
         putAttr(HTML_ATTR_CLASS, cssClassString);
-        return this;
+        return (T) this;
     }
 
     @Override
@@ -484,23 +504,25 @@ public class ElementNode extends AbstractNode<ElementNode> implements IDomElemen
 
     @Nonnull
     @Override
-    public ElementNode addCssStyle(@Nonnull CharSequence styleKey, CharSequence styleValue) {
+    @SuppressWarnings("unchecked")
+    public T addCssStyle(@Nonnull CharSequence styleKey, CharSequence styleValue) {
         Map<String, String> cssStyleMap = getCssStyles();
         if (!StringUtils.equals(cssStyleMap.get(styleKey.toString()), styleKey)) {
             cssStyleMap.put(styleKey.toString(), styleValue.toString());
             setCssStyles(cssStyleMap);
         }
-        return this;
+        return (T) this;
     }
 
     @Nonnull
     @Override
-    public ElementNode removeCssStyle(@Nonnull CharSequence styleKey) {
+    @SuppressWarnings("unchecked")
+    public T removeCssStyle(@Nonnull CharSequence styleKey) {
         Map<String, String> cssStyleMap = getCssStyles();
         if (cssStyleMap.remove(styleKey.toString()) != null) {
             setCssStyles(cssStyleMap);
         }
-        return this;
+        return (T) this;
     }
 
     @Nonnull
@@ -525,44 +547,47 @@ public class ElementNode extends AbstractNode<ElementNode> implements IDomElemen
 
     @Nonnull
     @Override
-    public ElementNode setCssStyles(@Nonnull Map<? extends CharSequence, ? extends CharSequence> cssStyles) {
+    @SuppressWarnings("unchecked")
+    public T setCssStyles(@Nonnull Map<? extends CharSequence, ? extends CharSequence> cssStyles) {
         StringBuilder stringBuilder = new StringBuilder();
         for (Map.Entry<? extends CharSequence, ? extends CharSequence> entry : cssStyles.entrySet()) {
             stringBuilder.append(entry.getKey()).append(HTML_SEPARATOR_STYLE_VALUE).append(entry.getValue()).append(';');
         }
         putAttr(HTML_ATTR_STYLE, stringBuilder.toString());
-        return this;
+        return (T) this;
     }
 
     @Nonnull
     @Override
-    public ElementNode clear() {
-        if (children == null) return this;
-        children.clear();
-        children = null;
-        return this;
+    @SuppressWarnings("unchecked")
+    public T clear() {
+        if (children != null) {
+            children.clear();
+            children = null;
+        }
+        return (T) this;
     }
 
     @Nonnull
     @Override
-    public ElementNodeSelection findByTag(@Nonnull CharSequence tagName) {
+    public ElementNodeSelection<?, ?> findByTag(@Nonnull CharSequence tagName) {
         return findByTag(tagName, Integer.MAX_VALUE);
     }
 
     @Nonnull
     @Override
-    public ElementNodeSelection findByTag(@Nonnull CharSequence tagName, int maxDepth) {
-        return new ElementNodeSelection(findByFilter(new TagNameFilter(tagName), ElementNode.class, maxDepth));
+    public ElementNodeSelection<?, ?> findByTag(@Nonnull CharSequence tagName, int maxDepth) {
+        return new ElementNodeSelection<ElementNode<?>, ElementNodeSelection<ElementNode<?>, ?>>(findByFilter(new TagNameFilter(tagName), ElementNode.class, maxDepth));
     }
 
     @Override
-    public ElementNode findById(@Nonnull CharSequence id) {
+    public ElementNode<?> findById(@Nonnull CharSequence id) {
         return findById(id, Integer.MAX_VALUE);
     }
 
     @Override
-    public ElementNode findById(@Nonnull CharSequence id, int maxDepth) {
-        ElementNodeSelection elementNodeSelection = findByAttr("id", id, QueryMatchMode.FULL_MATCH, maxDepth);
+    public ElementNode<?> findById(@Nonnull CharSequence id, int maxDepth) {
+        ElementNodeSelection<?, ?> elementNodeSelection = findByAttr("id", id, QueryMatchMode.FULL_MATCH, maxDepth);
         if (elementNodeSelection.size() == 0) {
             return null;
         } else if (elementNodeSelection.size() > 1) {
@@ -574,38 +599,38 @@ public class ElementNode extends AbstractNode<ElementNode> implements IDomElemen
 
     @Nonnull
     @Override
-    public ElementNodeSelection findByAttr(@Nonnull CharSequence key) {
+    public ElementNodeSelection<?, ?> findByAttr(@Nonnull CharSequence key) {
         return findByAttr(key, Integer.MAX_VALUE);
     }
 
     @Nonnull
     @Override
-    public ElementNodeSelection findByAttr(@Nonnull CharSequence key, int maxDepth) {
-        return new ElementNodeSelection(findByFilter(new AttributeKeyExistenceFilter(key), ElementNode.class, maxDepth));
+    public ElementNodeSelection<?, ?> findByAttr(@Nonnull CharSequence key, int maxDepth) {
+        return new ElementNodeSelection<ElementNode<?>, ElementNodeSelection<ElementNode<?>, ?>>(findByFilter(new AttributeKeyExistenceFilter(key), ElementNode.class, maxDepth));
     }
 
     @Nonnull
     @Override
-    public ElementNodeSelection findByAttr(@Nonnull CharSequence key, CharSequence value, @Nonnull QueryMatchMode queryMatchMode) {
+    public ElementNodeSelection<?, ?> findByAttr(@Nonnull CharSequence key, CharSequence value, @Nonnull QueryMatchMode queryMatchMode) {
         return findByAttr(key, value, queryMatchMode, Integer.MAX_VALUE);
     }
 
     @Nonnull
     @Override
-    public ElementNodeSelection findByAttr(@Nonnull CharSequence key, CharSequence value, @Nonnull QueryMatchMode queryMatchMode, int maxDepth) {
-        return new ElementNodeSelection(findByFilter(new AttributeKeyValueFilter(key, value, queryMatchMode), ElementNode.class, maxDepth));
+    public ElementNodeSelection<?, ?> findByAttr(@Nonnull CharSequence key, CharSequence value, @Nonnull QueryMatchMode queryMatchMode, int maxDepth) {
+        return new ElementNodeSelection<ElementNode<?>, ElementNodeSelection<ElementNode<?>, ?>>(findByFilter(new AttributeKeyValueFilter(key, value, queryMatchMode), ElementNode.class, maxDepth));
     }
 
     @Nonnull
     @Override
-    public ElementNodeSelection findByCssClass(@Nonnull CharSequence cssClassName) {
+    public ElementNodeSelection<?, ?> findByCssClass(@Nonnull CharSequence cssClassName) {
         return findByCssClass(cssClassName, Integer.MAX_VALUE);
     }
 
     @Nonnull
     @Override
-    public ElementNodeSelection findByCssClass(@Nonnull CharSequence cssClassName, int maxDepth) {
-        return new ElementNodeSelection(findByFilter(new CssClassNameFilter(cssClassName), ElementNode.class, maxDepth));
+    public ElementNodeSelection<?, ?> findByCssClass(@Nonnull CharSequence cssClassName, int maxDepth) {
+        return new ElementNodeSelection<ElementNode<?>, ElementNodeSelection<ElementNode<?>, ?>>(findByFilter(new CssClassNameFilter(cssClassName), ElementNode.class, maxDepth));
     }
 
     @Nonnull
@@ -646,14 +671,14 @@ public class ElementNode extends AbstractNode<ElementNode> implements IDomElemen
 
     @Nonnull
     @Override
-    public ElementNodeSelection findElements() {
+    public ElementNodeSelection<?, ?> findElements() {
         return findElements(Integer.MAX_VALUE);
     }
 
     @Nonnull
     @Override
-    public ElementNodeSelection findElements(int maxDepth) {
-        return new ElementNodeSelection(findByFilter(new ElementNodeFilter(), ElementNode.class, maxDepth));
+    public ElementNodeSelection<?, ?> findElements(int maxDepth) {
+        return new ElementNodeSelection<ElementNode<?>, ElementNodeSelection<ElementNode<?>, ?>>(findByFilter(new ElementNodeFilter(), ElementNode.class, maxDepth));
     }
 
     @Nonnull
@@ -711,34 +736,39 @@ public class ElementNode extends AbstractNode<ElementNode> implements IDomElemen
 
     @Override
     @Nonnull
-    public ElementNode addAjaxEvent(@Nonnull AjaxEventTrigger ajaxEventTrigger, @Nonnull IAjaxCallback<? super ElementNode> ajaxCallback) {
+    @SuppressWarnings("unchecked")
+    public T addAjaxEvent(@Nonnull AjaxEventTrigger ajaxEventTrigger, @Nonnull IAjaxCallback<? super ElementNode> ajaxCallback) {
         if (ajaxEvents == null) ajaxEvents = new ArrayList<AjaxCallbackEventTriggerTupel<? super ElementNode>>();
         ajaxEvents.add(new AjaxCallbackEventTriggerTupel<ElementNode>(ajaxCallback, ajaxEventTrigger));
-        return this;
+        return (T) this;
     }
 
     @Override
     @Nonnull
-    public ElementNode removeAjaxEvent(@Nonnull IAjaxCallback<?> ajaxCallback) {
-        if (ajaxEvents == null) return this;
-        Iterator<AjaxCallbackEventTriggerTupel<? super ElementNode>> it = ajaxEvents.iterator();
-        while (it.hasNext()) {
-            if (it.next().getAjaxCallback() == ajaxCallback) it.remove();
+    @SuppressWarnings("unchecked")
+    public T removeAjaxEvent(@Nonnull IAjaxCallback<?> ajaxCallback) {
+        if (ajaxEvents != null) {
+            Iterator<AjaxCallbackEventTriggerTupel<? super ElementNode>> it = ajaxEvents.iterator();
+            while (it.hasNext()) {
+                if (it.next().getAjaxCallback() == ajaxCallback) it.remove();
+            }
+            if (ajaxEvents.size() == 0) ajaxEvents = null;
         }
-        if (ajaxEvents.size() == 0) ajaxEvents = null;
-        return this;
+        return (T) this;
     }
 
     @Nonnull
     @Override
-    public ElementNode removeAjaxEvent(@Nonnull AjaxEventTrigger ajaxEventTrigger) {
-        if (ajaxEvents == null) return this;
-        Iterator<AjaxCallbackEventTriggerTupel<? super ElementNode>> it = ajaxEvents.iterator();
-        while (it.hasNext()) {
-            if (it.next().getAjaxEventTrigger() == ajaxEventTrigger) it.remove();
+    @SuppressWarnings("unchecked")
+    public T removeAjaxEvent(@Nonnull AjaxEventTrigger ajaxEventTrigger) {
+        if (ajaxEvents != null) {
+            Iterator<AjaxCallbackEventTriggerTupel<? super ElementNode>> it = ajaxEvents.iterator();
+            while (it.hasNext()) {
+                if (it.next().getAjaxEventTrigger() == ajaxEventTrigger) it.remove();
+            }
+            if (ajaxEvents.size() == 0) ajaxEvents = null;
         }
-        if (ajaxEvents.size() == 0) ajaxEvents = null;
-        return this;
+        return (T) this;
     }
 
     @Nonnull

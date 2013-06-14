@@ -18,13 +18,13 @@ public interface IDomSelectionReduceable<N extends AbstractNode<? extends N>> ex
     NodeSelection<N, ?> get(int from, int to);
 
     @Nonnull
-    ElementNodeSelection reduceByTag(@Nonnull CharSequence tagName);
+    ElementNodeSelection<?, ?> reduceByTag(@Nonnull CharSequence tagName);
 
     @Nonnull
-    ElementNodeSelection reduceByAttr(@Nonnull CharSequence key);
+    ElementNodeSelection<?, ?> reduceByAttr(@Nonnull CharSequence key);
 
     @Nonnull
-    ElementNodeSelection reduceByAttr(@Nonnull CharSequence key, CharSequence value, @Nonnull QueryMatchMode queryMatchMode);
+    ElementNodeSelection<?, ?> reduceByAttr(@Nonnull CharSequence key, CharSequence value, @Nonnull QueryMatchMode queryMatchMode);
 
     @Nonnull
     NodeSelection<?, ?> reduceByFilter(@Nonnull INodeFilter<AbstractNode<?>> nodeFilter);
@@ -36,5 +36,5 @@ public interface IDomSelectionReduceable<N extends AbstractNode<? extends N>> ex
     TextNodeSelection reduceToText();
 
     @Nonnull
-    ElementNodeSelection reduceToElement();
+    ElementNodeSelection<?, ?> reduceToElement();
 }

@@ -3,10 +3,7 @@ package no.kantega.lab.limber.dom.selection;
 import no.kantega.lab.limber.ajax.abstraction.AjaxEventTrigger;
 import no.kantega.lab.limber.ajax.abstraction.IAjaxCallback;
 import no.kantega.lab.limber.dom.abstraction.IDomElementNodeRepresentable;
-import no.kantega.lab.limber.dom.element.AbstractNode;
-import no.kantega.lab.limber.dom.element.ContentEscapeMode;
-import no.kantega.lab.limber.dom.element.ElementNode;
-import no.kantega.lab.limber.dom.element.TextNode;
+import no.kantega.lab.limber.dom.element.*;
 import no.kantega.lab.limber.dom.filter.*;
 import no.kantega.lab.limber.dom.filter.util.NodeFilterSupport;
 import no.kantega.lab.limber.dom.filter.util.QueryMatchMode;
@@ -17,34 +14,37 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 
-public class ElementNodeSelection extends NodeSelection<ElementNode, ElementNodeSelection> implements IDomElementNodeRepresentable {
+public class ElementNodeSelection<N extends ElementNode<? extends N>, S extends IElementNodeSelection<N>>
+        extends NodeSelection<N, S>
+        implements IElementNodeSelection<N> {
 
-    public ElementNodeSelection(@Nonnull List<ElementNode> selected) {
+    public ElementNodeSelection(@Nonnull List<? extends N> selected) {
         super(selected);
     }
 
-    public ElementNodeSelection(@Nonnull NodeSelection<ElementNode, ?> that) {
+    public ElementNodeSelection(@Nonnull NodeSelection<? extends N, ?> that) {
         super(that);
     }
 
-    public ElementNodeSelection(@Nonnull LinkedHashSet<ElementNode> selected) {
+    public ElementNodeSelection(@Nonnull LinkedHashSet<? extends N> selected) {
         super(selected);
     }
 
     @Nonnull
     @Override
-    public ElementNodeSelection setTagName(@Nonnull CharSequence tagName) {
-        for (ElementNode elementNode : getSelected()) {
+    @SuppressWarnings("unchecked")
+    public S setTagName(@Nonnull CharSequence tagName) {
+        for (N elementNode : getSelected()) {
             elementNode.setTagName(tagName);
         }
-        return this;
+        return (S) this;
     }
 
     @Nonnull
     @Override
     public <N2 extends AbstractNode<? extends N2>> NodeSelection<N2, ?> addChild(int index, @Nonnull N2 prototype) {
         List<N2> addedChildren = new ArrayList<N2>();
-        for (ElementNode elementNode : getSelected()) {
+        for (N elementNode : getSelected()) {
             addedChildren.add(elementNode.addChild(index, prototype.clone()));
         }
         return new NodeSelection<N2, NodeSelection<N2, ?>>(addedChildren);
@@ -52,16 +52,17 @@ public class ElementNodeSelection extends NodeSelection<ElementNode, ElementNode
 
     @Nonnull
     @Override
-    public ElementNodeSelection addChildAndStay(int index, @Nonnull AbstractNode<?> prototype) {
+    @SuppressWarnings("unchecked")
+    public S addChildAndStay(int index, @Nonnull AbstractNode<?> prototype) {
         addChild(index, prototype);
-        return this;
+        return (S) this;
     }
 
     @Nonnull
     @Override
     public <N2 extends AbstractNode<? extends N2>> NodeSelection<N2, ?> appendChild(@Nonnull N2 prototype) {
         List<N2> addedChildren = new ArrayList<N2>();
-        for (ElementNode elementNode : getSelected()) {
+        for (N elementNode : getSelected()) {
             addedChildren.add(elementNode.appendChild(prototype.clone()));
         }
         return new NodeSelection<N2, NodeSelection<N2, ?>>(addedChildren);
@@ -69,17 +70,17 @@ public class ElementNodeSelection extends NodeSelection<ElementNode, ElementNode
 
     @Nonnull
     @Override
-    public ElementNodeSelection appendChildAndStay(@Nonnull AbstractNode<?> prototype) {
+    @SuppressWarnings("unchecked")
+    public S appendChildAndStay(@Nonnull AbstractNode<?> prototype) {
         appendChild(prototype);
-        return this;
+        return (S) this;
     }
 
     @Nonnull
     @Override
-    @SuppressWarnings("unchecked")
     public <N2 extends AbstractNode<? extends N2>> NodeSelection<N2, ?> prependChild(@Nonnull N2 prototype) {
         List<N2> addedChildren = new ArrayList<N2>();
-        for (ElementNode elementNode : getSelected()) {
+        for (N elementNode : getSelected()) {
             addedChildren.add(elementNode.prependChild(prototype.clone()));
         }
         return new NodeSelection<N2, NodeSelection<N2, ?>>(addedChildren);
@@ -87,50 +88,54 @@ public class ElementNodeSelection extends NodeSelection<ElementNode, ElementNode
 
     @Nonnull
     @Override
-    public ElementNodeSelection prependChildAndStay(@Nonnull AbstractNode<?> prototype) {
+    @SuppressWarnings("unchecked")
+    public S prependChildAndStay(@Nonnull AbstractNode<?> prototype) {
         prependChild(prototype);
-        return this;
+        return (S) this;
     }
 
     @Nonnull
     @Override
-    public ElementNodeSelection addChild(int index, @Nonnull CharSequence tagName) {
-        return new ElementNodeSelection(addChild(index, new ElementNode(tagName)));
+    public ElementNodeSelection<PlainElementNode, ?> addChild(int index, @Nonnull CharSequence tagName) {
+        return new ElementNodeSelection<PlainElementNode, ElementNodeSelection<PlainElementNode, ?>>(addChild(index, new PlainElementNode(tagName)));
     }
 
     @Nonnull
     @Override
-    public ElementNodeSelection addChildAndStay(int index, @Nonnull CharSequence tagName) {
+    @SuppressWarnings("unchecked")
+    public S addChildAndStay(int index, @Nonnull CharSequence tagName) {
         addChild(index, tagName);
-        return this;
+        return (S) this;
     }
 
     @Nonnull
     @Override
-    public ElementNodeSelection appendChild(@Nonnull CharSequence tagName) {
-        return new ElementNodeSelection(appendChild(new ElementNode(tagName)));
+    public ElementNodeSelection<PlainElementNode, ?> appendChild(@Nonnull CharSequence tagName) {
+        return new ElementNodeSelection<PlainElementNode, ElementNodeSelection<PlainElementNode, ?>>(appendChild(new PlainElementNode(tagName)));
     }
 
     @Nonnull
     @Override
-    public ElementNodeSelection appendChildAndStay(@Nonnull CharSequence tagName) {
+    @SuppressWarnings("unchecked")
+    public S appendChildAndStay(@Nonnull CharSequence tagName) {
         appendChild(tagName);
-        return this;
+        return (S) this;
     }
 
     @Nonnull
     @Override
-    public ElementNodeSelection prependChild(@Nonnull CharSequence tagName) {
-        return new ElementNodeSelection(appendChild(new ElementNode(tagName)));
+    public ElementNodeSelection<PlainElementNode, ?> prependChild(@Nonnull CharSequence tagName) {
+        return new ElementNodeSelection<PlainElementNode, ElementNodeSelection<PlainElementNode, ?>>(appendChild(new PlainElementNode(tagName)));
     }
 
     @Nonnull
     @Override
-    public ElementNodeSelection prependChildAndStay(@Nonnull CharSequence tagName) {
-        for (ElementNode elementNode : getSelected()) {
+    @SuppressWarnings("unchecked")
+    public S prependChildAndStay(@Nonnull CharSequence tagName) {
+        for (N elementNode : getSelected()) {
             elementNode.prependChildAndStay(tagName);
         }
-        return this;
+        return (S) this;
     }
 
     @Nonnull
@@ -141,9 +146,10 @@ public class ElementNodeSelection extends NodeSelection<ElementNode, ElementNode
 
     @Nonnull
     @Override
-    public ElementNodeSelection addTextAndStay(int index, @Nonnull CharSequence text) {
+    @SuppressWarnings("unchecked")
+    public S addTextAndStay(int index, @Nonnull CharSequence text) {
         addText(index, text);
-        return this;
+        return (S) this;
     }
 
     @Nonnull
@@ -154,9 +160,10 @@ public class ElementNodeSelection extends NodeSelection<ElementNode, ElementNode
 
     @Nonnull
     @Override
-    public ElementNodeSelection addTextAndStay(int index, @Nonnull CharSequence text, @Nonnull ContentEscapeMode contentEscapeMode) {
+    @SuppressWarnings("unchecked")
+    public S addTextAndStay(int index, @Nonnull CharSequence text, @Nonnull ContentEscapeMode contentEscapeMode) {
         addText(index, text, contentEscapeMode);
-        return this;
+        return (S) this;
     }
 
     @Nonnull
@@ -167,9 +174,10 @@ public class ElementNodeSelection extends NodeSelection<ElementNode, ElementNode
 
     @Nonnull
     @Override
-    public ElementNodeSelection appendTextAndStay(@Nonnull CharSequence text) {
+    @SuppressWarnings("unchecked")
+    public S appendTextAndStay(@Nonnull CharSequence text) {
         appendText(text);
-        return this;
+        return (S) this;
     }
 
     @Nonnull
@@ -180,201 +188,218 @@ public class ElementNodeSelection extends NodeSelection<ElementNode, ElementNode
 
     @Nonnull
     @Override
-    public ElementNodeSelection appendTextAndStay(@Nonnull CharSequence text, @Nonnull ContentEscapeMode contentEscapeMode) {
+    @SuppressWarnings("unchecked")
+    public S appendTextAndStay(@Nonnull CharSequence text, @Nonnull ContentEscapeMode contentEscapeMode) {
         appendText(text, contentEscapeMode);
-        return this;
+        return (S) this;
     }
 
     @Nonnull
     @Override
-    public Object prependText(@Nonnull CharSequence text) {
+    public TextNodeSelection prependText(@Nonnull CharSequence text) {
         return new TextNodeSelection(prependChild(new TextNode(text)));
     }
 
     @Nonnull
     @Override
-    public ElementNodeSelection prependTextAndStay(@Nonnull CharSequence text) {
+    @SuppressWarnings("unchecked")
+    public S prependTextAndStay(@Nonnull CharSequence text) {
         prependText(text);
-        return this;
+        return (S) this;
     }
 
     @Nonnull
     @Override
-    public Object prependText(@Nonnull CharSequence text, @Nonnull ContentEscapeMode contentEscapeMode) {
+    public TextNodeSelection prependText(@Nonnull CharSequence text, @Nonnull ContentEscapeMode contentEscapeMode) {
         return new TextNodeSelection(prependChild(new TextNode(text, contentEscapeMode)));
     }
 
     @Nonnull
     @Override
-    public ElementNodeSelection prependTextAndStay(@Nonnull CharSequence text, @Nonnull ContentEscapeMode contentEscapeMode) {
+    @SuppressWarnings("unchecked")
+    public S prependTextAndStay(@Nonnull CharSequence text, @Nonnull ContentEscapeMode contentEscapeMode) {
         prependText(text, contentEscapeMode);
-        return this;
+        return (S) this;
     }
 
     @Nonnull
     @Override
-    public ElementNodeSelection wrap(@Nonnull ElementNode prototype) {
-        List<ElementNode> nodes = new ArrayList<ElementNode>();
-        for (ElementNode element : getSelected()) {
-            nodes.add(element.wrap(prototype));
+    public <N2 extends ElementNode<? extends N2>> ElementNodeSelection<N2, ?> wrap(@Nonnull N2 prototype) {
+        List<N2> nodes = new ArrayList<N2>();
+        for (N element : getSelected()) {
+            nodes.add(element.wrap(prototype.clone()));
         }
-        return new ElementNodeSelection(nodes);
+        return new ElementNodeSelection<N2, ElementNodeSelection<N2, ?>>(nodes);
     }
 
     @Nonnull
     @Override
-    public ElementNodeSelection wrapAndStay(@Nonnull ElementNode prototype) {
+    @SuppressWarnings("unchecked")
+    public S wrapAndStay(@Nonnull ElementNode prototype) {
         wrap(prototype);
-        return this;
+        return (S) this;
     }
 
     @Nonnull
     @Override
-    public ElementNodeSelection wrap(@Nonnull CharSequence tagName) {
-        return wrap(new ElementNode(tagName));
+    public IDomElementNodeRepresentable<?> wrap(@Nonnull CharSequence tagName) {
+        return wrap(new PlainElementNode(tagName));
     }
 
     @Nonnull
     @Override
-    public ElementNodeSelection wrapAndStay(@Nonnull CharSequence tagName) {
+    @SuppressWarnings("unchecked")
+    public S wrapAndStay(@Nonnull CharSequence tagName) {
         wrap(tagName);
-        return this;
+        return (S) this;
     }
 
     @Nonnull
     @Override
-    public ElementNodeSelection putAttr(@Nonnull CharSequence key, CharSequence value) {
-        for (ElementNode elementNode : getSelected()) {
+    @SuppressWarnings("unchecked")
+    public S putAttr(@Nonnull CharSequence key, CharSequence value) {
+        for (N elementNode : getSelected()) {
             elementNode.putAttr(key, value);
         }
-        return this;
+        return (S) this;
     }
 
     @Nonnull
     @Override
-    public ElementNodeSelection setId(@Nonnull CharSequence id) {
-        for (ElementNode elementNode : getSelected()) {
+    @SuppressWarnings("unchecked")
+    public S setId(@Nonnull CharSequence id) {
+        for (N elementNode : getSelected()) {
             elementNode.setId(id);
         }
-        return this;
+        return (S) this;
     }
 
     @Nonnull
     @Override
-    public ElementNodeSelection setRandomId() {
-        for (ElementNode elementNode : getSelected()) {
+    @SuppressWarnings("unchecked")
+    public S setRandomId() {
+        for (N elementNode : getSelected()) {
             elementNode.setRandomId();
         }
-        return this;
+        return (S) this;
     }
 
     @Nonnull
     @Override
-    public ElementNodeSelection setRandomIdIfNone() {
-        for (ElementNode elementNode : getSelected()) {
+    @SuppressWarnings("unchecked")
+    public S setRandomIdIfNone() {
+        for (N elementNode : getSelected()) {
             elementNode.setRandomIdIfNone();
         }
-        return this;
+        return (S) this;
     }
 
     @Nonnull
     @Override
-    public ElementNodeSelection removeId() {
-        for (ElementNode elementNode : getSelected()) {
+    @SuppressWarnings("unchecked")
+    public S removeId() {
+        for (N elementNode : getSelected()) {
             elementNode.removeId();
         }
-        return this;
+        return (S) this;
     }
 
     @Nonnull
     @Override
-    public ElementNodeSelection removeAttr(@Nonnull CharSequence key) {
-        for (ElementNode elementNode : getSelected()) {
+    @SuppressWarnings("unchecked")
+    public S removeAttr(@Nonnull CharSequence key) {
+        for (N elementNode : getSelected()) {
             elementNode.removeAttr(key);
         }
-        return this;
+        return (S) this;
     }
 
     @Nonnull
     @Override
-    public ElementNodeSelection addCssClass(@Nonnull CharSequence cssClassName) {
-        for (ElementNode elementNode : getSelected()) {
+    @SuppressWarnings("unchecked")
+    public S addCssClass(@Nonnull CharSequence cssClassName) {
+        for (N elementNode : getSelected()) {
             elementNode.addCssClass(cssClassName);
         }
-        return this;
+        return (S) this;
     }
 
     @Nonnull
     @Override
-    public ElementNodeSelection setCssClasses(@Nonnull List<? extends CharSequence> cssClassNames) {
-        for (ElementNode elementNode : getSelected()) {
+    @SuppressWarnings("unchecked")
+    public S setCssClasses(@Nonnull List<? extends CharSequence> cssClassNames) {
+        for (N elementNode : getSelected()) {
             elementNode.setCssClasses(cssClassNames);
         }
-        return this;
+        return (S) this;
     }
 
     @Nonnull
     @Override
-    public ElementNodeSelection removeCssClass(@Nonnull CharSequence cssClassName) {
-        for (ElementNode elementNode : getSelected()) {
+    @SuppressWarnings("unchecked")
+    public S removeCssClass(@Nonnull CharSequence cssClassName) {
+        for (N elementNode : getSelected()) {
             elementNode.removeCssClass(cssClassName);
         }
-        return this;
+        return (S) this;
     }
 
     @Nonnull
     @Override
-    public ElementNodeSelection addCssStyle(@Nonnull CharSequence styleKey, CharSequence styleValue) {
-        for (ElementNode elementNode : getSelected()) {
+    @SuppressWarnings("unchecked")
+    public S addCssStyle(@Nonnull CharSequence styleKey, CharSequence styleValue) {
+        for (N elementNode : getSelected()) {
             elementNode.addCssStyle(styleKey, styleValue);
         }
-        return this;
+        return (S) this;
     }
 
     @Nonnull
     @Override
-    public ElementNodeSelection setCssStyles(@Nonnull Map<? extends CharSequence, ? extends CharSequence> cssStyles) {
-        for (ElementNode elementNode : getSelected()) {
+    @SuppressWarnings("unchecked")
+    public S setCssStyles(@Nonnull Map<? extends CharSequence, ? extends CharSequence> cssStyles) {
+        for (N elementNode : getSelected()) {
             elementNode.setCssStyles(cssStyles);
         }
-        return this;
+        return (S) this;
     }
 
     @Nonnull
     @Override
-    public ElementNodeSelection removeCssStyle(@Nonnull CharSequence styleKey) {
-        for (ElementNode elementNode : getSelected()) {
+    @SuppressWarnings("unchecked")
+    public S removeCssStyle(@Nonnull CharSequence styleKey) {
+        for (N elementNode : getSelected()) {
             elementNode.removeCssStyle(styleKey);
         }
-        return this;
+        return (S) this;
     }
 
     @Nonnull
     @Override
-    public ElementNodeSelection get(int from, int to) {
-        return new ElementNodeSelection(super.get(from, to));
+    public ElementNodeSelection<N, S> get(int from, int to) {
+        return new ElementNodeSelection<N, S>(super.get(from, to));
     }
 
     @Nonnull
     @Override
-    public ElementNodeSelection findByTag(@Nonnull CharSequence tagName) {
+    public ElementNodeSelection<?, ?> findByTag(@Nonnull CharSequence tagName) {
         return findByTag(tagName, Integer.MAX_VALUE);
     }
 
     @Nonnull
     @Override
-    public ElementNodeSelection findByTag(@Nonnull CharSequence tagName, int maxDepth) {
-        return new ElementNodeSelection(findByFilter(new TagNameFilter(tagName), ElementNode.class, maxDepth));
+    public ElementNodeSelection<?, ?> findByTag(@Nonnull CharSequence tagName, int maxDepth) {
+        return new ElementNodeSelection<ElementNode<?>, ElementNodeSelection<ElementNode<?>, ?>>(findByFilter(new TagNameFilter(tagName), ElementNode.class, maxDepth));
     }
 
     @Override
-    public ElementNode findById(@Nonnull CharSequence id) {
+    public ElementNode<?> findById(@Nonnull CharSequence id) {
         return findById(id, Integer.MAX_VALUE);
     }
 
     @Override
-    public ElementNode findById(@Nonnull CharSequence id, int maxDepth) {
-        ElementNodeSelection elementNodeSelection = findByAttr("id", id, QueryMatchMode.FULL_MATCH, maxDepth);
+    public ElementNode<?> findById(@Nonnull CharSequence id, int maxDepth) {
+        ElementNodeSelection<?, ?> elementNodeSelection = findByAttr("id", id, QueryMatchMode.FULL_MATCH, maxDepth);
         if (elementNodeSelection.size() == 0) {
             return null;
         } else if (elementNodeSelection.size() > 1) {
@@ -386,38 +411,38 @@ public class ElementNodeSelection extends NodeSelection<ElementNode, ElementNode
 
     @Nonnull
     @Override
-    public ElementNodeSelection findByCssClass(@Nonnull CharSequence cssClassName) {
+    public ElementNodeSelection<?, ?> findByCssClass(@Nonnull CharSequence cssClassName) {
         return findByCssClass(cssClassName, Integer.MAX_VALUE);
     }
 
     @Nonnull
     @Override
-    public ElementNodeSelection findByCssClass(@Nonnull CharSequence cssClassName, int maxDepth) {
-        return new ElementNodeSelection(findByFilter(new CssClassNameFilter(cssClassName), ElementNode.class, maxDepth));
+    public ElementNodeSelection<?, ?> findByCssClass(@Nonnull CharSequence cssClassName, int maxDepth) {
+        return new ElementNodeSelection<ElementNode<?>, ElementNodeSelection<ElementNode<?>, ?>>(findByFilter(new CssClassNameFilter(cssClassName), ElementNode.class, maxDepth));
     }
 
     @Nonnull
     @Override
-    public ElementNodeSelection findByAttr(@Nonnull CharSequence key) {
+    public ElementNodeSelection<?, ?> findByAttr(@Nonnull CharSequence key) {
         return findByAttr(key, Integer.MAX_VALUE);
     }
 
     @Nonnull
     @Override
-    public ElementNodeSelection findByAttr(@Nonnull CharSequence key, int maxDepth) {
-        return new ElementNodeSelection(findByFilter(new AttributeKeyExistenceFilter(key), ElementNode.class, maxDepth));
+    public ElementNodeSelection<?, ?> findByAttr(@Nonnull CharSequence key, int maxDepth) {
+        return new ElementNodeSelection<ElementNode<?>, ElementNodeSelection<ElementNode<?>, ?>>(findByFilter(new AttributeKeyExistenceFilter(key), ElementNode.class, maxDepth));
     }
 
     @Nonnull
     @Override
-    public ElementNodeSelection findByAttr(@Nonnull CharSequence key, CharSequence value, @Nonnull QueryMatchMode queryMatchMode) {
+    public ElementNodeSelection<?, ?> findByAttr(@Nonnull CharSequence key, CharSequence value, @Nonnull QueryMatchMode queryMatchMode) {
         return findByAttr(key, value, queryMatchMode, Integer.MAX_VALUE);
     }
 
     @Nonnull
     @Override
-    public ElementNodeSelection findByAttr(@Nonnull CharSequence key, CharSequence value, @Nonnull QueryMatchMode queryMatchMode, int maxDepth) {
-        return new ElementNodeSelection(findByFilter(new AttributeKeyValueFilter(key, value, queryMatchMode), ElementNode.class, maxDepth));
+    public ElementNodeSelection<?, ?> findByAttr(@Nonnull CharSequence key, CharSequence value, @Nonnull QueryMatchMode queryMatchMode, int maxDepth) {
+        return new ElementNodeSelection<ElementNode<?>, ElementNodeSelection<ElementNode<?>, ?>>(findByFilter(new AttributeKeyValueFilter(key, value, queryMatchMode), ElementNode.class, maxDepth));
     }
 
     @Nonnull
@@ -436,7 +461,7 @@ public class ElementNodeSelection extends NodeSelection<ElementNode, ElementNode
     @Override
     public <N2 extends AbstractNode<? extends N2>, N3 extends N2> NodeSelection<N2, ?> getChildren(@Nonnull INodeFilter<N2> nodeFilter, Class<? extends N3> filterBoundary) {
         LinkedHashSet<N2> resultSelection = new LinkedHashSet<N2>();
-        for (ElementNode elementNode : getSelected()) {
+        for (N elementNode : getSelected()) {
             resultSelection.addAll(NodeFilterSupport.getInstance().filterNodeList(elementNode.getChildren().getSelected(), nodeFilter, filterBoundary));
         }
         return new NodeSelection<N2, NodeSelection<N2, ?>>(resultSelection);
@@ -451,7 +476,7 @@ public class ElementNodeSelection extends NodeSelection<ElementNode, ElementNode
     @Nonnull
     @Override
     public NodeSelection<?, ?> findByFilter(@Nonnull INodeFilter<AbstractNode<?>> nodeFilter, int maxDepth) {
-        return findByFilter(nodeFilter, AbstractNode.class, Integer.MAX_VALUE);
+        return findByFilter(nodeFilter, AbstractNode.class, maxDepth);
     }
 
     @Nonnull
@@ -464,7 +489,7 @@ public class ElementNodeSelection extends NodeSelection<ElementNode, ElementNode
     @Override
     public <N2 extends AbstractNode<? extends N2>, N3 extends N2> NodeSelection<N2, ?> findByFilter(@Nonnull INodeFilter<N2> nodeFilter, @Nonnull Class<? extends N3> filterBoundary, int maxDepth) {
         LinkedHashSet<N2> resultSelection = new LinkedHashSet<N2>();
-        for (ElementNode elementNode : getSelected()) {
+        for (N elementNode : getSelected()) {
             resultSelection.addAll(NodeFilterSupport.getInstance().filterNodeTree(elementNode, nodeFilter, filterBoundary, maxDepth));
         }
         return new NodeSelection<N2, NodeSelection<N2, ?>>(resultSelection);
@@ -484,40 +509,43 @@ public class ElementNodeSelection extends NodeSelection<ElementNode, ElementNode
 
     @Nonnull
     @Override
-    public ElementNodeSelection findElements() {
+    public ElementNodeSelection<?, ?> findElements() {
         return findElements(Integer.MAX_VALUE);
     }
 
     @Nonnull
     @Override
-    public ElementNodeSelection findElements(int maxDepth) {
-        return new ElementNodeSelection(findByFilter(new ElementNodeFilter(), ElementNode.class, maxDepth));
+    public ElementNodeSelection<?, ?> findElements(int maxDepth) {
+        return new ElementNodeSelection<ElementNode<?>, ElementNodeSelection<ElementNode<?>, ?>>(findByFilter(new ElementNodeFilter(), ElementNode.class, maxDepth));
     }
 
     @Nonnull
     @Override
-    public ElementNodeSelection addAjaxEvent(@Nonnull AjaxEventTrigger ajaxEventTrigger, @Nonnull IAjaxCallback<? super ElementNode> ajaxCallback) {
-        for (ElementNode elementNode : getSelected()) {
+    @SuppressWarnings("unchecked")
+    public S addAjaxEvent(@Nonnull AjaxEventTrigger ajaxEventTrigger, @Nonnull IAjaxCallback<? super ElementNode> ajaxCallback) {
+        for (N elementNode : getSelected()) {
             elementNode.addAjaxEvent(ajaxEventTrigger, ajaxCallback);
         }
-        return this;
+        return (S) this;
     }
 
     @Nonnull
     @Override
-    public ElementNodeSelection removeAjaxEvent(@Nonnull IAjaxCallback<?> ajaxCallback) {
-        for (ElementNode elementNode : getSelected()) {
+    @SuppressWarnings("unchecked")
+    public S removeAjaxEvent(@Nonnull IAjaxCallback<?> ajaxCallback) {
+        for (N elementNode : getSelected()) {
             elementNode.removeAjaxEvent(ajaxCallback);
         }
-        return this;
+        return (S) this;
     }
 
     @Nonnull
     @Override
-    public ElementNodeSelection removeAjaxEvent(@Nonnull AjaxEventTrigger ajaxEventTrigger) {
-        for (ElementNode elementNode : getSelected()) {
+    @SuppressWarnings("unchecked")
+    public S removeAjaxEvent(@Nonnull AjaxEventTrigger ajaxEventTrigger) {
+        for (N elementNode : getSelected()) {
             elementNode.removeAjaxEvent(ajaxEventTrigger);
         }
-        return this;
+        return (S) this;
     }
 }

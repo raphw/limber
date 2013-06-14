@@ -1,8 +1,5 @@
 package no.kantega.lab.limber.dom.selection;
 
-import no.kantega.lab.limber.dom.abstraction.IDomNodeRepresentable;
-import no.kantega.lab.limber.dom.abstraction.IDomSelectionQueryable;
-import no.kantega.lab.limber.dom.abstraction.IDomSelectionReduceable;
 import no.kantega.lab.limber.dom.element.*;
 import no.kantega.lab.limber.dom.filter.*;
 import no.kantega.lab.limber.dom.filter.util.NodeFilterSupport;
@@ -11,21 +8,21 @@ import no.kantega.lab.limber.dom.filter.util.QueryMatchMode;
 import javax.annotation.Nonnull;
 import java.util.*;
 
-public class NodeSelection<N extends AbstractNode<? extends N>, S extends NodeSelection<N, ?>> implements
-        IDomNodeRepresentable<N>, IDomSelectionQueryable<N>, IDomSelectionReduceable<N>, Iterable<N> {
+public class NodeSelection<N extends AbstractNode<? extends N>, S extends INodeSelection<N>>
+        implements INodeSelection<N> {
 
     private final List<N> selected;
 
-    public NodeSelection(@Nonnull List<N> selected) {
+    public NodeSelection(@Nonnull List<? extends N> selected) {
         if (selected.contains(null)) throw new IllegalArgumentException();
         this.selected = Collections.unmodifiableList(new ArrayList<N>(selected));
     }
 
-    public NodeSelection(@Nonnull NodeSelection<N, ?> that) {
-        this.selected = that.getSelected();
+    public NodeSelection(@Nonnull NodeSelection<? extends N, ?> that) {
+        this.selected = new ArrayList<N>(that.getSelected());
     }
 
-    public NodeSelection(@Nonnull LinkedHashSet<N> selected) {
+    public NodeSelection(@Nonnull LinkedHashSet<? extends N> selected) {
         if (selected.contains(null)) throw new IllegalArgumentException();
         this.selected = Collections.unmodifiableList(new ArrayList<N>(selected));
     }
@@ -115,20 +112,20 @@ public class NodeSelection<N extends AbstractNode<? extends N>, S extends NodeSe
 
     @Nonnull
     @Override
-    public ElementNodeSelection reduceByTag(@Nonnull CharSequence tagName) {
-        return new ElementNodeSelection(this.reduceByFilter(new TagNameFilter(tagName), ElementNode.class));
+    public ElementNodeSelection<?, ?> reduceByTag(@Nonnull CharSequence tagName) {
+        return new ElementNodeSelection<ElementNode<?>, ElementNodeSelection<ElementNode<?>, ?>>(this.reduceByFilter(new TagNameFilter(tagName), ElementNode.class));
     }
 
     @Nonnull
     @Override
-    public ElementNodeSelection reduceByAttr(@Nonnull CharSequence key) {
-        return new ElementNodeSelection(this.reduceByFilter(new AttributeKeyExistenceFilter(key), ElementNode.class));
+    public ElementNodeSelection<?, ?> reduceByAttr(@Nonnull CharSequence key) {
+        return new ElementNodeSelection<ElementNode<?>, ElementNodeSelection<ElementNode<?>, ?>>(this.reduceByFilter(new AttributeKeyExistenceFilter(key), ElementNode.class));
     }
 
     @Nonnull
     @Override
-    public ElementNodeSelection reduceByAttr(@Nonnull CharSequence key, CharSequence value, @Nonnull QueryMatchMode queryMatchMode) {
-        return new ElementNodeSelection(this.reduceByFilter(new AttributeKeyValueFilter(key, value, queryMatchMode), ElementNode.class));
+    public ElementNodeSelection<?, ?> reduceByAttr(@Nonnull CharSequence key, CharSequence value, @Nonnull QueryMatchMode queryMatchMode) {
+        return new ElementNodeSelection<ElementNode<?>, ElementNodeSelection<ElementNode<?>, ?>>(this.reduceByFilter(new AttributeKeyValueFilter(key, value, queryMatchMode), ElementNode.class));
     }
 
     @Nonnull
@@ -151,30 +148,30 @@ public class NodeSelection<N extends AbstractNode<? extends N>, S extends NodeSe
 
     @Nonnull
     @Override
-    public ElementNodeSelection reduceToElement() {
-        return new ElementNodeSelection(this.reduceByFilter(new ElementNodeFilter(), ElementNode.class));
+    public ElementNodeSelection<?, ?> reduceToElement() {
+        return new ElementNodeSelection<ElementNode<?>, ElementNodeSelection<ElementNode<?>, ?>>(this.reduceByFilter(new ElementNodeFilter(), ElementNode.class));
     }
 
     @Nonnull
     @Override
-    public ElementNodeSelection getParent() {
-        LinkedHashSet<ElementNode> parents = new LinkedHashSet<ElementNode>();
+    public ElementNodeSelection<?, ?> getParent() {
+        LinkedHashSet<ElementNode<?>> parents = new LinkedHashSet<ElementNode<?>>();
         for (N element : getSelected()) {
             ElementNode parent = element.getParent();
             if (parent != null) parents.add(parent);
         }
-        return new ElementNodeSelection(parents);
+        return new ElementNodeSelection<ElementNode<?>, ElementNodeSelection<ElementNode<?>, ?>>(parents);
     }
 
     @Nonnull
     @Override
-    public ElementNodeSelection getRoot() {
-        LinkedHashSet<ElementNode> roots = new LinkedHashSet<ElementNode>();
+    public ElementNodeSelection<?, ?> getRoot() {
+        LinkedHashSet<ElementNode<?>> roots = new LinkedHashSet<ElementNode<?>>();
         for (N element : getSelected()) {
             ElementNode root = element.getRoot();
             if (root != null) roots.add(root);
         }
-        return new ElementNodeSelection(roots);
+        return new ElementNodeSelection<ElementNode<?>, ElementNodeSelection<ElementNode<?>, ?>>(roots);
     }
 
     @Nonnull

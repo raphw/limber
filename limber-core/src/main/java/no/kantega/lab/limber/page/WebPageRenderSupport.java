@@ -1,7 +1,6 @@
 package no.kantega.lab.limber.page;
 
 import no.kantega.lab.limber.ajax.container.AjaxCallbackEventTriggerElementNodeTupel;
-import no.kantega.lab.limber.ajax.container.AjaxCallbackEventTriggerTupel;
 import no.kantega.lab.limber.dom.element.ElementNode;
 import no.kantega.lab.limber.dom.element.IDomNodeVisitor;
 
@@ -21,14 +20,15 @@ public class WebPageRenderSupport {
         /* empty */
     }
 
-    public Map<UUID, AjaxCallbackEventTriggerElementNodeTupel> makeAjaxEventMap(ElementNode root) {
+    public Map<UUID, AjaxCallbackEventTriggerElementNodeTupel> makeAjaxEventMap(ElementNode<?> root) {
         final Map<UUID, AjaxCallbackEventTriggerElementNodeTupel> ajaxEventMap = new HashMap<UUID, AjaxCallbackEventTriggerElementNodeTupel>();
         root.findElements().visit(new IDomNodeVisitor<ElementNode>() {
             @Override
             public void visit(ElementNode node) {
-                for (AjaxCallbackEventTriggerTupel<? super ElementNode> tupel : node.getAjaxEvents()) {
-                    ajaxEventMap.put(UUID.randomUUID(), new AjaxCallbackEventTriggerElementNodeTupel(tupel, node));
-                }
+//                for (AjaxCallbackEventTriggerTupel<? super ElementNode<?>> tupel : node.getAjaxEvents()) {
+//                    ajaxEventMap.put(UUID.randomUUID(), new AjaxCallbackEventTriggerElementNodeTupel(tupel, node));
+//                }
+                // TODO: Revert!
             }
         });
         return ajaxEventMap;

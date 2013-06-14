@@ -10,7 +10,8 @@ import javax.annotation.Nonnull;
 import java.io.IOException;
 import java.io.OutputStream;
 
-public class TextNode extends AbstractNode<TextNode> implements IDomTextNodeRepresentable, IDomTextNodeQueryable {
+public class TextNode extends AbstractNode<TextNode>
+        implements IDomTextNodeRepresentable, IDomTextNodeQueryable {
 
     private static final String[] searchChars = {"\n", "\r"}, replaceChars = {"\\n", "\\r"};
 

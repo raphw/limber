@@ -24,7 +24,7 @@ public interface IDomNodeMorphable<N extends AbstractNode<? extends N>> extends 
     IDomNodeRepresentable<N> remove();
 
     @Nonnull
-    <N2 extends AbstractNode<? extends N2>> Object replaceBy(@Nonnull N2 node);
+    <N2 extends AbstractNode<? extends N2>> IDomNodeRepresentable<? extends N2> replaceBy(@Nonnull N2 node);
 
     @Nonnull
     IDomNodeRepresentable<N> replaceByAndStay(@Nonnull AbstractNode<?> node);

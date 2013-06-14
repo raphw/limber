@@ -13,32 +13,32 @@ import javax.annotation.Nonnull;
 public interface IDomElementNodeBrowsable extends IDomNodeBrowsable {
 
     @Nonnull
-    ElementNodeSelection findByTag(@Nonnull CharSequence tagName);
+    ElementNodeSelection<?, ?> findByTag(@Nonnull CharSequence tagName);
 
     @Nonnull
-    ElementNodeSelection findByTag(@Nonnull CharSequence tagName, int maxDepth);
+    ElementNodeSelection<?, ?> findByTag(@Nonnull CharSequence tagName, int maxDepth);
 
-    ElementNode findById(@Nonnull CharSequence id);
+    ElementNode<?> findById(@Nonnull CharSequence id);
 
-    ElementNode findById(@Nonnull CharSequence id, int maxDepth);
-
-    @Nonnull
-    ElementNodeSelection findByCssClass(@Nonnull CharSequence cssClassName);
+    ElementNode<?> findById(@Nonnull CharSequence id, int maxDepth);
 
     @Nonnull
-    ElementNodeSelection findByCssClass(@Nonnull CharSequence cssClassName, int maxDepth);
+    ElementNodeSelection<?, ?> findByCssClass(@Nonnull CharSequence cssClassName);
 
     @Nonnull
-    ElementNodeSelection findByAttr(@Nonnull CharSequence key);
+    ElementNodeSelection<?, ?> findByCssClass(@Nonnull CharSequence cssClassName, int maxDepth);
 
     @Nonnull
-    ElementNodeSelection findByAttr(@Nonnull CharSequence key, int maxDepth);
+    ElementNodeSelection<?, ?> findByAttr(@Nonnull CharSequence key);
 
     @Nonnull
-    ElementNodeSelection findByAttr(@Nonnull CharSequence key, CharSequence value, @Nonnull QueryMatchMode queryMatchMode);
+    ElementNodeSelection<?, ?> findByAttr(@Nonnull CharSequence key, int maxDepth);
 
     @Nonnull
-    ElementNodeSelection findByAttr(@Nonnull CharSequence key, CharSequence value, @Nonnull QueryMatchMode queryMatchMode, int maxDepth);
+    ElementNodeSelection<?, ?> findByAttr(@Nonnull CharSequence key, CharSequence value, @Nonnull QueryMatchMode queryMatchMode);
+
+    @Nonnull
+    ElementNodeSelection<?, ?> findByAttr(@Nonnull CharSequence key, CharSequence value, @Nonnull QueryMatchMode queryMatchMode, int maxDepth);
 
     @Nonnull
     NodeSelection<?, ?> findByFilter(@Nonnull INodeFilter<AbstractNode<?>> nodeFilter);
@@ -68,8 +68,8 @@ public interface IDomElementNodeBrowsable extends IDomNodeBrowsable {
     TextNodeSelection findTextNodes(int maxDepth);
 
     @Nonnull
-    ElementNodeSelection findElements();
+    ElementNodeSelection<?, ?> findElements();
 
     @Nonnull
-    ElementNodeSelection findElements(int maxDepth);
+    ElementNodeSelection<?, ?> findElements(int maxDepth);
 }

@@ -2,30 +2,31 @@ package no.kantega.lab.limber.dom.abstraction;
 
 import no.kantega.lab.limber.doctype.DoctypeDeclaration;
 import no.kantega.lab.limber.dom.element.ElementNode;
+import no.kantega.lab.limber.dom.selection.IHtmlDocumentRootSelection;
 
 import javax.annotation.Nonnull;
 
-public interface IDomHtmlRootSteerable<R extends IDomHtmlRootSteerable<R>> {
+public interface IDomHtmlRootSteerable {
 
     @Nonnull
-    R setTile(@Nonnull CharSequence charSequence);
+    IHtmlDocumentRootSelection setTile(@Nonnull CharSequence charSequence);
 
     @Nonnull
     String getTitle();
 
     @Nonnull
-    R clearTitle();
+    IHtmlDocumentRootSelection clearTitle();
 
-    ElementNode getTitleNode();
+    ElementNode<?> getTitleNode();
 
     @Nonnull
-    ElementNode getRootNode();
+    ElementNode<?> getRootNode();
 
-    ElementNode getBodyNode();
+    ElementNode<?> getBodyNode();
 
-    ElementNode getHeadNode();
+    ElementNode<?> getHeadNode();
 
     DoctypeDeclaration getDoctypeDeclaration();
 
-    R setDoctypeDeclaration(DoctypeDeclaration doctypeDeclaration);
+    IHtmlDocumentRootSelection setDoctypeDeclaration(DoctypeDeclaration doctypeDeclaration);
 }

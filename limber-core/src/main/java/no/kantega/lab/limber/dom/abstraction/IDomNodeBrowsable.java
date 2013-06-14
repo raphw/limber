@@ -1,6 +1,7 @@
 package no.kantega.lab.limber.dom.abstraction;
 
 import no.kantega.lab.limber.dom.element.AbstractNode;
+import no.kantega.lab.limber.dom.element.ElementNode;
 import no.kantega.lab.limber.dom.filter.INodeFilter;
 import no.kantega.lab.limber.dom.selection.NodeSelection;
 
@@ -8,9 +9,9 @@ import javax.annotation.Nonnull;
 
 public interface IDomNodeBrowsable {
 
-    IDomElementNodeRepresentable getParent();
+    IDomElementNodeRepresentable<? extends ElementNode<?>> getParent();
 
-    IDomElementNodeRepresentable getRoot();
+    IDomElementNodeRepresentable<? extends ElementNode<?>> getRoot();
 
     @Nonnull
     NodeSelection<?, ?> getSiblings();

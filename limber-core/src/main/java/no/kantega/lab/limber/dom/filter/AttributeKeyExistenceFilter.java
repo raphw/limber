@@ -4,7 +4,7 @@ import no.kantega.lab.limber.dom.element.ElementNode;
 
 import javax.annotation.Nonnull;
 
-public class AttributeKeyExistenceFilter implements INodeFilter<ElementNode> {
+public class AttributeKeyExistenceFilter implements INodeFilter<ElementNode<?>> {
 
     private final CharSequence attrKey;
 
@@ -13,7 +13,7 @@ public class AttributeKeyExistenceFilter implements INodeFilter<ElementNode> {
     }
 
     @Override
-    public boolean filter(@Nonnull ElementNode element) {
+    public boolean filter(@Nonnull ElementNode<?> element) {
         return element.isAttribute(attrKey);
     }
 

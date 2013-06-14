@@ -21,7 +21,7 @@ public class NodeFilterSupport {
     }
 
     @Nonnull
-    public <N extends AbstractNode<? extends N>, N2 extends N> List<N> filterNodeTree(@Nonnull ElementNode origin,
+    public <N extends AbstractNode<? extends N>, N2 extends N> List<N> filterNodeTree(@Nonnull ElementNode<?> origin,
                                                               @Nonnull INodeFilter<N> nodeFilter,
                                                               @Nonnull Class<? extends N2> filterBoundary,
                                                               int maxDepth) {
@@ -36,7 +36,7 @@ public class NodeFilterSupport {
 
     @Nonnull
     @SuppressWarnings("unchecked")
-    private <N extends AbstractNode<? extends N>, N2 extends N> List<N> filterToBottomBreadthFirst(@Nonnull ElementNode origin,
+    private <N extends AbstractNode<? extends N>, N2 extends N> List<N> filterToBottomBreadthFirst(@Nonnull ElementNode<?> origin,
                                                                            @Nonnull INodeFilter<N> nodeFilter,
                                                                            @Nonnull Class<? extends N2> filterBoundary,
                                                                            int maxDepth) {
@@ -45,14 +45,14 @@ public class NodeFilterSupport {
 
         List<N> foundNodes = new ArrayList<N>();
         if (maxDepth < 1) return foundNodes;
-        Queue<ElementNode> nodesToScan = new ArrayDeque<ElementNode>();
+        Queue<ElementNode<?>> nodesToScan = new ArrayDeque<ElementNode<?>>();
         nodesToScan.add(origin);
 
         int currentDepth = 0, timeToDepthIncrease = 1, nextTimeToDepthIncrease = 0;
 
         while (!nodesToScan.isEmpty()) {
-            ElementNode current = nodesToScan.poll();
-            List<ElementNode> children = findElementNodeChildren(current);
+            ElementNode<?> current = nodesToScan.poll();
+            List<ElementNode<?>> children = findElementNodeChildren(current);
             nextTimeToDepthIncrease += children.size();
             nodesToScan.addAll(children);
             if (--timeToDepthIncrease == 0) {
@@ -74,7 +74,7 @@ public class NodeFilterSupport {
     }
 
     @Nonnull
-    private <N extends AbstractNode<? extends N>, N2 extends N> List<N> filterToRootNode(@Nonnull ElementNode origin,
+    private <N extends AbstractNode<? extends N>, N2 extends N> List<N> filterToRootNode(@Nonnull ElementNode<?> origin,
                                                                  @Nonnull INodeFilter<N> nodeFilter,
                                                                  @Nonnull Class<? extends N2> filterBoundary,
                                                                  int maxDepth) {
@@ -98,18 +98,18 @@ public class NodeFilterSupport {
     }
 
     @Nonnull
-    private List<ElementNode> findElementNodeChildren(@Nonnull ElementNode parent) {
-        List<ElementNode> elementChildren = new LinkedList<ElementNode>();
+    private List<ElementNode<?>> findElementNodeChildren(@Nonnull ElementNode<?> parent) {
+        List<ElementNode<?>> elementChildren = new LinkedList<ElementNode<?>>();
         for (AbstractNode<?> child : parent.getChildren()) {
             if (child instanceof ElementNode) {
-                elementChildren.add((ElementNode) child);
+                elementChildren.add((ElementNode<?>) child);
             }
         }
         return elementChildren;
     }
 
     @Nonnull
-    public <N extends AbstractNode<? extends N>, N2 extends N> List<N> filterNodeList(@Nonnull List<? extends AbstractNode> nodeList,
+    public <N extends AbstractNode<? extends N>, N2 extends N> List<N> filterNodeList(@Nonnull List<? extends AbstractNode<?>> nodeList,
                                                               @Nonnull INodeFilter<N> nodeFilter,
                                                               @Nonnull Class<? extends N2> filterBoundary) {
         List<N> resultNodeList = new ArrayList<N>(nodeList.size());
