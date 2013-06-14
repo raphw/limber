@@ -20,7 +20,7 @@ public class HtmlDocumentRootSelection
     }
 
     public HtmlDocumentRootSelection(@Nonnull ElementNode<?> rootNode, DoctypeDeclaration doctypeDeclaration) {
-        super(Arrays.asList(rootNode));
+        super(Arrays.<ElementNode<?>>asList(rootNode));
         this.rootNode = rootNode;
         this.doctypeDeclaration = doctypeDeclaration;
     }

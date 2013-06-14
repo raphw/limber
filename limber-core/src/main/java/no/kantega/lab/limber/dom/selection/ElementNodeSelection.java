@@ -22,7 +22,7 @@ public class ElementNodeSelection<N extends ElementNode<? extends N>, S extends 
         super(selected);
     }
 
-    public ElementNodeSelection(@Nonnull NodeSelection<? extends N, ?> that) {
+    public ElementNodeSelection(@Nonnull INodeSelection<? extends N> that) {
         super(that);
     }
 

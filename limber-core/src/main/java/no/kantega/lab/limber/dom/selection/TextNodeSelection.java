@@ -1,6 +1,5 @@
 package no.kantega.lab.limber.dom.selection;
 
-import no.kantega.lab.limber.dom.abstraction.IDomTextNodeRepresentable;
 import no.kantega.lab.limber.dom.element.TextNode;
 
 import javax.annotation.Nonnull;
@@ -8,18 +7,18 @@ import java.util.LinkedHashSet;
 import java.util.List;
 
 public class TextNodeSelection
-        extends NodeSelection<TextNode, TextNodeSelection>
-        implements IDomTextNodeRepresentable {
+        extends NodeSelection<TextNode, ITextNodeSelection>
+        implements ITextNodeSelection {
 
-    public TextNodeSelection(@Nonnull List<TextNode> selected) {
+    public TextNodeSelection(@Nonnull List<? extends TextNode> selected) {
         super(selected);
     }
 
-    public TextNodeSelection(@Nonnull NodeSelection<TextNode, ?> that) {
+    public TextNodeSelection(@Nonnull INodeSelection<? extends TextNode> that) {
         super(that);
     }
 
-    public TextNodeSelection(@Nonnull LinkedHashSet<TextNode> selected) {
+    public TextNodeSelection(@Nonnull LinkedHashSet<? extends TextNode> selected) {
         super(selected);
     }
 

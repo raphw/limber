@@ -18,8 +18,8 @@ public class NodeSelection<N extends AbstractNode<? extends N>, S extends INodeS
         this.selected = Collections.unmodifiableList(new ArrayList<N>(selected));
     }
 
-    public NodeSelection(@Nonnull NodeSelection<? extends N, ?> that) {
-        this.selected = new ArrayList<N>(that.getSelected());
+    public NodeSelection(@Nonnull INodeSelection<? extends N> that) {
+        this.selected = new ArrayList<N>(that.nodeList());
     }
 
     public NodeSelection(@Nonnull LinkedHashSet<? extends N> selected) {

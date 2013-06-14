@@ -22,7 +22,7 @@ public class WebPageRenderSupport {
 
     public Map<UUID, AjaxCallbackEventTriggerElementNodeTupel> makeAjaxEventMap(ElementNode<?> root) {
         final Map<UUID, AjaxCallbackEventTriggerElementNodeTupel> ajaxEventMap = new HashMap<UUID, AjaxCallbackEventTriggerElementNodeTupel>();
-        root.findElements().visit(new IDomNodeVisitor<ElementNode>() {
+        root.findElements().visit(new IDomNodeVisitor<ElementNode<?>>() {
             @Override
             public void visit(ElementNode node) {
 //                for (AjaxCallbackEventTriggerTupel<? super ElementNode<?>> tupel : node.getAjaxEvents()) {
