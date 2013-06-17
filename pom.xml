@@ -55,6 +55,7 @@
         <version.reflections>0.9.9-RC1</version.reflections>
         <version.testng>6.8.5</version.testng>
         <version.mockito>1.9.5</version.mockito>
+        <!--<version.spoon>1.5</version.spoon>-->
     </properties>
 
     <dependencies>
@@ -126,7 +127,22 @@
                 <version>${version.reflections}</version>
             </dependency>
 
+            <!--<dependency>-->
+            <!--<groupId>fr.inria.gforge.spoon</groupId>-->
+            <!--<artifactId>spoon-core</artifactId>-->
+            <!--<version>${version.spoon}</version>-->
+            <!--</dependency>-->
+
         </dependencies>
     </dependencyManagement>
+
+    <!--<repositories>-->
+    <!--<repository>-->
+    <!--<id>gforge.inria.fr-release</id>-->
+    <!--<name>Maven Repository for Spoon</name>-->
+    <!--<url>http://spoon.gforge.inria.fr/repositories/releases/</url>-->
+    <!--<releases/>-->
+    <!--</repository>-->
+    <!--</repositories>-->
 
 </project>

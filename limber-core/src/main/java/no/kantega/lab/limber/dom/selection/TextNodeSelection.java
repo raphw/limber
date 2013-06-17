@@ -7,7 +7,7 @@ import java.util.LinkedHashSet;
 import java.util.List;
 
 public class TextNodeSelection
-        extends NodeSelection<TextNode, ITextNodeSelection>
+        extends NodeSelection<TextNode, TextNodeSelection>
         implements ITextNodeSelection {
 
     public TextNodeSelection(@Nonnull List<? extends TextNode> selected) {

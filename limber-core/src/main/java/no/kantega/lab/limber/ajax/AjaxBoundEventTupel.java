@@ -19,6 +19,7 @@ public class AjaxBoundEventTupel<N extends ElementNode<? extends N>> {
         this.ajaxEventTrigger = ajaxEventTrigger;
         this.ajaxCallback = ajaxCallback;
     }
+
     @Nonnull
     public N getElementNode() {
         return node;
@@ -46,11 +47,10 @@ public class AjaxBoundEventTupel<N extends ElementNode<? extends N>> {
 
         AjaxBoundEventTupel<?> that = (AjaxBoundEventTupel<?>) o;
 
-        if (!ajaxCallback.equals(that.ajaxCallback)) return false;
-        if (ajaxEventTrigger != that.ajaxEventTrigger) return false;
-        if (!node.equals(that.node)) return false;
+        return ajaxCallback.equals(that.ajaxCallback)
+                && ajaxEventTrigger == that.ajaxEventTrigger
+                && node.equals(that.node);
 
-        return true;
     }
 
     @Override

@@ -8,7 +8,7 @@ import javax.annotation.Nonnull;
 import java.util.Arrays;
 
 public class HtmlDocumentRootSelection
-        extends ElementNodeSelection<ElementNode<?>, IHtmlDocumentRootSelection>
+        extends ElementNodeSelection<ElementNode<?>, HtmlDocumentRootSelection>
         implements IHtmlDocumentRootSelection {
 
     private final ElementNode<?> rootNode;

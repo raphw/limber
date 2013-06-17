@@ -64,12 +64,11 @@ public class DoctypeDeclaration implements IRenderable {
 
         DoctypeDeclaration that = (DoctypeDeclaration) o;
 
-        if (doctypeVisibility != that.doctypeVisibility) return false;
-        if (!name.equals(that.name)) return false;
-        if (publicId != null ? !publicId.equals(that.publicId) : that.publicId != null) return false;
-        if (systemId != null ? !systemId.equals(that.systemId) : that.systemId != null) return false;
+        return doctypeVisibility == that.doctypeVisibility
+                && name.equals(that.name)
+                && !(publicId != null ? !publicId.equals(that.publicId) : that.publicId != null)
+                && !(systemId != null ? !systemId.equals(that.systemId) : that.systemId != null);
 
-        return true;
     }
 
     @Override

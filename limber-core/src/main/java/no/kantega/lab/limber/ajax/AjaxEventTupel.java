@@ -35,10 +35,9 @@ public class AjaxEventTupel<N extends ElementNode<? extends N>> {
 
         AjaxEventTupel<?> that = (AjaxEventTupel<?>) o;
 
-        if (!ajaxCallback.equals(that.ajaxCallback)) return false;
-        if (ajaxEventTrigger != that.ajaxEventTrigger) return false;
+        return ajaxCallback.equals(that.ajaxCallback)
+                && ajaxEventTrigger == that.ajaxEventTrigger;
 
-        return true;
     }
 
     @Override

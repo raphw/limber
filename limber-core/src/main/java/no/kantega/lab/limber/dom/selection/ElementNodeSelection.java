@@ -14,7 +14,7 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 
-public class ElementNodeSelection<N extends ElementNode<? extends N>, S extends IElementNodeSelection<N>>
+public class ElementNodeSelection<N extends ElementNode<? extends N>, S extends ElementNodeSelection<N, ?>>
         extends NodeSelection<N, S>
         implements IElementNodeSelection<N> {
 

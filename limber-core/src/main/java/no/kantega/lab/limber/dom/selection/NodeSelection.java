@@ -8,7 +8,7 @@ import no.kantega.lab.limber.dom.filter.util.QueryMatchMode;
 import javax.annotation.Nonnull;
 import java.util.*;
 
-public class NodeSelection<N extends AbstractNode<? extends N>, S extends INodeSelection<N>>
+public class NodeSelection<N extends AbstractNode<? extends N>, S extends NodeSelection<N, ?>>
         implements INodeSelection<N> {
 
     private final List<N> selected;
@@ -99,7 +99,7 @@ public class NodeSelection<N extends AbstractNode<? extends N>, S extends INodeS
 
     @Nonnull
     @Override
-    public NodeSelection<N, ?> get(int from, int to) {
+    public NodeSelection<N, S> get(int from, int to) {
         if (from < 0 || to < 0 || from >= selected.size() || to >= selected.size()) {
             throw new IndexOutOfBoundsException();
         }
@@ -107,7 +107,7 @@ public class NodeSelection<N extends AbstractNode<? extends N>, S extends INodeS
         for (int i = from; i < to; i++) {
             subSelection.add(getSelected().get(i));
         }
-        return new NodeSelection<N, NodeSelection<N, ?>>(subSelection);
+        return new NodeSelection<N, S>(subSelection);
     }
 
     @Nonnull
