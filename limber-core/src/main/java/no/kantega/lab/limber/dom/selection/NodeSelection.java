@@ -113,7 +113,7 @@ public class NodeSelection<N extends AbstractNode<? extends N>, S extends NodeSe
     @Nonnull
     @Override
     public ElementNodeSelection<?, ?> reduceByTag(@Nonnull CharSequence tagName) {
-        return new ElementNodeSelection<ElementNode<?>, ElementNodeSelection<ElementNode<?>, ?>>(this.reduceByFilter(new TagNameFilter(tagName), ElementNode.class));
+        return new ElementNodeSelection<ElementNode<?>, ElementNodeSelection<ElementNode<?>, ?>>(this.reduceByFilter(new TagNameFilter<ElementNode<?>>(tagName), ElementNode.class));
     }
 
     @Nonnull
@@ -143,13 +143,31 @@ public class NodeSelection<N extends AbstractNode<? extends N>, S extends NodeSe
     @Nonnull
     @Override
     public TextNodeSelection reduceToText() {
-        return new TextNodeSelection(this.reduceByFilter(new TextNodeFilter(), TextNode.class));
+        return new TextNodeSelection(this.reduceByFilter(new BooleanRepeaterFilter<TextNode>(true), TextNode.class));
     }
 
     @Nonnull
     @Override
     public ElementNodeSelection<?, ?> reduceToElement() {
-        return new ElementNodeSelection<ElementNode<?>, ElementNodeSelection<ElementNode<?>, ?>>(this.reduceByFilter(new ElementNodeFilter(), ElementNode.class));
+        return new ElementNodeSelection<ElementNode<?>, ElementNodeSelection<ElementNode<?>, ?>>(this.reduceByFilter(new BooleanRepeaterFilter<ElementNode<?>>(true), ElementNode.class));
+    }
+
+    @Nonnull
+    @Override
+    public ElementNodeSelection<?, ?> reduceToElement(CharSequence tagName) {
+        return new ElementNodeSelection<ElementNode<?>, ElementNodeSelection<ElementNode<?>, ?>>(this.reduceByFilter(new TagNameFilter<ElementNode<?>>(tagName), ElementNode.class));
+    }
+
+    @Nonnull
+    @Override
+    public LinkNodeSelection<?, ?> reduceToLink() {
+        return new LinkNodeSelection<LinkNode<?>, LinkNodeSelection<LinkNode<?>, ?>>(this.reduceByFilter(new BooleanRepeaterFilter<LinkNode<?>>(true), LinkNode.class));
+    }
+
+    @Nonnull
+    @Override
+    public LinkNodeSelection<?, ?> reduceToLink(CharSequence tagName) {
+        return new LinkNodeSelection<LinkNode<?>, LinkNodeSelection<LinkNode<?>, ?>>(this.reduceByFilter(new TagNameFilter<LinkNode<?>>(tagName), LinkNode.class));
     }
 
     @Nonnull

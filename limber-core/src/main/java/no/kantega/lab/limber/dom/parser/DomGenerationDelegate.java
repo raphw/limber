@@ -1,7 +1,7 @@
 package no.kantega.lab.limber.dom.parser;
 
-import no.kantega.lab.limber.doctype.DoctypeDeclaration;
-import no.kantega.lab.limber.doctype.DoctypeVisibility;
+import no.kantega.lab.limber.dom.doctype.DoctypeDeclaration;
+import no.kantega.lab.limber.dom.doctype.DoctypeVisibility;
 import no.kantega.lab.limber.dom.element.ElementNode;
 import no.kantega.lab.limber.dom.element.ElementNodeFactory;
 import no.kantega.lab.limber.dom.element.TextNode;
@@ -23,6 +23,8 @@ public class DomGenerationDelegate extends DefaultHandler2 {
 
     private ElementNode<?> root;
 
+    private DoctypeDeclaration doctypeDeclaration;
+
     public DomGenerationDelegate(@Nonnull IDomRootElementNodeContainer rootNodeContainer) {
         elementNodeStack = new Stack<ElementNode<?>>();
         this.rootNodeContainer = rootNodeContainer;
@@ -30,7 +32,7 @@ public class DomGenerationDelegate extends DefaultHandler2 {
 
     @Override
     public void startElement(String uri, String localName, @Nonnull String qName, @Nonnull Attributes atts) throws SAXException {
-        ElementNode<?> elementNode = ElementNodeFactory.make(qName);
+        ElementNode<?> elementNode = ElementNodeFactory.getInstance().make(qName);
         for (int i = 0; i < atts.getLength(); i++) {
             elementNode.putAttr(atts.getQName(i), atts.getValue(i));
         }
@@ -71,7 +73,8 @@ public class DomGenerationDelegate extends DefaultHandler2 {
         } else if (systemId != null) {
             doctypeVisibility = DoctypeVisibility.SYSTEM;
         }
-        rootNodeContainer.setDoctype(new DoctypeDeclaration(name, doctypeVisibility, publicId, systemId));
+        doctypeDeclaration = new DoctypeDeclaration(name, doctypeVisibility, publicId, systemId);
+        rootNodeContainer.setDoctype(doctypeDeclaration);
     }
 
     @Override

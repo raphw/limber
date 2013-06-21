@@ -1,6 +1,6 @@
 package no.kantega.lab.limber.dom.selection;
 
-import no.kantega.lab.limber.doctype.DoctypeDeclaration;
+import no.kantega.lab.limber.dom.doctype.DoctypeDeclaration;
 import no.kantega.lab.limber.dom.element.ElementNode;
 import no.kantega.lab.limber.dom.element.TextNode;
 

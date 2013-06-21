@@ -1,8 +1,9 @@
 package no.kantega.lab.limber.servlet.request.standard;
 
 import no.kantega.lab.limber.servlet.IRenderable;
-import no.kantega.lab.limber.servlet.IResponseContainer;
-import no.kantega.lab.limber.servlet.request.ILimberRequest;
+import no.kantega.lab.limber.servlet.meta.PageVersioning;
+import no.kantega.lab.limber.servlet.meta.VersioningType;
+import no.kantega.lab.limber.servlet.request.context.IRenderContext;
 
 import javax.annotation.Nonnull;
 import javax.servlet.http.HttpServletResponse;
@@ -11,21 +12,22 @@ import java.io.OutputStream;
 import java.net.URI;
 import java.util.UUID;
 
+@PageVersioning(VersioningType.NONE)
 public class RedirectionResponse implements IRenderable {
 
-    private final ILimberRequest limberRequest;
+    private final Class<? extends IRenderable> renderableClass;
     private final UUID uuid;
 
-    public RedirectionResponse(ILimberRequest limberRequest, UUID uuid) {
-        this.limberRequest = limberRequest;
+    public RedirectionResponse(Class<? extends IRenderable> renderableClass, UUID uuid) {
+        this.renderableClass = renderableClass;
         this.uuid = uuid;
     }
 
     @Override
-    public boolean render(@Nonnull OutputStream outputStream, @Nonnull IResponseContainer responseContainer) throws IOException {
-        URI referralURI = responseContainer.decodeLink(limberRequest.getRenderableClass(), uuid, null);
-        responseContainer.addHeader("Location", referralURI.toString());
-        responseContainer.setStatusCode(HttpServletResponse.SC_FOUND);
+    public boolean render(@Nonnull OutputStream outputStream, @Nonnull IRenderContext renderContext) throws IOException {
+        URI referralURI = renderContext.getLimberPageRegister().decodeLink(renderableClass, uuid);
+        renderContext.getHttpServletResponseWrapper().putHeaderValue("Location", referralURI.toString());
+        renderContext.getHttpServletResponseWrapper().setStatusCode(HttpServletResponse.SC_FOUND);
         return true;
     }
 }

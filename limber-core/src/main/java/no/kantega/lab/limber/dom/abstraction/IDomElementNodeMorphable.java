@@ -1,10 +1,10 @@
 package no.kantega.lab.limber.dom.abstraction;
 
-import no.kantega.lab.limber.ajax.abstraction.AjaxEventTrigger;
-import no.kantega.lab.limber.ajax.abstraction.IAjaxCallback;
+import no.kantega.lab.limber.dom.ajax.IAjaxCallback;
 import no.kantega.lab.limber.dom.element.AbstractNode;
 import no.kantega.lab.limber.dom.element.ContentEscapeMode;
 import no.kantega.lab.limber.dom.element.ElementNode;
+import no.kantega.lab.limber.dom.target.EventTrigger;
 
 import javax.annotation.Nonnull;
 import java.util.List;
@@ -136,11 +136,11 @@ public interface IDomElementNodeMorphable<N extends ElementNode<? extends N>> ex
     IDomElementNodeRepresentable<N> removeCssStyle(@Nonnull CharSequence styleKey);
 
     @Nonnull
-    IDomElementNodeRepresentable<N> addAjaxEvent(@Nonnull AjaxEventTrigger ajaxEventTrigger, @Nonnull IAjaxCallback<? super N> ajaxCallback);
+    IDomElementNodeRepresentable<N> addAjaxEvent(@Nonnull EventTrigger ajaxEventTrigger, @Nonnull IAjaxCallback<? super N> ajaxCallback);
 
     @Nonnull
     IDomElementNodeRepresentable<N> removeAjaxEvent(@Nonnull IAjaxCallback<? super N> ajaxCallback);
 
     @Nonnull
-    IDomElementNodeRepresentable<N> removeAjaxEvent(@Nonnull AjaxEventTrigger ajaxEventTrigger);
+    IDomElementNodeRepresentable<N> removeAjaxEvent(@Nonnull EventTrigger ajaxEventTrigger);
 }

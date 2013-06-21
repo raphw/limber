@@ -1,4 +1,4 @@
-package no.kantega.lab.limber.doctype;
+package no.kantega.lab.limber.dom.doctype;
 
 public enum DoctypeVisibility {
     PUBLIC("PUBLIC"),

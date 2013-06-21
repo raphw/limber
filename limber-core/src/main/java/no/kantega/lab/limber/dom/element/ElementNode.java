@@ -1,26 +1,25 @@
 package no.kantega.lab.limber.dom.element;
 
-import no.kantega.lab.limber.ajax.AjaxEventTupel;
-import no.kantega.lab.limber.ajax.abstraction.AjaxEventTrigger;
-import no.kantega.lab.limber.ajax.abstraction.IAjaxCallback;
 import no.kantega.lab.limber.dom.abstraction.IDomElementNodeQueryable;
 import no.kantega.lab.limber.dom.abstraction.IDomElementNodeRepresentable;
+import no.kantega.lab.limber.dom.ajax.AjaxBoundEventTupel;
+import no.kantega.lab.limber.dom.ajax.IAjaxCallback;
 import no.kantega.lab.limber.dom.filter.*;
 import no.kantega.lab.limber.dom.filter.util.NodeFilterSupport;
 import no.kantega.lab.limber.dom.filter.util.QueryMatchMode;
 import no.kantega.lab.limber.dom.selection.ElementNodeSelection;
 import no.kantega.lab.limber.dom.selection.NodeSelection;
 import no.kantega.lab.limber.dom.selection.TextNodeSelection;
-import no.kantega.lab.limber.servlet.IResponseContainer;
-import org.apache.commons.io.IOUtils;
+import no.kantega.lab.limber.dom.target.EventTrigger;
+import no.kantega.lab.limber.page.context.IHtmlRenderContext;
 import org.apache.commons.lang3.StringUtils;
 
 import javax.annotation.Nonnull;
 import java.io.IOException;
-import java.io.OutputStream;
+import java.io.Writer;
 import java.util.*;
 
-public abstract class ElementNode<N extends ElementNode<N>> extends AbstractNode<N>
+public class ElementNode<N extends ElementNode<N>> extends AbstractNode<N>
         implements IDomElementNodeRepresentable<N>, IDomElementNodeQueryable<N>, Iterable<AbstractNode<?>> {
 
     private static final String HTML_ATTR_CLASS = "class";
@@ -37,7 +36,7 @@ public abstract class ElementNode<N extends ElementNode<N>> extends AbstractNode
 
     private List<AbstractNode<?>> children;
 
-    private List<AjaxEventTupel<N>> ajaxEvents;
+    private List<AjaxBoundEventTupel<N>> ajaxEvents;
 
     public ElementNode(@Nonnull CharSequence tag) {
         setTagName(tag);
@@ -142,7 +141,7 @@ public abstract class ElementNode<N extends ElementNode<N>> extends AbstractNode
     @Nonnull
     @Override
     public ElementNode<?> addChild(int index, @Nonnull CharSequence tagName) {
-        return addChild(index, ElementNodeFactory.make(tagName));
+        return addChild(index, ElementNodeFactory.getInstance().make(tagName));
     }
 
     @Nonnull
@@ -186,7 +185,7 @@ public abstract class ElementNode<N extends ElementNode<N>> extends AbstractNode
     @Nonnull
     @Override
     public ElementNode<?> appendChild(@Nonnull CharSequence tagName) {
-        return appendChild(ElementNodeFactory.make(tagName));
+        return appendChild(ElementNodeFactory.getInstance().make(tagName));
     }
 
     @Nonnull
@@ -228,7 +227,7 @@ public abstract class ElementNode<N extends ElementNode<N>> extends AbstractNode
     @Nonnull
     @Override
     public ElementNode<?> prependChild(@Nonnull CharSequence tagName) {
-        return prependChild(ElementNodeFactory.make(tagName));
+        return prependChild(ElementNodeFactory.getInstance().make(tagName));
     }
 
     @Nonnull
@@ -286,7 +285,7 @@ public abstract class ElementNode<N extends ElementNode<N>> extends AbstractNode
     @Nonnull
     @Override
     public ElementNode<?> wrap(@Nonnull CharSequence tagName) {
-        return wrap(ElementNodeFactory.make(tagName));
+        return wrap(ElementNodeFactory.getInstance().make(tagName));
     }
 
     @Nonnull
@@ -577,7 +576,7 @@ public abstract class ElementNode<N extends ElementNode<N>> extends AbstractNode
     @Nonnull
     @Override
     public ElementNodeSelection<?, ?> findByTag(@Nonnull CharSequence tagName, int maxDepth) {
-        return new ElementNodeSelection<ElementNode<?>, ElementNodeSelection<ElementNode<?>, ?>>(findByFilter(new TagNameFilter(tagName), ElementNode.class, maxDepth));
+        return new ElementNodeSelection<ElementNode<?>, ElementNodeSelection<ElementNode<?>, ?>>(findByFilter(new TagNameFilter<ElementNode<?>>(tagName), ElementNode.class, maxDepth));
     }
 
     @Override
@@ -666,7 +665,7 @@ public abstract class ElementNode<N extends ElementNode<N>> extends AbstractNode
     @Nonnull
     @Override
     public TextNodeSelection findTextNodes(int maxDepth) {
-        return new TextNodeSelection(findByFilter(new TextNodeFilter(), TextNode.class, maxDepth));
+        return new TextNodeSelection(findByFilter(new BooleanRepeaterFilter<TextNode>(true), TextNode.class, maxDepth));
     }
 
     @Nonnull
@@ -678,7 +677,7 @@ public abstract class ElementNode<N extends ElementNode<N>> extends AbstractNode
     @Nonnull
     @Override
     public ElementNodeSelection<?, ?> findElements(int maxDepth) {
-        return new ElementNodeSelection<ElementNode<?>, ElementNodeSelection<ElementNode<?>, ?>>(findByFilter(new ElementNodeFilter(), ElementNode.class, maxDepth));
+        return new ElementNodeSelection<ElementNode<?>, ElementNodeSelection<ElementNode<?>, ?>>(findByFilter(new BooleanRepeaterFilter<ElementNode<?>>(true), ElementNode.class, maxDepth));
     }
 
     @Nonnull
@@ -710,38 +709,14 @@ public abstract class ElementNode<N extends ElementNode<N>> extends AbstractNode
     }
 
     @Override
-    public boolean onRender(@Nonnull OutputStream outputStream, @Nonnull IResponseContainer response) throws IOException {
-        IOUtils.write("<", outputStream);
-        IOUtils.write(getTagName(), outputStream);
-        for (Map.Entry<String, String> attr : getAttrs().entrySet()) {
-            IOUtils.write(" ", outputStream);
-            IOUtils.write(attr.getKey(), outputStream);
-            IOUtils.write("=\"", outputStream);
-            IOUtils.write(attr.getValue(), outputStream);
-            IOUtils.write("\"", outputStream);
-        }
-
-        IOUtils.write(">", outputStream);
-        for (AbstractNode<?> child : getChildren()) {
-            if (child instanceof ElementNode) IOUtils.write("\n", outputStream);
-            child.render(outputStream, response);
-        }
-        IOUtils.write("</", outputStream);
-        IOUtils.write(getTagName(), outputStream);
-        IOUtils.write(">", outputStream);
-        IOUtils.write("\n", outputStream);
-
-        return true;
-    }
-
-    @Override
     @Nonnull
     @SuppressWarnings("unchecked")
-    public N addAjaxEvent(@Nonnull AjaxEventTrigger ajaxEventTrigger, @Nonnull IAjaxCallback<? super N> ajaxCallback) {
-        if (ajaxEvents == null) ajaxEvents = new ArrayList<AjaxEventTupel<N>>();
-        AjaxEventTupel<N> tupel = new AjaxEventTupel<N>(ajaxEventTrigger, ajaxCallback);
+    public N addAjaxEvent(@Nonnull EventTrigger ajaxEventTrigger, @Nonnull IAjaxCallback<? super N> ajaxCallback) {
+        N cast = (N) this;
+        if (ajaxEvents == null) ajaxEvents = new ArrayList<AjaxBoundEventTupel<N>>();
+        AjaxBoundEventTupel<N> tupel = new AjaxBoundEventTupel<N>(cast, ajaxEventTrigger, ajaxCallback);
         if (!ajaxEvents.contains(tupel)) ajaxEvents.add(tupel);
-        return (N) this;
+        return cast;
     }
 
     @Nonnull
@@ -749,7 +724,7 @@ public abstract class ElementNode<N extends ElementNode<N>> extends AbstractNode
     @SuppressWarnings("unchecked")
     public N removeAjaxEvent(@Nonnull IAjaxCallback<? super N> ajaxCallback) {
         if (ajaxEvents != null) {
-            Iterator<AjaxEventTupel<N>> iterator = ajaxEvents.iterator();
+            Iterator<AjaxBoundEventTupel<N>> iterator = ajaxEvents.iterator();
             while (iterator.hasNext()) {
                 if (iterator.next().getAjaxCallback().equals(ajaxCallback)) iterator.remove();
             }
@@ -760,11 +735,11 @@ public abstract class ElementNode<N extends ElementNode<N>> extends AbstractNode
     @Nonnull
     @Override
     @SuppressWarnings("unchecked")
-    public N removeAjaxEvent(@Nonnull AjaxEventTrigger ajaxEventTrigger) {
+    public N removeAjaxEvent(@Nonnull EventTrigger ajaxEventTrigger) {
         if (ajaxEvents != null) {
-            Iterator<AjaxEventTupel<N>> iterator = ajaxEvents.iterator();
+            Iterator<AjaxBoundEventTupel<N>> iterator = ajaxEvents.iterator();
             while (iterator.hasNext()) {
-                if (iterator.next().getAjaxEventTrigger().equals(ajaxEventTrigger)) iterator.remove();
+                if (iterator.next().getEventTrigger().equals(ajaxEventTrigger)) iterator.remove();
             }
         }
         return (N) this;
@@ -772,11 +747,62 @@ public abstract class ElementNode<N extends ElementNode<N>> extends AbstractNode
 
     @Nonnull
     @Override
-    public List<AjaxEventTupel<N>> getAjaxEvents() {
+    public List<AjaxBoundEventTupel<N>> getAjaxEvents() {
         if (ajaxEvents == null) {
             return Collections.emptyList();
         } else {
             return Collections.unmodifiableList(ajaxEvents);
         }
+    }
+
+    @Override
+    protected boolean onRender(@Nonnull Writer writer, @Nonnull IHtmlRenderContext htmlRenderContext) throws IOException {
+
+        onRegisterSubroutines(htmlRenderContext);
+
+        writer.append("<").append(getTagName());
+        onRenderAttrs(writer, htmlRenderContext);
+        writer.append(">");
+
+        onRenderChildren(writer, htmlRenderContext);
+
+        writer.append("</");
+        writer.append(getTagName());
+        writer.append(">");
+
+        writer.append("\n");
+
+        return true;
+    }
+
+    protected void onRegisterSubroutines(@Nonnull IHtmlRenderContext htmlRenderContext) {
+        for (AjaxBoundEventTupel<?> ajaxBoundEventTupel : getAjaxEvents()) {
+            htmlRenderContext.getSubroutineRegister().registerSubroutine(ajaxBoundEventTupel);
+        }
+    }
+
+    protected void onRenderChildren(@Nonnull Writer writer, @Nonnull IHtmlRenderContext htmlRenderContext) throws IOException {
+        for (AbstractNode<?> child : getChildren()) {
+            onRenderChild(child, writer, htmlRenderContext);
+        }
+    }
+
+    protected boolean onRenderChild(@Nonnull AbstractNode<?> child, @Nonnull Writer writer, @Nonnull IHtmlRenderContext htmlRenderContext) throws IOException {
+        if (child instanceof ElementNode) writer.append("\n");
+        return child.render(writer, htmlRenderContext);
+    }
+
+    protected void onRenderAttrs(@Nonnull Writer writer, @Nonnull IHtmlRenderContext htmlRenderContext) throws IOException {
+        for (Map.Entry<String, String> attr : getAttrs().entrySet()) {
+            writer.append(" ");
+            onRenderAttr(attr.getKey(), attr.getValue(), writer, htmlRenderContext);
+        }
+    }
+
+    protected void onRenderAttr(@Nonnull String key, @Nonnull String value, @Nonnull Writer writer, @Nonnull IHtmlRenderContext htmlRenderContext) throws IOException {
+        writer.append(key);
+        writer.append("=\"");
+        writer.append(value);
+        writer.append("\"");
     }
 }

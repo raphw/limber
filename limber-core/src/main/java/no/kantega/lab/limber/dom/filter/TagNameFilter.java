@@ -4,7 +4,7 @@ import no.kantega.lab.limber.dom.element.ElementNode;
 
 import javax.annotation.Nonnull;
 
-public class TagNameFilter implements INodeFilter<ElementNode<?>> {
+public class TagNameFilter<N extends ElementNode<? extends N>> implements INodeFilter<N> {
 
     private final CharSequence tagName;
 
@@ -13,7 +13,7 @@ public class TagNameFilter implements INodeFilter<ElementNode<?>> {
     }
 
     @Override
-    public boolean filter(@Nonnull ElementNode<?> element) {
+    public boolean filter(@Nonnull N element) {
         return element.isTag(tagName);
     }
 }

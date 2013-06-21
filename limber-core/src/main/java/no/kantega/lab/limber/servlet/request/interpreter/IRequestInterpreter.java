@@ -1,8 +1,8 @@
 package no.kantega.lab.limber.servlet.request.interpreter;
 
 import no.kantega.lab.limber.servlet.IRenderable;
-import no.kantega.lab.limber.servlet.request.ILimberRequest;
-import no.kantega.lab.limber.servlet.request.RawRequest;
+import no.kantega.lab.limber.servlet.context.IHttpServletRequestWrapper;
+import no.kantega.lab.limber.servlet.context.IRequestMapping;
 
 import javax.annotation.Nonnull;
 import java.net.URI;
@@ -14,7 +14,7 @@ public interface IRequestInterpreter {
 
     static final String JAVA_PACKAGE_NAME_REGEX = "[a-zA-Z_]{1}[a-zA-Z0-9_]*(?:\\.[a-zA-Z_]{1}[a-zA-Z0-9_]*)*";
 
-    ILimberRequest interpret(@Nonnull RawRequest rawRequest);
+    IRequestMapping interpret(@Nonnull IHttpServletRequestWrapper rawRequest);
 
     URI resolve(@Nonnull Class<? extends IRenderable> renderableClass, UUID versionId, UUID ajaxId);
 }

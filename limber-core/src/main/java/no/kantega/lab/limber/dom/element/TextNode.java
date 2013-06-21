@@ -2,13 +2,12 @@ package no.kantega.lab.limber.dom.element;
 
 import no.kantega.lab.limber.dom.abstraction.IDomTextNodeQueryable;
 import no.kantega.lab.limber.dom.abstraction.IDomTextNodeRepresentable;
-import no.kantega.lab.limber.servlet.IResponseContainer;
-import org.apache.commons.io.IOUtils;
+import no.kantega.lab.limber.page.context.IHtmlRenderContext;
 import org.apache.commons.lang3.StringUtils;
 
 import javax.annotation.Nonnull;
 import java.io.IOException;
-import java.io.OutputStream;
+import java.io.Writer;
 
 public class TextNode extends AbstractNode<TextNode>
         implements IDomTextNodeRepresentable, IDomTextNodeQueryable {
@@ -75,9 +74,9 @@ public class TextNode extends AbstractNode<TextNode>
     }
 
     @Override
-    public boolean onRender(@Nonnull OutputStream outputStream, @Nonnull IResponseContainer response) throws IOException {
+    protected boolean onRender(@Nonnull Writer writer, @Nonnull IHtmlRenderContext htmlRenderContext) throws IOException {
         if (!StringUtils.isBlank(content)) {
-            IOUtils.write(content, outputStream);
+            writer.append(content);
         }
         return true;
     }

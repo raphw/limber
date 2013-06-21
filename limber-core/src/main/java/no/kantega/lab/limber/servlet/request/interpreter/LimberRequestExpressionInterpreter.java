@@ -2,9 +2,9 @@ package no.kantega.lab.limber.servlet.request.interpreter;
 
 import no.kantega.lab.limber.exception.LimberRequestMappingException;
 import no.kantega.lab.limber.servlet.IRenderable;
-import no.kantega.lab.limber.servlet.request.DefaultLimberRequest;
-import no.kantega.lab.limber.servlet.request.ILimberRequest;
-import no.kantega.lab.limber.servlet.request.RawRequest;
+import no.kantega.lab.limber.servlet.context.DefaultRequestMapping;
+import no.kantega.lab.limber.servlet.context.IHttpServletRequestWrapper;
+import no.kantega.lab.limber.servlet.context.IRequestMapping;
 
 import javax.annotation.Nonnull;
 import java.net.URI;
@@ -35,11 +35,11 @@ public class LimberRequestExpressionInterpreter implements IRequestInterpreter {
     }
 
     @Override
-    public ILimberRequest interpret(@Nonnull RawRequest rawRequest) {
+    public IRequestMapping interpret(@Nonnull IHttpServletRequestWrapper httpServletRequestWrapper) {
 
         // Check if this expression interpreter can be applied at all.
-        String limberQuery = rawRequest.getQueryArgument("limber");
-        if (!"/".equals(rawRequest.getRequestURI()) || limberQuery == null) {
+        String limberQuery = httpServletRequestWrapper.getQueryArgument("limber");
+        if (limberQuery == null || !"/".equals(httpServletRequestWrapper.getRequestUri())) {
             return null;
         }
         Matcher pathMatcher = pathPattern.matcher(limberQuery);
@@ -73,8 +73,8 @@ public class LimberRequestExpressionInterpreter implements IRequestInterpreter {
             ajaxId = UUID.fromString(ajaxIdString);
         }
 
-        return new DefaultLimberRequest(
-                rawRequest.getSessionId(),
+        return new DefaultRequestMapping(
+                httpServletRequestWrapper.getSessionId(),
                 renderableClass,
                 versionId,
                 ajaxId);

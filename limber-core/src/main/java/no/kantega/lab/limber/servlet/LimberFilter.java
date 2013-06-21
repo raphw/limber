@@ -10,15 +10,14 @@ import java.util.UUID;
 
 public class LimberFilter implements Filter {
 
-    private UUID filterId;
-
     private LimberRequestHandler requestHelper;
 
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
-        filterId = GlobalLimberFilterRegistry.findOrCreateUUID(this);
-        requestHelper = new LimberRequestHandler(filterConfig);
-        System.out.println(String.format("Limber[%s]: '%s' is ready", filterId, filterConfig.getFilterName()));
+        UUID filterId = GlobalLimberFilterRegistry.findOrCreateUUID(this);
+        requestHelper = new LimberRequestHandler(filterConfig, filterId);
+        System.out.println(String.format("Limber[%s]: '%s' is servicing context '/%s'",
+                filterId, filterConfig.getFilterName(), filterConfig.getServletContext().getContextPath()));
     }
 
     @Override
@@ -30,19 +29,12 @@ public class LimberFilter implements Filter {
             return;
         }
 
-        // TODO: Add support for resolving different sides (maybe by configuration class which
-        // is referred by a web.xml entry as in Wicket)
-
-        // TODO: Add filtering mechanism that allows to respond to different requests in different
-        // ways. Some requests might refer to plain files, some might be resources on the file system,
-        // some might be downloads etc.
-
         try {
             HttpServletRequest httpServletRequest = (HttpServletRequest) servletRequest;
             HttpServletResponse httpServletResponse = (HttpServletResponse) servletResponse;
             requestHelper.proceedRequest(httpServletRequest, httpServletResponse);
         } catch (IOException e) {
-            servletResponse.getOutputStream().print("Status 500: Fatal exception");
+            servletResponse.getOutputStream().print("Status 500: An error has occured");
         } finally {
             servletResponse.getOutputStream().flush();
             servletResponse.getOutputStream().close();

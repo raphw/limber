@@ -49,22 +49,29 @@
         <version.servlet-api>2.5</version.servlet-api>
         <version.xerces>2.11.0</version.xerces>
         <version.neko>1.9.18</version.neko>
+        <version.guava>14.0.1</version.guava>
         <version.commons.lang3>3.1</version.commons.lang3>
-        <version.commons.io>2.4</version.commons.io>
         <version.findbugs>2.0.1</version.findbugs>
         <version.reflections>0.9.9-RC1</version.reflections>
+        <version.slf4j>1.7.5</version.slf4j>
         <version.testng>6.8.5</version.testng>
         <version.mockito>1.9.5</version.mockito>
-        <!--<version.spoon>1.5</version.spoon>-->
     </properties>
 
     <dependencies>
 
-        <!-- Find bugs annotations: allows @Nonnull -->
+        <!-- Find bugs annotations: allows e.g. @Nonnull -->
         <dependency>
             <groupId>com.google.code.findbugs</groupId>
             <artifactId>annotations</artifactId>
             <version>${version.findbugs}</version>
+        </dependency>
+
+        <!-- Logging API -->
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>${version.slf4j}</version>
         </dependency>
 
         <!-- Testing -->
@@ -116,9 +123,9 @@
             </dependency>
 
             <dependency>
-                <groupId>commons-io</groupId>
-                <artifactId>commons-io</artifactId>
-                <version>${version.commons.io}</version>
+                <groupId>com.google.guava</groupId>
+                <artifactId>guava</artifactId>
+                <version>${version.guava}</version>
             </dependency>
 
             <dependency>
@@ -127,22 +134,7 @@
                 <version>${version.reflections}</version>
             </dependency>
 
-            <!--<dependency>-->
-            <!--<groupId>fr.inria.gforge.spoon</groupId>-->
-            <!--<artifactId>spoon-core</artifactId>-->
-            <!--<version>${version.spoon}</version>-->
-            <!--</dependency>-->
-
         </dependencies>
     </dependencyManagement>
-
-    <!--<repositories>-->
-    <!--<repository>-->
-    <!--<id>gforge.inria.fr-release</id>-->
-    <!--<name>Maven Repository for Spoon</name>-->
-    <!--<url>http://spoon.gforge.inria.fr/repositories/releases/</url>-->
-    <!--<releases/>-->
-    <!--</repository>-->
-    <!--</repositories>-->
 
 </project>

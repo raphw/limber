@@ -8,17 +8,16 @@ import no.kantega.lab.limber.dom.filter.INodeFilter;
 import no.kantega.lab.limber.dom.filter.NodeExclusionFilter;
 import no.kantega.lab.limber.dom.filter.util.NodeFilterSupport;
 import no.kantega.lab.limber.dom.selection.NodeSelection;
-import no.kantega.lab.limber.servlet.IRenderable;
-import no.kantega.lab.limber.servlet.IResponseContainer;
+import no.kantega.lab.limber.page.IHtmlRenderable;
+import no.kantega.lab.limber.page.context.IHtmlRenderContext;
 
 import javax.annotation.Nonnull;
 import java.io.IOException;
-import java.io.OutputStream;
+import java.io.Writer;
 import java.util.Collections;
 
 public abstract class AbstractNode<N extends AbstractNode<N>> 
-        implements IDomNodeRepresentable<N>, IDomNodeQueryable, IRenderable 
-{
+        implements IDomNodeRepresentable<N>, IDomNodeQueryable, IHtmlRenderable {
 
     private boolean rendered;
     private ElementNode<?> parent;
@@ -167,9 +166,9 @@ public abstract class AbstractNode<N extends AbstractNode<N>>
     }
 
     @Override
-    public final boolean render(@Nonnull OutputStream outputStream, @Nonnull IResponseContainer response) throws IOException {
-        return isRendered() && onRender(outputStream, response);
+    public final boolean render(@Nonnull Writer writer, @Nonnull IHtmlRenderContext htmlRenderContext) throws IOException {
+        return isRendered() && onRender(writer, htmlRenderContext);
     }
 
-    protected abstract boolean onRender(@Nonnull OutputStream outputStream, @Nonnull IResponseContainer response) throws IOException;
+    protected abstract boolean onRender(@Nonnull Writer writer, @Nonnull IHtmlRenderContext htmlRenderContexte) throws IOException;
 }

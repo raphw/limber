@@ -3,10 +3,11 @@ package no.kantega.lab.limber.servlet.request.interpreter;
 import no.kantega.lab.limber.exception.LimberRequestMappingException;
 import no.kantega.lab.limber.exception.LimberRequestPathConflictException;
 import no.kantega.lab.limber.servlet.IRenderable;
+import no.kantega.lab.limber.servlet.context.DefaultRequestMapping;
+import no.kantega.lab.limber.servlet.context.IHttpServletRequestWrapper;
+import no.kantega.lab.limber.servlet.context.ILimberApplicationContext;
+import no.kantega.lab.limber.servlet.context.IRequestMapping;
 import no.kantega.lab.limber.servlet.meta.RequestMapping;
-import no.kantega.lab.limber.servlet.request.DefaultLimberRequest;
-import no.kantega.lab.limber.servlet.request.ILimberRequest;
-import no.kantega.lab.limber.servlet.request.RawRequest;
 import org.reflections.Reflections;
 
 import javax.annotation.Nonnull;
@@ -32,11 +33,13 @@ public class AnnotationRequestInterpreter implements IRequestInterpreter {
 
     private final Pattern pathPattern;
 
-    public AnnotationRequestInterpreter(@Nonnull String scanPackage) {
+    public AnnotationRequestInterpreter(@Nonnull ILimberApplicationContext limberApplicationContext) {
         pathPattern = Pattern.compile(LIMBER_REQUEST_REGEX);
         this.requestMapping = new HashMap<String, Class<? extends IRenderable>>();
         this.requestMappingBacklink = new WeakHashMap<Class<? extends IRenderable>, String>();
-        scanPath(scanPackage);
+        for (String packageElement : limberApplicationContext.getRegisteredPackages()) {
+            scanPath(packageElement);
+        }
     }
 
     private void scanPath(@Nonnull String scanPackage) {
@@ -72,15 +75,15 @@ public class AnnotationRequestInterpreter implements IRequestInterpreter {
     }
 
     @Override
-    public ILimberRequest interpret(@Nonnull RawRequest rawRequest) {
+    public IRequestMapping interpret(@Nonnull IHttpServletRequestWrapper httpServletRequestWrapper) {
 
         // Try to find registered class.
-        Class<? extends IRenderable> renderableClass = requestMapping.get(rawRequest.getRequestURI());
+        Class<? extends IRenderable> renderableClass = requestMapping.get(httpServletRequestWrapper.getRequestUri());
         if (renderableClass == null) {
             return null;
         }
 
-        String limberQuery = rawRequest.getQueryArgument("limber");
+        String limberQuery = httpServletRequestWrapper.getQueryArgument("limber");
         UUID versionId = null, ajaxId = null;
         if (limberQuery != null) {
             Matcher pathMatcher = pathPattern.matcher(limberQuery);
@@ -96,8 +99,8 @@ public class AnnotationRequestInterpreter implements IRequestInterpreter {
             }
         }
 
-        return new DefaultLimberRequest(
-                rawRequest.getSessionId(),
+        return new DefaultRequestMapping(
+                httpServletRequestWrapper.getSessionId(),
                 renderableClass,
                 versionId,
                 ajaxId);
@@ -114,7 +117,7 @@ public class AnnotationRequestInterpreter implements IRequestInterpreter {
         if (versionId != null) {
             stringBuilder.append("?limber=");
             stringBuilder.append(versionId.toString());
-            if(ajaxId != null) {
+            if (ajaxId != null) {
                 stringBuilder.append(":");
                 stringBuilder.append(ajaxId.toString());
             }

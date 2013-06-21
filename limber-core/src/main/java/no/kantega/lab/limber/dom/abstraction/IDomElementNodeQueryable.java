@@ -1,6 +1,6 @@
 package no.kantega.lab.limber.dom.abstraction;
 
-import no.kantega.lab.limber.ajax.AjaxEventTupel;
+import no.kantega.lab.limber.dom.ajax.AjaxBoundEventTupel;
 import no.kantega.lab.limber.dom.element.AbstractNode;
 import no.kantega.lab.limber.dom.element.ElementNode;
 import no.kantega.lab.limber.dom.filter.util.QueryMatchMode;
@@ -48,5 +48,5 @@ public interface IDomElementNodeQueryable<N extends ElementNode<? extends N>> ex
     boolean isCssStyle(@Nonnull CharSequence key, CharSequence value, @Nonnull QueryMatchMode queryMatchMode);
 
     @Nonnull
-    List<AjaxEventTupel<N>> getAjaxEvents();
+    List<AjaxBoundEventTupel<N>> getAjaxEvents();
 }

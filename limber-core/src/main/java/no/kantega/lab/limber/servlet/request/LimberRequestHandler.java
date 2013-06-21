@@ -1,40 +1,46 @@
 package no.kantega.lab.limber.servlet.request;
 
 import no.kantega.lab.limber.servlet.IRenderable;
-import no.kantega.lab.limber.servlet.IResponseContainer;
+import no.kantega.lab.limber.servlet.context.*;
 import no.kantega.lab.limber.servlet.request.container.IInstanceContainer;
 import no.kantega.lab.limber.servlet.request.container.InMemoryContainer;
+import no.kantega.lab.limber.servlet.request.context.DefaultRenderContext;
 import no.kantega.lab.limber.servlet.request.creator.IInstanceCreator;
 import no.kantega.lab.limber.servlet.request.creator.ReflectionInstanceCreator;
 import no.kantega.lab.limber.servlet.request.interpreter.AnnotationRequestInterpreter;
 import no.kantega.lab.limber.servlet.request.interpreter.IRequestInterpreter;
 import no.kantega.lab.limber.servlet.request.interpreter.LimberRequestExpressionInterpreter;
+import no.kantega.lab.limber.servlet.request.interpreter.RessourceRequestInterpreter;
 
 import javax.annotation.Nonnull;
 import javax.servlet.FilterConfig;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.net.URI;
-import java.util.*;
+import java.util.Deque;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.UUID;
 
 public class LimberRequestHandler {
+
+    private final ILimberApplicationContext limberApplicationContext;
+    private final ILimberPageRegister limberPageRegister;
 
     private final Deque<IRequestInterpreter> requestInterpreters;
     private final IInstanceCreator instanceCreator;
     private final List<IInstanceContainer> instanceContainers;
 
-    private final RequestPacker requestPacker;
+    public LimberRequestHandler(@Nonnull FilterConfig filterConfig, @Nonnull UUID filterId) {
 
-    public LimberRequestHandler(@Nonnull FilterConfig filterConfig) {
+        // Create application context
+        limberApplicationContext = new DefaultLimberApplicationContext(filterConfig, filterId);
 
         // Set up request interpreters
         requestInterpreters = new LinkedList<IRequestInterpreter>();
         requestInterpreters.add(new LimberRequestExpressionInterpreter());
-        String scanPackage = filterConfig.getInitParameter("scan-package");
-        if (scanPackage != null) {
-            requestInterpreters.add(new AnnotationRequestInterpreter(scanPackage));
-        }
+        requestInterpreters.add(new AnnotationRequestInterpreter(limberApplicationContext));
+        requestInterpreters.add(new RessourceRequestInterpreter(limberApplicationContext));
 
         // Set up instance creator
         instanceCreator = new ReflectionInstanceCreator();
@@ -43,8 +49,7 @@ public class LimberRequestHandler {
         instanceContainers = new LinkedList<IInstanceContainer>();
         instanceContainers.add(new InMemoryContainer());
 
-        // Set up other utilities
-        requestPacker = new RequestPacker();
+        limberPageRegister = new DefaultLimberPageRegister(requestInterpreters);
 
     }
 
@@ -53,34 +58,37 @@ public class LimberRequestHandler {
             @Nonnull HttpServletResponse httpServletResponse)
             throws IOException {
 
-        // Transform servlet request in raw request which is visible to API users.
-        RawRequest rawRequest = requestPacker.pack(httpServletRequest);
+        // Wrap servlet request and response
+        IHttpServletRequestWrapper httpServletRequestWrapper = new DefaultHttpServletRequestWrapper(httpServletRequest);
 
-        // Wrap request as ILimberRequest, if request can be mapped.
-        ILimberRequest limberRequest = interpretRawRequest(rawRequest);
-        if (limberRequest == null) {
+        // Wrap request as IRequestContainer, if request can be mapped.
+        IRequestMapping requestMapping = interpretRawRequest(httpServletRequestWrapper);
+        if (requestMapping == null) {
             return false;
         }
 
         // Query container stack to handle the request.
-        IRenderable renderable = findRenderableToRequest(limberRequest);
-        return renderable != null && renderRequest(limberRequest, renderable, httpServletResponse);
-
+        IRenderable renderable = findRenderableToRequest(requestMapping);
+        return renderable != null && renderRequest(
+                requestMapping,
+                renderable,
+                httpServletRequestWrapper,
+                new DefaultHttpServletResponseWrapper(httpServletResponse));
     }
 
-    private ILimberRequest interpretRawRequest(@Nonnull RawRequest rawRequest) throws IOException {
+    private IRequestMapping interpretRawRequest(@Nonnull IHttpServletRequestWrapper httpServletRequestWrapper) throws IOException {
         for (IRequestInterpreter requestResolver : requestInterpreters) {
-            ILimberRequest limberRequest = requestResolver.interpret(rawRequest);
-            if (limberRequest != null) {
-                return limberRequest;
+            IRequestMapping requestMapping = requestResolver.interpret(httpServletRequestWrapper);
+            if (requestMapping != null) {
+                return requestMapping;
             }
         }
         return null;
     }
 
-    private IRenderable findRenderableToRequest(@Nonnull ILimberRequest limberRequest) {
+    private IRenderable findRenderableToRequest(@Nonnull IRequestMapping requestMapping) {
         for (IInstanceContainer instanceContainer : instanceContainers) {
-            IRenderable renderable = instanceContainer.resolve(limberRequest, instanceCreator);
+            IRenderable renderable = instanceContainer.resolve(requestMapping, instanceCreator);
             if (renderable != null) {
                 return renderable;
             }
@@ -88,51 +96,18 @@ public class LimberRequestHandler {
         return null;
     }
 
-    private boolean renderRequest(@Nonnull ILimberRequest limberRequest, @Nonnull IRenderable renderable,
-                                  @Nonnull HttpServletResponse httpServletResponse) throws IOException {
-        return renderable.render(httpServletResponse.getOutputStream(),
-                new DefaultResponseContainer(limberRequest, httpServletResponse));
+    private boolean renderRequest(@Nonnull IRequestMapping requestMapping,
+                                  @Nonnull IRenderable renderable,
+                                  @Nonnull IHttpServletRequestWrapper httpServletRequestWrapper,
+                                  @Nonnull IHttpServletResponseWrapper httpServletResponseWrapper) throws IOException {
+        return renderable.render(
+                httpServletResponseWrapper.getHttpServletResponse().getOutputStream(),
+                new DefaultRenderContext(
+                        limberApplicationContext,
+                        limberPageRegister,
+                        requestMapping,
+                        httpServletRequestWrapper,
+                        httpServletResponseWrapper
+                ));
     }
-
-    private class DefaultResponseContainer implements IResponseContainer {
-
-        private final ILimberRequest limberRequest;
-        private final HttpServletResponse httpServletResponse;
-
-        public DefaultResponseContainer(ILimberRequest limberRequest, HttpServletResponse httpServletResponse) {
-            this.limberRequest = limberRequest;
-            this.httpServletResponse = httpServletResponse;
-        }
-
-        @Override
-        @Nonnull
-        public ILimberRequest getRequest() {
-            return limberRequest;
-        }
-
-        @Override
-        public void setStatusCode(int code) {
-            httpServletResponse.setStatus(code);
-        }
-
-        @Override
-        public void addHeader(@Nonnull String key, String value) {
-            httpServletResponse.addHeader(key, value);
-        }
-
-        @Override
-        public URI decodeLink(@Nonnull Class<? extends IRenderable> renderableClass, UUID versionId, UUID ajaxId) {
-            // Reversely iterate over the list of request interpreters.
-            Iterator<IRequestInterpreter> iterator = requestInterpreters.descendingIterator();
-            while (iterator.hasNext()) {
-                IRequestInterpreter interpreter = iterator.next();
-                URI link = interpreter.resolve(renderableClass, versionId, ajaxId);
-                if (link != null) {
-                    return link;
-                }
-            }
-            return null;
-        }
-    }
-
 }

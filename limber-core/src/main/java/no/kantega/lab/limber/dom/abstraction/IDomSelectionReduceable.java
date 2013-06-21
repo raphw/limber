@@ -4,6 +4,7 @@ import no.kantega.lab.limber.dom.element.AbstractNode;
 import no.kantega.lab.limber.dom.filter.INodeFilter;
 import no.kantega.lab.limber.dom.filter.util.QueryMatchMode;
 import no.kantega.lab.limber.dom.selection.IElementNodeSelection;
+import no.kantega.lab.limber.dom.selection.ILinkNodeSelection;
 import no.kantega.lab.limber.dom.selection.INodeSelection;
 import no.kantega.lab.limber.dom.selection.ITextNodeSelection;
 
@@ -37,4 +38,13 @@ public interface IDomSelectionReduceable<N extends AbstractNode<? extends N>> ex
 
     @Nonnull
     IElementNodeSelection<?> reduceToElement();
+
+    @Nonnull
+    IElementNodeSelection<?> reduceToElement(CharSequence tagName);
+
+    @Nonnull
+    ILinkNodeSelection<?> reduceToLink();
+
+    @Nonnull
+    ILinkNodeSelection<?> reduceToLink(CharSequence tagName);
 }

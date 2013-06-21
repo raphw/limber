@@ -1,12 +1,12 @@
 package no.kantega.lab.limber.dom.selection;
 
-import no.kantega.lab.limber.ajax.abstraction.AjaxEventTrigger;
-import no.kantega.lab.limber.ajax.abstraction.IAjaxCallback;
 import no.kantega.lab.limber.dom.abstraction.IDomElementNodeRepresentable;
+import no.kantega.lab.limber.dom.ajax.IAjaxCallback;
 import no.kantega.lab.limber.dom.element.*;
 import no.kantega.lab.limber.dom.filter.*;
 import no.kantega.lab.limber.dom.filter.util.NodeFilterSupport;
 import no.kantega.lab.limber.dom.filter.util.QueryMatchMode;
+import no.kantega.lab.limber.dom.target.EventTrigger;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
@@ -97,7 +97,7 @@ public class ElementNodeSelection<N extends ElementNode<? extends N>, S extends 
     @Nonnull
     @Override
     public ElementNodeSelection<ElementNode<?>, ?> addChild(int index, @Nonnull CharSequence tagName) {
-        return new ElementNodeSelection<ElementNode<?>, ElementNodeSelection<ElementNode<?>, ?>>(addChild(index, ElementNodeFactory.make(tagName)));
+        return new ElementNodeSelection<ElementNode<?>, ElementNodeSelection<ElementNode<?>, ?>>(addChild(index, ElementNodeFactory.getInstance().make(tagName)));
     }
 
     @Nonnull
@@ -111,7 +111,7 @@ public class ElementNodeSelection<N extends ElementNode<? extends N>, S extends 
     @Nonnull
     @Override
     public ElementNodeSelection<ElementNode<?>, ?> appendChild(@Nonnull CharSequence tagName) {
-        return new ElementNodeSelection<ElementNode<?>, ElementNodeSelection<ElementNode<?>, ?>>(appendChild(ElementNodeFactory.make(tagName)));
+        return new ElementNodeSelection<ElementNode<?>, ElementNodeSelection<ElementNode<?>, ?>>(appendChild(ElementNodeFactory.getInstance().make(tagName)));
     }
 
     @Nonnull
@@ -125,7 +125,7 @@ public class ElementNodeSelection<N extends ElementNode<? extends N>, S extends 
     @Nonnull
     @Override
     public ElementNodeSelection<ElementNode<?>, ?> prependChild(@Nonnull CharSequence tagName) {
-        return new ElementNodeSelection<ElementNode<?>, ElementNodeSelection<ElementNode<?>, ?>>(appendChild(ElementNodeFactory.make(tagName)));
+        return new ElementNodeSelection<ElementNode<?>, ElementNodeSelection<ElementNode<?>, ?>>(appendChild(ElementNodeFactory.getInstance().make(tagName)));
     }
 
     @Nonnull
@@ -243,7 +243,7 @@ public class ElementNodeSelection<N extends ElementNode<? extends N>, S extends 
     @Nonnull
     @Override
     public IDomElementNodeRepresentable<?> wrap(@Nonnull CharSequence tagName) {
-        return wrap(ElementNodeFactory.make(tagName));
+        return wrap(ElementNodeFactory.getInstance().make(tagName));
     }
 
     @Nonnull
@@ -389,7 +389,7 @@ public class ElementNodeSelection<N extends ElementNode<? extends N>, S extends 
     @Nonnull
     @Override
     public ElementNodeSelection<?, ?> findByTag(@Nonnull CharSequence tagName, int maxDepth) {
-        return new ElementNodeSelection<ElementNode<?>, ElementNodeSelection<ElementNode<?>, ?>>(findByFilter(new TagNameFilter(tagName), ElementNode.class, maxDepth));
+        return new ElementNodeSelection<ElementNode<?>, ElementNodeSelection<ElementNode<?>, ?>>(findByFilter(new TagNameFilter<ElementNode<?>>(tagName), ElementNode.class, maxDepth));
     }
 
     @Override
@@ -504,7 +504,7 @@ public class ElementNodeSelection<N extends ElementNode<? extends N>, S extends 
     @Nonnull
     @Override
     public TextNodeSelection findTextNodes(int maxDepth) {
-        return new TextNodeSelection(findByFilter(new TextNodeFilter(), TextNode.class, maxDepth));
+        return new TextNodeSelection(findByFilter(new BooleanRepeaterFilter<TextNode>(true), TextNode.class, maxDepth));
     }
 
     @Nonnull
@@ -516,13 +516,13 @@ public class ElementNodeSelection<N extends ElementNode<? extends N>, S extends 
     @Nonnull
     @Override
     public ElementNodeSelection<?, ?> findElements(int maxDepth) {
-        return new ElementNodeSelection<ElementNode<?>, ElementNodeSelection<ElementNode<?>, ?>>(findByFilter(new ElementNodeFilter(), ElementNode.class, maxDepth));
+        return new ElementNodeSelection<ElementNode<?>, ElementNodeSelection<ElementNode<?>, ?>>(findByFilter(new BooleanRepeaterFilter<ElementNode<?>>(true), ElementNode.class, maxDepth));
     }
 
     @Nonnull
     @Override
     @SuppressWarnings("unchecked")
-    public S addAjaxEvent(@Nonnull AjaxEventTrigger ajaxEventTrigger, @Nonnull IAjaxCallback<? super N> ajaxCallback) {
+    public S addAjaxEvent(@Nonnull EventTrigger ajaxEventTrigger, @Nonnull IAjaxCallback<? super N> ajaxCallback) {
         for (N elementNode : getSelected()) {
             elementNode.addAjaxEvent(ajaxEventTrigger, ajaxCallback);
         }
@@ -542,7 +542,7 @@ public class ElementNodeSelection<N extends ElementNode<? extends N>, S extends 
     @Nonnull
     @Override
     @SuppressWarnings("unchecked")
-    public S removeAjaxEvent(@Nonnull AjaxEventTrigger ajaxEventTrigger) {
+    public S removeAjaxEvent(@Nonnull EventTrigger ajaxEventTrigger) {
         for (N elementNode : getSelected()) {
             elementNode.removeAjaxEvent(ajaxEventTrigger);
         }

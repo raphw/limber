@@ -1,13 +1,16 @@
-package no.kantega.lab.limber.servlet.request;
+package no.kantega.lab.limber.servlet.context;
 
 import no.kantega.lab.limber.servlet.IRenderable;
 
+import javax.annotation.Nonnull;
 import java.util.UUID;
 
-public interface ILimberRequest {
+public interface IRequestMapping {
 
+    @Nonnull
     String getSessionId();
 
+    @Nonnull
     Class<? extends IRenderable> getRenderableClass();
 
     UUID getVersionId();
