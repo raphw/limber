@@ -1,23 +1,27 @@
 package no.kantega.lab.limber.dom.element;
 
+import no.kantega.lab.limber.dom.abstraction.IDomNodeCastable;
 import no.kantega.lab.limber.dom.abstraction.IDomNodeQueryable;
 import no.kantega.lab.limber.dom.abstraction.IDomNodeRepresentable;
+import no.kantega.lab.limber.dom.clone.CloneSupport;
 import no.kantega.lab.limber.dom.filter.BooleanRepeaterFilter;
 import no.kantega.lab.limber.dom.filter.ConjunctionFilter;
 import no.kantega.lab.limber.dom.filter.INodeFilter;
 import no.kantega.lab.limber.dom.filter.NodeExclusionFilter;
 import no.kantega.lab.limber.dom.filter.util.NodeFilterSupport;
+import no.kantega.lab.limber.dom.page.IHtmlRenderable;
+import no.kantega.lab.limber.dom.page.context.IHtmlRenderContext;
 import no.kantega.lab.limber.dom.selection.NodeSelection;
-import no.kantega.lab.limber.page.IHtmlRenderable;
-import no.kantega.lab.limber.page.context.IHtmlRenderContext;
 
 import javax.annotation.Nonnull;
+import javax.annotation.OverridingMethodsMustInvokeSuper;
 import java.io.IOException;
 import java.io.Writer;
+import java.util.Arrays;
 import java.util.Collections;
 
-public abstract class AbstractNode<N extends AbstractNode<N>> 
-        implements IDomNodeRepresentable<N>, IDomNodeQueryable, IHtmlRenderable {
+public abstract class AbstractNode<N extends AbstractNode<N>>
+        implements IDomNodeRepresentable<N>, IDomNodeQueryable, IDomNodeCastable, IHtmlRenderable {
 
     private boolean rendered;
     private ElementNode<?> parent;
@@ -42,6 +46,13 @@ public abstract class AbstractNode<N extends AbstractNode<N>>
         if (parent == null) return (N) this;
         parent.removeChild(this);
         parent = null;
+        return (N) this;
+    }
+
+    @Nonnull
+    @SuppressWarnings("unchecked")
+    protected N setParent(@Nonnull ElementNode<?> parent) {
+        this.parent = parent;
         return (N) this;
     }
 
@@ -100,13 +111,13 @@ public abstract class AbstractNode<N extends AbstractNode<N>>
 
     @Nonnull
     @Override
-    public <N2 extends AbstractNode<? extends N2>, N3 extends N2> NodeSelection<N2, ?> getSiblings(@Nonnull INodeFilter<N2> nodeFilter, Class<? extends N3> filterBoundary) {
+    public <N2 extends AbstractNode<? extends N2>, N3 extends N2> NodeSelection<N2, ?> getSiblings(@Nonnull INodeFilter<N2> nodeFilter, Class<N3> filterBoundary) {
         return getSiblings(nodeFilter, filterBoundary, false);
     }
 
     @Nonnull
     @Override
-    public <N2 extends AbstractNode<? extends N2>, N3 extends N2> NodeSelection<N2, ?> getSiblings(@Nonnull INodeFilter<N2> nodeFilter, Class<? extends N3> filterBoundary, boolean includeMe) {
+    public <N2 extends AbstractNode<? extends N2>, N3 extends N2> NodeSelection<N2, ?> getSiblings(@Nonnull INodeFilter<N2> nodeFilter, Class<N3> filterBoundary, boolean includeMe) {
         NodeSelection<N2, ?> siblingSelection;
         // Parent existent, find children of parent and exclude myself, if not required.
         if (getParent() != null) {
@@ -153,16 +164,38 @@ public abstract class AbstractNode<N extends AbstractNode<N>>
     @Override
     @SuppressWarnings("unchecked")
     public N clone() {
-        try {
-            return (N) super.clone();
-        } catch (CloneNotSupportedException e) {
-            throw new IllegalStateException();
+        return (N) CloneSupport.getInstance().deepClone(this);
+    }
+
+    @Override
+    public <N extends AbstractNode<?>> N to(Class<N> clazz) {
+        if (!Arrays.asList(getClass().getClasses()).contains(clazz)) {
+            throw new IllegalArgumentException();
+        } else {
+            return clazz.cast(this);
         }
     }
 
     @Override
     public String toString() {
         return String.format("%s[rendered=%b]", getClass().getName(), rendered);
+    }
+
+    @Override
+    public final int hashCode() {
+        return super.hashCode();
+    }
+
+    @Override
+    public final boolean equals(Object obj) {
+        return super.equals(obj);
+    }
+
+    @OverridingMethodsMustInvokeSuper
+    public long localHashCode() {
+        long result = getClass().getName().hashCode();
+        if (isRendered()) result <<= 1;
+        return result;
     }
 
     @Override

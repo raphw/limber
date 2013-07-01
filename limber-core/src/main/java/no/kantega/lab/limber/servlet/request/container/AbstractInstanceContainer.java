@@ -1,6 +1,6 @@
 package no.kantega.lab.limber.servlet.request.container;
 
-import no.kantega.lab.limber.servlet.IRenderable;
+import no.kantega.lab.limber.servlet.AbstractRenderable;
 import no.kantega.lab.limber.servlet.context.IRequestMapping;
 import no.kantega.lab.limber.servlet.request.creator.IInstanceCreator;
 
@@ -20,19 +20,19 @@ public abstract class AbstractInstanceContainer implements IInstanceContainer {
     }
 
     @Override
-    public UUID store(@Nonnull IRequestMapping requestMapping, @Nonnull IRenderable renderable) {
+    public UUID store(@Nonnull IRequestMapping requestMapping, @Nonnull AbstractRenderable renderable) {
         if (parent == null) throw new IllegalStateException();
         return parent.store(requestMapping, renderable);
     }
 
     @Override
-    public IRenderable remove(@Nonnull IRequestMapping requestMapping) {
+    public AbstractRenderable remove(@Nonnull IRequestMapping requestMapping) {
         if (parent == null) throw new IllegalStateException();
         return parent.remove(requestMapping);
     }
 
     @Override
-    public IRenderable resolve(@Nonnull IRequestMapping requestMapping, @Nonnull IInstanceCreator instanceCreator) {
+    public AbstractRenderable resolve(@Nonnull IRequestMapping requestMapping, @Nonnull IInstanceCreator instanceCreator) {
         if (parent == null) throw new IllegalStateException();
         return parent.remove(requestMapping);
     }

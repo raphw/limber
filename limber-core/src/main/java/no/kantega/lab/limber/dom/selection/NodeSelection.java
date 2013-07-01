@@ -81,9 +81,9 @@ public class NodeSelection<N extends AbstractNode<? extends N>, S extends NodeSe
     @Nonnull
     @Override
     @SuppressWarnings("unchecked")
-    public S setContent(CharSequence content, @Nonnull ContentEscapeMode escapeMode) {
+    public S setContent(CharSequence content, @Nonnull ContentEscapeStrategy contentEscapeStrategy) {
         for (N node : getSelected()) {
-            node.setContent(content, escapeMode);
+            node.setContent(content, contentEscapeStrategy);
         }
         return (S) this;
     }
@@ -218,13 +218,13 @@ public class NodeSelection<N extends AbstractNode<? extends N>, S extends NodeSe
 
     @Nonnull
     @Override
-    public <N2 extends AbstractNode<? extends N2>, N3 extends N2> NodeSelection<N2, ?> getSiblings(@Nonnull INodeFilter<N2> nodeFilter, Class<? extends N3> filterBoundary) {
+    public <N2 extends AbstractNode<? extends N2>, N3 extends N2> NodeSelection<N2, ?> getSiblings(@Nonnull INodeFilter<N2> nodeFilter, Class<N3> filterBoundary) {
         return getSiblings(nodeFilter, filterBoundary, false);
     }
 
     @Nonnull
     @Override
-    public <N2 extends AbstractNode<? extends N2>, N3 extends N2> NodeSelection<N2, ?> getSiblings(@Nonnull INodeFilter<N2> nodeFilter, Class<? extends N3> filterBoundary, boolean includeMe) {
+    public <N2 extends AbstractNode<? extends N2>, N3 extends N2> NodeSelection<N2, ?> getSiblings(@Nonnull INodeFilter<N2> nodeFilter, Class<N3> filterBoundary, boolean includeMe) {
         LinkedHashSet<N2> siblings = new LinkedHashSet<N2>();
         for (AbstractNode<?> element : getSelected()) {
             siblings.addAll(element.getSiblings(nodeFilter, filterBoundary, includeMe).getSelected());

@@ -2,7 +2,7 @@ package no.kantega.lab.limber.dom.abstraction;
 
 import no.kantega.lab.limber.dom.element.LinkNode;
 import no.kantega.lab.limber.dom.target.ITargetable;
-import no.kantega.lab.limber.servlet.IRenderable;
+import no.kantega.lab.limber.servlet.AbstractRenderable;
 
 import javax.annotation.Nonnull;
 import java.net.URI;
@@ -16,7 +16,7 @@ public interface IDomLinkNodeMorphable<N extends LinkNode<? extends N>> extends 
     IDomLinkNodeRepresentable<N> setTarget(@Nonnull URI uri);
 
     @Nonnull
-    IDomLinkNodeRepresentable<N> setTarget(@Nonnull Class<? extends IRenderable> clazz);
+    IDomLinkNodeRepresentable<N> setTarget(@Nonnull Class<? extends AbstractRenderable> clazz);
 
     @Nonnull
     IDomLinkNodeRepresentable<N> setTarget(@Nonnull ITargetable<?> targetable);

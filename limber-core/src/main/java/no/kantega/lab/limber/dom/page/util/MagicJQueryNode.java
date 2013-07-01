@@ -1,8 +1,8 @@
-package no.kantega.lab.limber.page.util;
+package no.kantega.lab.limber.dom.page.util;
 
 import no.kantega.lab.limber.dom.element.ElementNode;
-import no.kantega.lab.limber.page.IEventTriggerable;
-import no.kantega.lab.limber.page.context.IHtmlRenderContext;
+import no.kantega.lab.limber.dom.page.IEventTriggerable;
+import no.kantega.lab.limber.dom.page.context.IHtmlRenderContext;
 
 import javax.annotation.Nonnull;
 import java.io.IOException;
@@ -25,7 +25,7 @@ public class MagicJQueryNode extends ElementNode<MagicJQueryNode> {
         Collection<IEventTriggerable> ajaxEventTriggerables = new HashSet<IEventTriggerable>();
 
         for (IEventTriggerable eventTriggerable : eventTriggerables) {
-            if (eventTriggerable.isAjaxResponse()) ajaxEventTriggerables.add(eventTriggerable);
+            if (eventTriggerable.isAjaxEventTrigger()) ajaxEventTriggerables.add(eventTriggerable);
         }
 
         if (ajaxEventTriggerables.isEmpty()) {
@@ -33,7 +33,7 @@ public class MagicJQueryNode extends ElementNode<MagicJQueryNode> {
         }
 
         writer.append("<script type=\"text/javascript\">\n");
-        //TODO: render Ajax registers
+        JQueryRenderSupport.getInstance().makeEventJavascript(writer, htmlRenderContext, ajaxEventTriggerables);
         writer.append("</script>\n");
 
         return true;

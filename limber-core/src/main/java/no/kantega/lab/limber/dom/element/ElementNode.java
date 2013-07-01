@@ -3,18 +3,19 @@ package no.kantega.lab.limber.dom.element;
 import no.kantega.lab.limber.dom.abstraction.IDomElementNodeQueryable;
 import no.kantega.lab.limber.dom.abstraction.IDomElementNodeRepresentable;
 import no.kantega.lab.limber.dom.ajax.AjaxBoundEventTupel;
+import no.kantega.lab.limber.dom.ajax.AjaxEventTrigger;
 import no.kantega.lab.limber.dom.ajax.IAjaxCallback;
 import no.kantega.lab.limber.dom.filter.*;
 import no.kantega.lab.limber.dom.filter.util.NodeFilterSupport;
 import no.kantega.lab.limber.dom.filter.util.QueryMatchMode;
+import no.kantega.lab.limber.dom.page.context.IHtmlRenderContext;
 import no.kantega.lab.limber.dom.selection.ElementNodeSelection;
 import no.kantega.lab.limber.dom.selection.NodeSelection;
 import no.kantega.lab.limber.dom.selection.TextNodeSelection;
-import no.kantega.lab.limber.dom.target.EventTrigger;
-import no.kantega.lab.limber.page.context.IHtmlRenderContext;
 import org.apache.commons.lang3.StringUtils;
 
 import javax.annotation.Nonnull;
+import javax.annotation.OverridingMethodsMustInvokeSuper;
 import java.io.IOException;
 import java.io.Writer;
 import java.util.*;
@@ -74,6 +75,7 @@ public class ElementNode<N extends ElementNode<N>> extends AbstractNode<N>
         }
         if (children == null) children = new ArrayList<AbstractNode<?>>();
         children.add(index, node);
+        node.setParent(this);
         return node;
     }
 
@@ -100,6 +102,24 @@ public class ElementNode<N extends ElementNode<N>> extends AbstractNode<N>
 
     @Nonnull
     @Override
+    public String getXPath() {
+        StringBuilder stringBuilder = new StringBuilder();
+        getXPath(stringBuilder);
+        return stringBuilder.toString();
+    }
+
+
+    protected void getXPath(StringBuilder stringBuilder) {
+        if (getParent() == null) {
+            stringBuilder.append("/").append(getTagName().toLowerCase());
+        } else {
+            getParent().getXPath(stringBuilder);
+            stringBuilder.append("/*[").append(getParent().getChildIndex(this, ElementNode.class) + 1).append(']');
+        }
+    }
+
+    @Nonnull
+    @Override
     public <N2 extends AbstractNode<? extends N2>> N2 appendChild(@Nonnull N2 node) {
         return addChild(children == null ? 0 : children.size(), node);
     }
@@ -110,10 +130,14 @@ public class ElementNode<N extends ElementNode<N>> extends AbstractNode<N>
         return addChildAndStay(children == null ? 0 : children.size(), node);
     }
 
-    protected void removeChild(AbstractNode<?> node) {
-        if (children == null) return;
-        children.remove(node);
-        if (children.size() == 0) children = null;
+    @Nonnull
+    @SuppressWarnings("unchecked")
+    protected N removeChild(@Nonnull AbstractNode<?> node) {
+        if (children != null) {
+            children.remove(node);
+            if (children.size() == 0) children = null;
+        }
+        return (N) this;
     }
 
     @Nonnull
@@ -130,7 +154,7 @@ public class ElementNode<N extends ElementNode<N>> extends AbstractNode<N>
 
     @Nonnull
     @Override
-    public <N2 extends AbstractNode<? extends N2>, N3 extends N2> NodeSelection<N2, ?> getChildren(@Nonnull INodeFilter<N2> nodeFilter, Class<? extends N3> filterBoundary) {
+    public <N2 extends AbstractNode<? extends N2>, N3 extends N2> NodeSelection<N2, ?> getChildren(@Nonnull INodeFilter<N2> nodeFilter, Class<N3> filterBoundary) {
         if (children == null) {
             return new NodeSelection<N2, NodeSelection<N2, ?>>(Collections.<N2>emptyList());
         } else {
@@ -170,15 +194,15 @@ public class ElementNode<N extends ElementNode<N>> extends AbstractNode<N>
 
     @Nonnull
     @Override
-    public TextNode addText(int index, @Nonnull CharSequence text, @Nonnull ContentEscapeMode contentEscapeMode) {
-        return addChild(index, new TextNode(text, contentEscapeMode));
+    public TextNode addText(int index, @Nonnull CharSequence text, @Nonnull ContentEscapeStrategy contentEscapeStrategy) {
+        return addChild(index, new TextNode(text, contentEscapeStrategy));
     }
 
     @Nonnull
     @Override
     @SuppressWarnings("unchecked")
-    public N addTextAndStay(int index, @Nonnull CharSequence text, @Nonnull ContentEscapeMode contentEscapeMode) {
-        addText(index, text, contentEscapeMode);
+    public N addTextAndStay(int index, @Nonnull CharSequence text, @Nonnull ContentEscapeStrategy contentEscapeStrategy) {
+        addText(index, text, contentEscapeStrategy);
         return (N) this;
     }
 
@@ -212,15 +236,15 @@ public class ElementNode<N extends ElementNode<N>> extends AbstractNode<N>
 
     @Nonnull
     @Override
-    public TextNode appendText(@Nonnull CharSequence text, @Nonnull ContentEscapeMode contentEscapeMode) {
-        return appendChild(new TextNode(text, contentEscapeMode));
+    public TextNode appendText(@Nonnull CharSequence text, @Nonnull ContentEscapeStrategy contentEscapeStrategy) {
+        return appendChild(new TextNode(text, contentEscapeStrategy));
     }
 
     @Nonnull
     @Override
     @SuppressWarnings("unchecked")
-    public N appendTextAndStay(@Nonnull CharSequence text, @Nonnull ContentEscapeMode contentEscapeMode) {
-        appendText(text, contentEscapeMode);
+    public N appendTextAndStay(@Nonnull CharSequence text, @Nonnull ContentEscapeStrategy contentEscapeStrategy) {
+        appendText(text, contentEscapeStrategy);
         return (N) this;
     }
 
@@ -254,15 +278,15 @@ public class ElementNode<N extends ElementNode<N>> extends AbstractNode<N>
 
     @Nonnull
     @Override
-    public TextNode prependText(@Nonnull CharSequence text, @Nonnull ContentEscapeMode contentEscapeMode) {
-        return prependChild(new TextNode(text, contentEscapeMode));
+    public TextNode prependText(@Nonnull CharSequence text, @Nonnull ContentEscapeStrategy contentEscapeStrategy) {
+        return prependChild(new TextNode(text, contentEscapeStrategy));
     }
 
     @Nonnull
     @Override
     @SuppressWarnings("unchecked")
-    public N prependTextAndStay(@Nonnull CharSequence text, @Nonnull ContentEscapeMode contentEscapeMode) {
-        prependText(text, contentEscapeMode);
+    public N prependTextAndStay(@Nonnull CharSequence text, @Nonnull ContentEscapeStrategy contentEscapeStrategy) {
+        prependText(text, contentEscapeStrategy);
         return (N) this;
     }
 
@@ -299,15 +323,15 @@ public class ElementNode<N extends ElementNode<N>> extends AbstractNode<N>
     @Nonnull
     @Override
     public N setContent(CharSequence content) {
-        return setContent(content, ContentEscapeMode.getDefault());
+        return setContent(content, ContentEscapeStrategy.getDefault());
     }
 
     @Nonnull
     @Override
     @SuppressWarnings("unchecked")
-    public N setContent(CharSequence content, @Nonnull ContentEscapeMode contentEscapeMode) {
+    public N setContent(CharSequence content, @Nonnull ContentEscapeStrategy contentEscapeStrategy) {
         clear();
-        if (content != null) appendTextAndStay(content, contentEscapeMode);
+        if (content != null) appendTextAndStay(content, contentEscapeStrategy);
         return (N) this;
     }
 
@@ -319,6 +343,19 @@ public class ElementNode<N extends ElementNode<N>> extends AbstractNode<N>
                 return i;
             }
             i++;
+        }
+        throw new IllegalArgumentException();
+    }
+
+    public int getChildIndex(@Nonnull AbstractNode<?> node, @Nonnull Class<? extends AbstractNode> nodeClass) {
+        int i = 0;
+        for (AbstractNode<?> child : getChildren()) {
+            if (child == node) {
+                return i;
+            }
+            if (nodeClass.isAssignableFrom(child.getClass())) {
+                i++;
+            }
         }
         throw new IllegalArgumentException();
     }
@@ -646,13 +683,13 @@ public class ElementNode<N extends ElementNode<N>> extends AbstractNode<N>
 
     @Nonnull
     @Override
-    public <N2 extends AbstractNode<? extends N2>, N3 extends N2> NodeSelection<N2, ?> findByFilter(@Nonnull INodeFilter<N2> nodeFilter, @Nonnull Class<? extends N3> filterBoundary) {
+    public <N2 extends AbstractNode<? extends N2>, N3 extends N2> NodeSelection<N2, ?> findByFilter(@Nonnull INodeFilter<N2> nodeFilter, @Nonnull Class<N3> filterBoundary) {
         return findByFilter(nodeFilter, filterBoundary, Integer.MAX_VALUE);
     }
 
     @Nonnull
     @Override
-    public <N2 extends AbstractNode<? extends N2>, N3 extends N2> NodeSelection<N2, ?> findByFilter(@Nonnull INodeFilter<N2> nodeFilter, @Nonnull Class<? extends N3> filterBoundary, int maxDepth) {
+    public <N2 extends AbstractNode<? extends N2>, N3 extends N2> NodeSelection<N2, ?> findByFilter(@Nonnull INodeFilter<N2> nodeFilter, @Nonnull Class<N3> filterBoundary, int maxDepth) {
         return new NodeSelection<N2, NodeSelection<N2, ?>>(NodeFilterSupport.getInstance().filterNodeTree(this, nodeFilter, filterBoundary, maxDepth));
     }
 
@@ -711,7 +748,7 @@ public class ElementNode<N extends ElementNode<N>> extends AbstractNode<N>
     @Override
     @Nonnull
     @SuppressWarnings("unchecked")
-    public N addAjaxEvent(@Nonnull EventTrigger ajaxEventTrigger, @Nonnull IAjaxCallback<? super N> ajaxCallback) {
+    public N addAjaxEvent(@Nonnull AjaxEventTrigger ajaxEventTrigger, @Nonnull IAjaxCallback<? super N> ajaxCallback) {
         N cast = (N) this;
         if (ajaxEvents == null) ajaxEvents = new ArrayList<AjaxBoundEventTupel<N>>();
         AjaxBoundEventTupel<N> tupel = new AjaxBoundEventTupel<N>(cast, ajaxEventTrigger, ajaxCallback);
@@ -735,11 +772,11 @@ public class ElementNode<N extends ElementNode<N>> extends AbstractNode<N>
     @Nonnull
     @Override
     @SuppressWarnings("unchecked")
-    public N removeAjaxEvent(@Nonnull EventTrigger ajaxEventTrigger) {
+    public N removeAjaxEvent(@Nonnull AjaxEventTrigger ajaxEventTrigger) {
         if (ajaxEvents != null) {
             Iterator<AjaxBoundEventTupel<N>> iterator = ajaxEvents.iterator();
             while (iterator.hasNext()) {
-                if (iterator.next().getEventTrigger().equals(ajaxEventTrigger)) iterator.remove();
+                if (iterator.next().getAjaxEventTrigger().equals(ajaxEventTrigger)) iterator.remove();
             }
         }
         return (N) this;
@@ -804,5 +841,16 @@ public class ElementNode<N extends ElementNode<N>> extends AbstractNode<N>
         writer.append("=\"");
         writer.append(value);
         writer.append("\"");
+    }
+
+    @Override
+    @OverridingMethodsMustInvokeSuper
+    public long localHashCode() {
+        long result = super.localHashCode();
+        result *= getTagName().hashCode();
+        for (Map.Entry<String, String> attr : new TreeMap<String, String>(getAttrs()).entrySet()) {
+            result *= (attr.getKey().hashCode() ^ attr.getValue().hashCode());
+        }
+        return result;
     }
 }

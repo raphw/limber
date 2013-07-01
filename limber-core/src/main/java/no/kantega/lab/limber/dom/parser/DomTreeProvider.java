@@ -4,7 +4,7 @@ import no.kantega.lab.limber.dom.doctype.DoctypeDeclaration;
 import no.kantega.lab.limber.dom.element.ElementNode;
 import no.kantega.lab.limber.dom.selection.HtmlDocumentRootSelection;
 import no.kantega.lab.limber.exception.LimberParsingException;
-import no.kantega.lab.limber.servlet.IRenderable;
+import no.kantega.lab.limber.servlet.AbstractRenderable;
 import org.apache.xerces.parsers.AbstractSAXParser;
 import org.apache.xerces.xni.parser.XMLParserConfiguration;
 import org.cyberneko.html.HTMLConfiguration;
@@ -28,7 +28,7 @@ public class DomTreeProvider {
         renderableResourceLocator = new RenderableResourceLocator();
     }
 
-    public HtmlDocumentRootSelection makeDocumentRootSelection(@Nonnull Class<? extends IRenderable> renderableClass) {
+    public HtmlDocumentRootSelection makeDocumentRootSelection(@Nonnull Class<? extends AbstractRenderable> renderableClass) {
         InputStream resourceInputStream = renderableResourceLocator.locateResource(renderableClass);
         RetrievableDomRootElementNodeContainer rootElementNodeContainer = new RetrievableDomRootElementNodeContainer();
         XMLReader xmlReader = createParser(rootElementNodeContainer);

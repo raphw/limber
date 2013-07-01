@@ -49,10 +49,11 @@
         <version.servlet-api>2.5</version.servlet-api>
         <version.xerces>2.11.0</version.xerces>
         <version.neko>1.9.18</version.neko>
-        <version.guava>14.0.1</version.guava>
         <version.commons.lang3>3.1</version.commons.lang3>
-        <version.findbugs>2.0.1</version.findbugs>
+        <version.guava>14.0.1</version.guava>
         <version.reflections>0.9.9-RC1</version.reflections>
+        <version.cloning>1.9.0</version.cloning>
+        <version.findbugs>2.0.1</version.findbugs>
         <version.slf4j>1.7.5</version.slf4j>
         <version.testng>6.8.5</version.testng>
         <version.mockito>1.9.5</version.mockito>
@@ -132,6 +133,12 @@
                 <groupId>org.reflections</groupId>
                 <artifactId>reflections</artifactId>
                 <version>${version.reflections}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>uk.com.robust-it</groupId>
+                <artifactId>cloning</artifactId>
+                <version>${version.cloning}</version>
             </dependency>
 
         </dependencies>

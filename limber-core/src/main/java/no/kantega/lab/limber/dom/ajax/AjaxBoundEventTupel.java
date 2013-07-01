@@ -1,8 +1,7 @@
 package no.kantega.lab.limber.dom.ajax;
 
 import no.kantega.lab.limber.dom.element.ElementNode;
-import no.kantega.lab.limber.dom.target.EventTrigger;
-import no.kantega.lab.limber.page.IEventTriggerable;
+import no.kantega.lab.limber.dom.page.IEventTriggerable;
 
 import javax.annotation.Nonnull;
 import java.util.UUID;
@@ -11,13 +10,13 @@ public class AjaxBoundEventTupel<N extends ElementNode<? extends N>> implements 
 
     private final N node;
 
-    private final EventTrigger ajaxEventTrigger;
+    private final AjaxEventTrigger ajaxEventTrigger;
 
     private final IAjaxCallback<? super N> ajaxCallback;
 
     private final UUID uuid;
 
-    public AjaxBoundEventTupel(@Nonnull N node, @Nonnull EventTrigger ajaxEventTrigger, @Nonnull IAjaxCallback<? super N> ajaxCallback) {
+    public AjaxBoundEventTupel(@Nonnull N node, @Nonnull AjaxEventTrigger ajaxEventTrigger, @Nonnull IAjaxCallback<? super N> ajaxCallback) {
         this.node = node;
         this.ajaxEventTrigger = ajaxEventTrigger;
         this.ajaxCallback = ajaxCallback;
@@ -25,13 +24,18 @@ public class AjaxBoundEventTupel<N extends ElementNode<? extends N>> implements 
     }
 
     @Nonnull
-    public N getElementNode() {
+    public N getEventTarget() {
         return node;
     }
 
     @Nonnull
-    public EventTrigger getEventTrigger() {
+    public AjaxEventTrigger getAjaxEventTrigger() {
         return ajaxEventTrigger;
+    }
+
+    @Override
+    public boolean isAjaxEventTrigger() {
+        return true;
     }
 
     @Nonnull
@@ -47,11 +51,6 @@ public class AjaxBoundEventTupel<N extends ElementNode<? extends N>> implements 
     @Override
     public UUID getUUID() {
         return uuid;
-    }
-
-    @Override
-    public boolean isAjaxResponse() {
-        return true;
     }
 
     @Override

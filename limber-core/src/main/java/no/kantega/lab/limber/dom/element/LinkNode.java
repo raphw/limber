@@ -2,14 +2,15 @@ package no.kantega.lab.limber.dom.element;
 
 import no.kantega.lab.limber.dom.abstraction.IDomLinkNodeQueryable;
 import no.kantega.lab.limber.dom.abstraction.IDomLinkNodeRepresentable;
+import no.kantega.lab.limber.dom.page.context.IHtmlRenderContext;
 import no.kantega.lab.limber.dom.target.ITargetable;
 import no.kantega.lab.limber.dom.target.RenderableTarget;
 import no.kantega.lab.limber.dom.target.URITarget;
-import no.kantega.lab.limber.page.context.IHtmlRenderContext;
-import no.kantega.lab.limber.servlet.IRenderable;
+import no.kantega.lab.limber.servlet.AbstractRenderable;
 import org.apache.commons.lang3.StringUtils;
 
 import javax.annotation.Nonnull;
+import javax.annotation.OverridingMethodsMustInvokeSuper;
 import java.io.IOException;
 import java.io.Writer;
 import java.net.URI;
@@ -33,7 +34,7 @@ public class LinkNode<N extends LinkNode<N>> extends ElementNode<N>
 
     @Nonnull
     @Override
-    public N setTarget(@Nonnull Class<? extends IRenderable> clazz) {
+    public N setTarget(@Nonnull Class<? extends AbstractRenderable> clazz) {
         return setTarget(new RenderableTarget(clazz));
     }
 
@@ -47,7 +48,7 @@ public class LinkNode<N extends LinkNode<N>> extends ElementNode<N>
 
     @Nonnull
     @Override
-    public ITargetable<?> getTarget() {
+    public ITargetable<?> getTargetRepresentant() {
         return targetable;
     }
 
@@ -86,5 +87,17 @@ public class LinkNode<N extends LinkNode<N>> extends ElementNode<N>
             writer.append(" ");
             onRenderAttr(overridenAttribute, targetable.renderTarget(htmlRenderContext), writer, htmlRenderContext);
         }
+    }
+
+    @Override
+    @OverridingMethodsMustInvokeSuper
+    public long localHashCode() {
+        long result = super.localHashCode();
+        if (getTargetRepresentant() == null) {
+            result <<= 2;
+        } else {
+            result *= getTargetRepresentant().getTarget().hashCode();
+        }
+        return result;
     }
 }

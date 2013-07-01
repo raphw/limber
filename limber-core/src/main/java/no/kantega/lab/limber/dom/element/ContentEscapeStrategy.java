@@ -2,7 +2,7 @@ package no.kantega.lab.limber.dom.element;
 
 import org.apache.commons.lang3.StringEscapeUtils;
 
-public enum ContentEscapeMode {
+public enum ContentEscapeStrategy {
     NONE,
     HTML3,
     HTML4,
@@ -23,7 +23,7 @@ public enum ContentEscapeMode {
         }
     }
 
-    public static ContentEscapeMode getDefault() {
+    public static ContentEscapeStrategy getDefault() {
         return HTML4;
     }
 

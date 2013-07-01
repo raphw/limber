@@ -2,7 +2,7 @@ package no.kantega.lab.limber.servlet.request.interpreter;
 
 import no.kantega.lab.limber.exception.LimberRequestMappingException;
 import no.kantega.lab.limber.exception.LimberRequestPathConflictException;
-import no.kantega.lab.limber.servlet.IRenderable;
+import no.kantega.lab.limber.servlet.AbstractRenderable;
 import no.kantega.lab.limber.servlet.context.DefaultRequestMapping;
 import no.kantega.lab.limber.servlet.context.IHttpServletRequestWrapper;
 import no.kantega.lab.limber.servlet.context.ILimberApplicationContext;
@@ -19,8 +19,8 @@ import java.util.regex.Pattern;
 
 public class AnnotationRequestInterpreter implements IRequestInterpreter {
 
-    private final Map<String, Class<? extends IRenderable>> requestMapping;
-    private final Map<Class<? extends IRenderable>, String> requestMappingBacklink;
+    private final Map<String, Class<? extends AbstractRenderable>> requestMapping;
+    private final Map<Class<? extends AbstractRenderable>, String> requestMappingBacklink;
 
     private static final String LIMBER_REQUEST_REGEX = "^"
             // Version ID (group 1)
@@ -35,8 +35,8 @@ public class AnnotationRequestInterpreter implements IRequestInterpreter {
 
     public AnnotationRequestInterpreter(@Nonnull ILimberApplicationContext limberApplicationContext) {
         pathPattern = Pattern.compile(LIMBER_REQUEST_REGEX);
-        this.requestMapping = new HashMap<String, Class<? extends IRenderable>>();
-        this.requestMappingBacklink = new WeakHashMap<Class<? extends IRenderable>, String>();
+        this.requestMapping = new HashMap<String, Class<? extends AbstractRenderable>>();
+        this.requestMappingBacklink = new WeakHashMap<Class<? extends AbstractRenderable>, String>();
         for (String packageElement : limberApplicationContext.getRegisteredPackages()) {
             scanPath(packageElement);
         }
@@ -48,7 +48,7 @@ public class AnnotationRequestInterpreter implements IRequestInterpreter {
         Collection<Class<?>> foundTypes = reflections.getTypesAnnotatedWith(RequestMapping.class);
 
         for (Class<?> type : foundTypes) {
-            if (!IRenderable.class.isAssignableFrom(type)) {
+            if (!AbstractRenderable.class.isAssignableFrom(type)) {
                 throw new LimberRequestMappingException(type);
             }
             RequestMapping requestMappingAnnotation = type.getAnnotation(RequestMapping.class);
@@ -58,7 +58,7 @@ public class AnnotationRequestInterpreter implements IRequestInterpreter {
                 if (conflictingClass != null) {
                     throw new LimberRequestPathConflictException(path, type, conflictingClass);
                 }
-                Class<? extends IRenderable> renderableClass = castToRenderable(type);
+                Class<? extends AbstractRenderable> renderableClass = castToRenderable(type);
                 if (firstRun) {
                     firstRun = false;
                     requestMappingBacklink.put(renderableClass, path);
@@ -70,15 +70,15 @@ public class AnnotationRequestInterpreter implements IRequestInterpreter {
     }
 
     @SuppressWarnings("unchecked")
-    private Class<? extends IRenderable> castToRenderable(@Nonnull Class<?> type) {
-        return (Class<? extends IRenderable>) type;
+    private Class<? extends AbstractRenderable> castToRenderable(@Nonnull Class<?> type) {
+        return (Class<? extends AbstractRenderable>) type;
     }
 
     @Override
     public IRequestMapping interpret(@Nonnull IHttpServletRequestWrapper httpServletRequestWrapper) {
 
         // Try to find registered class.
-        Class<? extends IRenderable> renderableClass = requestMapping.get(httpServletRequestWrapper.getRequestUri());
+        Class<? extends AbstractRenderable> renderableClass = requestMapping.get(httpServletRequestWrapper.getRequestUri());
         if (renderableClass == null) {
             return null;
         }
@@ -107,7 +107,7 @@ public class AnnotationRequestInterpreter implements IRequestInterpreter {
     }
 
     @Override
-    public URI resolve(@Nonnull Class<? extends IRenderable> renderableClass, UUID versionId, UUID ajaxId) {
+    public URI resolve(@Nonnull Class<? extends AbstractRenderable> renderableClass, UUID versionId, UUID ajaxId) {
         String backlink = requestMappingBacklink.get(renderableClass);
         if (backlink == null) {
             return null;

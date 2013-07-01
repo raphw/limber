@@ -2,6 +2,7 @@ package no.kantega.lab.limber.servlet.context;
 
 import javax.annotation.Nonnull;
 import javax.servlet.ServletContext;
+import java.io.InputStream;
 import java.util.Set;
 import java.util.UUID;
 
@@ -22,6 +23,9 @@ public interface ILimberApplicationContext {
     String getContextPath();
 
     boolean isLocalResource(@Nonnull CharSequence path);
+
+    @Nonnull
+    InputStream getLocalResourceAsStream(@Nonnull CharSequence path);
 
     @Nonnull
     String getMimeType(@Nonnull CharSequence path);

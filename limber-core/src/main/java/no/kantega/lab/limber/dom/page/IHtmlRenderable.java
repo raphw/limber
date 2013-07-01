@@ -1,6 +1,6 @@
-package no.kantega.lab.limber.page;
+package no.kantega.lab.limber.dom.page;
 
-import no.kantega.lab.limber.page.context.IHtmlRenderContext;
+import no.kantega.lab.limber.dom.page.context.IHtmlRenderContext;
 
 import javax.annotation.Nonnull;
 import java.io.IOException;

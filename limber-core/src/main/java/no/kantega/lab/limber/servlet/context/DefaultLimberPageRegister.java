@@ -1,7 +1,7 @@
 package no.kantega.lab.limber.servlet.context;
 
 import no.kantega.lab.limber.exception.NotYetImplementedException;
-import no.kantega.lab.limber.servlet.IRenderable;
+import no.kantega.lab.limber.servlet.AbstractRenderable;
 import no.kantega.lab.limber.servlet.request.interpreter.IRequestInterpreter;
 
 import javax.annotation.Nonnull;
@@ -19,7 +19,7 @@ public class DefaultLimberPageRegister implements ILimberPageRegister {
     }
 
     @Override
-    public URI decodeLink(@Nonnull IRenderable renderable) {
+    public URI decodeLink(@Nonnull AbstractRenderable renderable) {
         throw new NotYetImplementedException();
     }
 
@@ -29,17 +29,17 @@ public class DefaultLimberPageRegister implements ILimberPageRegister {
     }
 
     @Override
-    public URI decodeLink(@Nonnull Class<? extends IRenderable> renderable) {
+    public URI decodeLink(@Nonnull Class<? extends AbstractRenderable> renderable) {
         return decodeLink(renderable, null);
     }
 
     @Override
-    public URI decodeLink(@Nonnull Class<? extends IRenderable> renderable, UUID versionId) {
+    public URI decodeLink(@Nonnull Class<? extends AbstractRenderable> renderable, UUID versionId) {
         return decodeLink(renderable, versionId, null);
     }
 
     @Override
-    public URI decodeLink(@Nonnull Class<? extends IRenderable> renderable, UUID versionId, UUID subroutineId) {
+    public URI decodeLink(@Nonnull Class<? extends AbstractRenderable> renderable, UUID versionId, UUID subroutineId) {
         // Reversely iterate over the list of request interpreters.
         Iterator<IRequestInterpreter> iterator = requestInterpreters.descendingIterator();
         while (iterator.hasNext()) {
@@ -54,13 +54,13 @@ public class DefaultLimberPageRegister implements ILimberPageRegister {
 
     @Nonnull
     @Override
-    public UUID register(@Nonnull IRenderable renderable) {
+    public UUID register(@Nonnull AbstractRenderable renderable) {
         throw new NotYetImplementedException();
     }
 
     @Nonnull
     @Override
-    public UUID register(@Nonnull Class<? extends IRenderable> renderable) {
+    public UUID register(@Nonnull Class<? extends AbstractRenderable> renderable) {
         throw new NotYetImplementedException();
     }
 }

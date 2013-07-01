@@ -5,7 +5,7 @@ public class LimberRequestMappingException extends RuntimeException {
     private final Class<?> clazz;
 
     public LimberRequestMappingException(Class clazz) {
-        super("Class does not implement IRenderable");
+        super("Class does not implement AbstractRenderable");
         this.clazz = clazz;
     }
 

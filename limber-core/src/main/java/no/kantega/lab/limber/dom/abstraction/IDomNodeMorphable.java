@@ -1,12 +1,12 @@
 package no.kantega.lab.limber.dom.abstraction;
 
 import no.kantega.lab.limber.dom.element.AbstractNode;
-import no.kantega.lab.limber.dom.element.ContentEscapeMode;
+import no.kantega.lab.limber.dom.element.ContentEscapeStrategy;
 import no.kantega.lab.limber.dom.element.IDomNodeVisitor;
 
 import javax.annotation.Nonnull;
 
-public interface IDomNodeMorphable<N extends AbstractNode<? extends N>> extends Cloneable {
+public interface IDomNodeMorphable<N extends AbstractNode<? extends N>> {
 
     @Nonnull
     IDomNodeRepresentable<N> clear();
@@ -18,7 +18,7 @@ public interface IDomNodeMorphable<N extends AbstractNode<? extends N>> extends 
     IDomNodeRepresentable<N> setContent(CharSequence content);
 
     @Nonnull
-    IDomNodeRepresentable<N> setContent(CharSequence content, @Nonnull ContentEscapeMode escapeMode);
+    IDomNodeRepresentable<N> setContent(CharSequence content, @Nonnull ContentEscapeStrategy contentEscapeStrategy);
 
     @Nonnull
     IDomNodeRepresentable<N> remove();

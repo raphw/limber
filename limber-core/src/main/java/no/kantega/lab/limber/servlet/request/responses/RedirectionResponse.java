@@ -1,8 +1,8 @@
-package no.kantega.lab.limber.servlet.request.standard;
+package no.kantega.lab.limber.servlet.request.responses;
 
-import no.kantega.lab.limber.servlet.IRenderable;
+import no.kantega.lab.limber.servlet.AbstractRenderable;
 import no.kantega.lab.limber.servlet.meta.PageVersioning;
-import no.kantega.lab.limber.servlet.meta.VersioningType;
+import no.kantega.lab.limber.servlet.meta.VersioningPolicy;
 import no.kantega.lab.limber.servlet.request.context.IRenderContext;
 
 import javax.annotation.Nonnull;
@@ -12,13 +12,13 @@ import java.io.OutputStream;
 import java.net.URI;
 import java.util.UUID;
 
-@PageVersioning(VersioningType.NONE)
-public class RedirectionResponse implements IRenderable {
+@PageVersioning(VersioningPolicy.NONE)
+public class RedirectionResponse extends AbstractRenderable {
 
-    private final Class<? extends IRenderable> renderableClass;
+    private final Class<? extends AbstractRenderable> renderableClass;
     private final UUID uuid;
 
-    public RedirectionResponse(Class<? extends IRenderable> renderableClass, UUID uuid) {
+    public RedirectionResponse(Class<? extends AbstractRenderable> renderableClass, UUID uuid) {
         this.renderableClass = renderableClass;
         this.uuid = uuid;
     }

@@ -23,7 +23,7 @@ public class NodeFilterSupport {
     @Nonnull
     public <N extends AbstractNode<? extends N>, N2 extends N> List<N> filterNodeTree(@Nonnull ElementNode<?> origin,
                                                               @Nonnull INodeFilter<N> nodeFilter,
-                                                              @Nonnull Class<? extends N2> filterBoundary,
+                                                              @Nonnull Class<N2> filterBoundary,
                                                               int maxDepth) {
         if (maxDepth > 0) {
             return filterToBottomBreadthFirst(origin, nodeFilter, filterBoundary, maxDepth);
@@ -38,7 +38,7 @@ public class NodeFilterSupport {
     @SuppressWarnings("unchecked")
     private <N extends AbstractNode<? extends N>, N2 extends N> List<N> filterToBottomBreadthFirst(@Nonnull ElementNode<?> origin,
                                                                            @Nonnull INodeFilter<N> nodeFilter,
-                                                                           @Nonnull Class<? extends N2> filterBoundary,
+                                                                           @Nonnull Class<N2> filterBoundary,
                                                                            int maxDepth) {
 
         assert maxDepth > 0;
@@ -76,7 +76,7 @@ public class NodeFilterSupport {
     @Nonnull
     private <N extends AbstractNode<? extends N>, N2 extends N> List<N> filterToRootNode(@Nonnull ElementNode<?> origin,
                                                                  @Nonnull INodeFilter<N> nodeFilter,
-                                                                 @Nonnull Class<? extends N2> filterBoundary,
+                                                                 @Nonnull Class<N2> filterBoundary,
                                                                  int maxDepth) {
 
         assert maxDepth < 0;
@@ -111,7 +111,7 @@ public class NodeFilterSupport {
     @Nonnull
     public <N extends AbstractNode<? extends N>, N2 extends N> List<N> filterNodeList(@Nonnull List<? extends AbstractNode<?>> nodeList,
                                                               @Nonnull INodeFilter<N> nodeFilter,
-                                                              @Nonnull Class<? extends N2> filterBoundary) {
+                                                              @Nonnull Class<N2> filterBoundary) {
         List<N> resultNodeList = new ArrayList<N>(nodeList.size());
         for (AbstractNode<?> node : nodeList) {
             N castNode = filterNode(node, nodeFilter, filterBoundary);
@@ -123,7 +123,7 @@ public class NodeFilterSupport {
     @SuppressWarnings("unchecked")
     public <N extends AbstractNode<? extends N>, N2 extends N> N filterNode(@Nonnull AbstractNode<?> node,
                                                     @Nonnull INodeFilter<N> nodeFilter,
-                                                    @Nonnull Class<? extends N2> filterBoundary) {
+                                                    @Nonnull Class<N2> filterBoundary) {
         if (filterBoundary.isAssignableFrom(node.getClass())) {
             N castNode = (N) node;
             return nodeFilter.filter(castNode) ? castNode : null;

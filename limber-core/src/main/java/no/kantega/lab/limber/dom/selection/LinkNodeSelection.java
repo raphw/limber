@@ -2,7 +2,7 @@ package no.kantega.lab.limber.dom.selection;
 
 import no.kantega.lab.limber.dom.element.LinkNode;
 import no.kantega.lab.limber.dom.target.ITargetable;
-import no.kantega.lab.limber.servlet.IRenderable;
+import no.kantega.lab.limber.servlet.AbstractRenderable;
 
 import javax.annotation.Nonnull;
 import java.net.URI;
@@ -48,7 +48,7 @@ public class LinkNodeSelection<N extends LinkNode<? extends N>, S extends LinkNo
     @Nonnull
     @Override
     @SuppressWarnings("unchecked")
-    public S setTarget(@Nonnull Class<? extends IRenderable> clazz) {
+    public S setTarget(@Nonnull Class<? extends AbstractRenderable> clazz) {
         for (N linkNode : getSelected()) {
             linkNode.setTarget(clazz);
         }

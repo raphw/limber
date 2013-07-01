@@ -1,6 +1,6 @@
 package no.kantega.lab.limber.servlet.context;
 
-import no.kantega.lab.limber.servlet.IRenderable;
+import no.kantega.lab.limber.servlet.AbstractRenderable;
 
 import javax.annotation.Nonnull;
 import java.util.UUID;
@@ -8,11 +8,11 @@ import java.util.UUID;
 public class DefaultRequestMapping implements IRequestMapping {
 
     private final String sessionId;
-    private final Class<? extends IRenderable> renderableClass;
+    private final Class<? extends AbstractRenderable> renderableClass;
     private final UUID versionId;
     private final UUID subroutineId;
 
-    public DefaultRequestMapping(@Nonnull String sessionId, @Nonnull Class<? extends IRenderable> renderableClass, UUID versionId, UUID subroutineId) {
+    public DefaultRequestMapping(@Nonnull String sessionId, @Nonnull Class<? extends AbstractRenderable> renderableClass, UUID versionId, UUID subroutineId) {
         this.sessionId = sessionId;
         this.renderableClass = renderableClass;
         this.versionId = versionId;
@@ -27,7 +27,7 @@ public class DefaultRequestMapping implements IRequestMapping {
 
     @Nonnull
     @Override
-    public Class<? extends IRenderable> getRenderableClass() {
+    public Class<? extends AbstractRenderable> getRenderableClass() {
         return renderableClass;
     }
 

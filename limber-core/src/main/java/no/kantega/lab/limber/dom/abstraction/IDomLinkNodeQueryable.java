@@ -8,5 +8,5 @@ import javax.annotation.Nonnull;
 public interface IDomLinkNodeQueryable<N extends ElementNode<? extends N>> extends IDomElementNodeQueryable<N> {
 
     @Nonnull
-    public ITargetable<?> getTarget();
+    public ITargetable<?> getTargetRepresentant();
 }

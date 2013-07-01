@@ -1,6 +1,6 @@
 package no.kantega.lab.limber.servlet.request.container;
 
-import no.kantega.lab.limber.servlet.IRenderable;
+import no.kantega.lab.limber.servlet.AbstractRenderable;
 
 import javax.annotation.Nonnull;
 import java.util.UUID;
@@ -8,12 +8,12 @@ import java.util.UUID;
 class InstanceKey {
 
     private final String sessionId;
-    private final Class<? extends IRenderable> renderableClass;
+    private final Class<? extends AbstractRenderable> renderableClass;
     private final UUID versionNumber;
 
     public InstanceKey(
             @Nonnull String sessionId,
-            @Nonnull Class<? extends IRenderable> renderableClass,
+            @Nonnull Class<? extends AbstractRenderable> renderableClass,
             UUID versionNumber) {
         this.sessionId = sessionId;
         this.renderableClass = renderableClass;

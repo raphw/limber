@@ -1,6 +1,6 @@
 package no.kantega.lab.limber.servlet.request.interpreter;
 
-import no.kantega.lab.limber.servlet.IRenderable;
+import no.kantega.lab.limber.servlet.AbstractRenderable;
 import no.kantega.lab.limber.servlet.context.IHttpServletRequestWrapper;
 import no.kantega.lab.limber.servlet.context.IRequestMapping;
 
@@ -16,5 +16,5 @@ public interface IRequestInterpreter {
 
     IRequestMapping interpret(@Nonnull IHttpServletRequestWrapper rawRequest);
 
-    URI resolve(@Nonnull Class<? extends IRenderable> renderableClass, UUID versionId, UUID ajaxId);
+    URI resolve(@Nonnull Class<? extends AbstractRenderable> renderableClass, UUID versionId, UUID ajaxId);
 }

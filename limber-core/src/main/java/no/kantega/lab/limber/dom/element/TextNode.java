@@ -2,10 +2,11 @@ package no.kantega.lab.limber.dom.element;
 
 import no.kantega.lab.limber.dom.abstraction.IDomTextNodeQueryable;
 import no.kantega.lab.limber.dom.abstraction.IDomTextNodeRepresentable;
-import no.kantega.lab.limber.page.context.IHtmlRenderContext;
+import no.kantega.lab.limber.dom.page.context.IHtmlRenderContext;
 import org.apache.commons.lang3.StringUtils;
 
 import javax.annotation.Nonnull;
+import javax.annotation.OverridingMethodsMustInvokeSuper;
 import java.io.IOException;
 import java.io.Writer;
 
@@ -17,11 +18,11 @@ public class TextNode extends AbstractNode<TextNode>
     private String content;
 
     public TextNode(CharSequence content) {
-        this(content, ContentEscapeMode.getDefault());
+        this(content, ContentEscapeStrategy.getDefault());
     }
 
-    public TextNode(CharSequence content, @Nonnull ContentEscapeMode contentEscapeMode) {
-        setContent(content, contentEscapeMode);
+    public TextNode(CharSequence content, @Nonnull ContentEscapeStrategy contentEscapeStrategy) {
+        setContent(content, contentEscapeStrategy);
     }
 
     @Override
@@ -32,16 +33,16 @@ public class TextNode extends AbstractNode<TextNode>
     @Nonnull
     @Override
     public TextNode setContent(CharSequence content) {
-        return setContent(content, ContentEscapeMode.getDefault());
+        return setContent(content, ContentEscapeStrategy.getDefault());
     }
 
     @Nonnull
     @Override
-    public TextNode setContent(CharSequence content, @Nonnull ContentEscapeMode contentEscapeMode) {
+    public TextNode setContent(CharSequence content, @Nonnull ContentEscapeStrategy contentEscapeStrategy) {
         if (content == null) {
             clear();
         } else {
-            this.content = contentEscapeMode.translate(content);
+            this.content = contentEscapeStrategy.translate(content);
         }
         return this;
     }
@@ -79,5 +80,17 @@ public class TextNode extends AbstractNode<TextNode>
             writer.append(content);
         }
         return true;
+    }
+
+    @Override
+    @OverridingMethodsMustInvokeSuper
+    public long localHashCode() {
+        long result = super.localHashCode();
+        if (getContent() == null) {
+            result <<= 2;
+        } else {
+            result *= getContent().hashCode();
+        }
+        return result;
     }
 }

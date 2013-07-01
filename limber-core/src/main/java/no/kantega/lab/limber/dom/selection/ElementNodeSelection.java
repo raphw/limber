@@ -1,12 +1,12 @@
 package no.kantega.lab.limber.dom.selection;
 
 import no.kantega.lab.limber.dom.abstraction.IDomElementNodeRepresentable;
+import no.kantega.lab.limber.dom.ajax.AjaxEventTrigger;
 import no.kantega.lab.limber.dom.ajax.IAjaxCallback;
 import no.kantega.lab.limber.dom.element.*;
 import no.kantega.lab.limber.dom.filter.*;
 import no.kantega.lab.limber.dom.filter.util.NodeFilterSupport;
 import no.kantega.lab.limber.dom.filter.util.QueryMatchMode;
-import no.kantega.lab.limber.dom.target.EventTrigger;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
@@ -154,15 +154,15 @@ public class ElementNodeSelection<N extends ElementNode<? extends N>, S extends 
 
     @Nonnull
     @Override
-    public TextNodeSelection addText(int index, @Nonnull CharSequence text, @Nonnull ContentEscapeMode contentEscapeMode) {
-        return new TextNodeSelection(addChild(index, new TextNode(text, contentEscapeMode)));
+    public TextNodeSelection addText(int index, @Nonnull CharSequence text, @Nonnull ContentEscapeStrategy contentEscapeStrategy) {
+        return new TextNodeSelection(addChild(index, new TextNode(text, contentEscapeStrategy)));
     }
 
     @Nonnull
     @Override
     @SuppressWarnings("unchecked")
-    public S addTextAndStay(int index, @Nonnull CharSequence text, @Nonnull ContentEscapeMode contentEscapeMode) {
-        addText(index, text, contentEscapeMode);
+    public S addTextAndStay(int index, @Nonnull CharSequence text, @Nonnull ContentEscapeStrategy contentEscapeStrategy) {
+        addText(index, text, contentEscapeStrategy);
         return (S) this;
     }
 
@@ -182,15 +182,15 @@ public class ElementNodeSelection<N extends ElementNode<? extends N>, S extends 
 
     @Nonnull
     @Override
-    public TextNodeSelection appendText(@Nonnull CharSequence text, @Nonnull ContentEscapeMode contentEscapeMode) {
-        return new TextNodeSelection(appendChild(new TextNode(text, contentEscapeMode)));
+    public TextNodeSelection appendText(@Nonnull CharSequence text, @Nonnull ContentEscapeStrategy contentEscapeStrategy) {
+        return new TextNodeSelection(appendChild(new TextNode(text, contentEscapeStrategy)));
     }
 
     @Nonnull
     @Override
     @SuppressWarnings("unchecked")
-    public S appendTextAndStay(@Nonnull CharSequence text, @Nonnull ContentEscapeMode contentEscapeMode) {
-        appendText(text, contentEscapeMode);
+    public S appendTextAndStay(@Nonnull CharSequence text, @Nonnull ContentEscapeStrategy contentEscapeStrategy) {
+        appendText(text, contentEscapeStrategy);
         return (S) this;
     }
 
@@ -210,15 +210,15 @@ public class ElementNodeSelection<N extends ElementNode<? extends N>, S extends 
 
     @Nonnull
     @Override
-    public TextNodeSelection prependText(@Nonnull CharSequence text, @Nonnull ContentEscapeMode contentEscapeMode) {
-        return new TextNodeSelection(prependChild(new TextNode(text, contentEscapeMode)));
+    public TextNodeSelection prependText(@Nonnull CharSequence text, @Nonnull ContentEscapeStrategy contentEscapeStrategy) {
+        return new TextNodeSelection(prependChild(new TextNode(text, contentEscapeStrategy)));
     }
 
     @Nonnull
     @Override
     @SuppressWarnings("unchecked")
-    public S prependTextAndStay(@Nonnull CharSequence text, @Nonnull ContentEscapeMode contentEscapeMode) {
-        prependText(text, contentEscapeMode);
+    public S prependTextAndStay(@Nonnull CharSequence text, @Nonnull ContentEscapeStrategy contentEscapeStrategy) {
+        prependText(text, contentEscapeStrategy);
         return (S) this;
     }
 
@@ -459,7 +459,7 @@ public class ElementNodeSelection<N extends ElementNode<? extends N>, S extends 
 
     @Nonnull
     @Override
-    public <N2 extends AbstractNode<? extends N2>, N3 extends N2> NodeSelection<N2, ?> getChildren(@Nonnull INodeFilter<N2> nodeFilter, Class<? extends N3> filterBoundary) {
+    public <N2 extends AbstractNode<? extends N2>, N3 extends N2> NodeSelection<N2, ?> getChildren(@Nonnull INodeFilter<N2> nodeFilter, Class<N3> filterBoundary) {
         LinkedHashSet<N2> resultSelection = new LinkedHashSet<N2>();
         for (N elementNode : getSelected()) {
             resultSelection.addAll(NodeFilterSupport.getInstance().filterNodeList(elementNode.getChildren().getSelected(), nodeFilter, filterBoundary));
@@ -481,13 +481,13 @@ public class ElementNodeSelection<N extends ElementNode<? extends N>, S extends 
 
     @Nonnull
     @Override
-    public <N2 extends AbstractNode<? extends N2>, N3 extends N2> NodeSelection<N2, ?> findByFilter(@Nonnull INodeFilter<N2> nodeFilter, @Nonnull Class<? extends N3> filterBoundary) {
+    public <N2 extends AbstractNode<? extends N2>, N3 extends N2> NodeSelection<N2, ?> findByFilter(@Nonnull INodeFilter<N2> nodeFilter, @Nonnull Class<N3> filterBoundary) {
         return findByFilter(nodeFilter, filterBoundary, Integer.MAX_VALUE);
     }
 
     @Nonnull
     @Override
-    public <N2 extends AbstractNode<? extends N2>, N3 extends N2> NodeSelection<N2, ?> findByFilter(@Nonnull INodeFilter<N2> nodeFilter, @Nonnull Class<? extends N3> filterBoundary, int maxDepth) {
+    public <N2 extends AbstractNode<? extends N2>, N3 extends N2> NodeSelection<N2, ?> findByFilter(@Nonnull INodeFilter<N2> nodeFilter, @Nonnull Class<N3> filterBoundary, int maxDepth) {
         LinkedHashSet<N2> resultSelection = new LinkedHashSet<N2>();
         for (N elementNode : getSelected()) {
             resultSelection.addAll(NodeFilterSupport.getInstance().filterNodeTree(elementNode, nodeFilter, filterBoundary, maxDepth));
@@ -522,7 +522,7 @@ public class ElementNodeSelection<N extends ElementNode<? extends N>, S extends 
     @Nonnull
     @Override
     @SuppressWarnings("unchecked")
-    public S addAjaxEvent(@Nonnull EventTrigger ajaxEventTrigger, @Nonnull IAjaxCallback<? super N> ajaxCallback) {
+    public S addAjaxEvent(@Nonnull AjaxEventTrigger ajaxEventTrigger, @Nonnull IAjaxCallback<? super N> ajaxCallback) {
         for (N elementNode : getSelected()) {
             elementNode.addAjaxEvent(ajaxEventTrigger, ajaxCallback);
         }
@@ -542,7 +542,7 @@ public class ElementNodeSelection<N extends ElementNode<? extends N>, S extends 
     @Nonnull
     @Override
     @SuppressWarnings("unchecked")
-    public S removeAjaxEvent(@Nonnull EventTrigger ajaxEventTrigger) {
+    public S removeAjaxEvent(@Nonnull AjaxEventTrigger ajaxEventTrigger) {
         for (N elementNode : getSelected()) {
             elementNode.removeAjaxEvent(ajaxEventTrigger);
         }

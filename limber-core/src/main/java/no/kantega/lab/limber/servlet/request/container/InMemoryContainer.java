@@ -1,9 +1,9 @@
 package no.kantega.lab.limber.servlet.request.container;
 
-import no.kantega.lab.limber.servlet.IRenderable;
+import no.kantega.lab.limber.servlet.AbstractRenderable;
 import no.kantega.lab.limber.servlet.context.IRequestMapping;
 import no.kantega.lab.limber.servlet.request.creator.IInstanceCreator;
-import no.kantega.lab.limber.servlet.request.standard.RedirectionResponse;
+import no.kantega.lab.limber.servlet.request.responses.RedirectionResponse;
 
 import javax.annotation.Nonnull;
 import java.util.HashMap;
@@ -12,7 +12,7 @@ import java.util.UUID;
 
 public class InMemoryContainer extends AbstractInstanceContainer {
 
-    private final Map<InstanceKey, IRenderable> memoryPageStore;
+    private final Map<InstanceKey, AbstractRenderable> memoryPageStore;
 
     public InMemoryContainer() {
         this(null);
@@ -20,20 +20,20 @@ public class InMemoryContainer extends AbstractInstanceContainer {
 
     public InMemoryContainer(IInstanceContainer parent) {
         super(parent);
-        this.memoryPageStore = new HashMap<InstanceKey, IRenderable>();
+        this.memoryPageStore = new HashMap<InstanceKey, AbstractRenderable>();
     }
 
     @Override
-    public IRenderable resolve(@Nonnull IRequestMapping requestMapping, @Nonnull IInstanceCreator instanceCreator) {
+    public AbstractRenderable resolve(@Nonnull IRequestMapping requestMapping, @Nonnull IInstanceCreator instanceCreator) {
 
         // Request is not versioned.
         if (!requestMapping.isVersioned()) {
-            IRenderable renderable = instanceCreator.create(requestMapping);
+            AbstractRenderable renderable = instanceCreator.create(requestMapping);
             UUID uuid = store(requestMapping, renderable);
             return new RedirectionResponse(requestMapping.getRenderableClass(), uuid);
         }
 
-        IRenderable renderable = memoryPageStore.get(new InstanceKey(
+        AbstractRenderable renderable = memoryPageStore.get(new InstanceKey(
                 requestMapping.getSessionId(),
                 requestMapping.getRenderableClass(),
                 requestMapping.getVersionId()));
@@ -47,7 +47,7 @@ public class InMemoryContainer extends AbstractInstanceContainer {
     }
 
     @Override
-    public UUID store(@Nonnull IRequestMapping requestMapping, @Nonnull IRenderable renderable) {
+    public UUID store(@Nonnull IRequestMapping requestMapping, @Nonnull AbstractRenderable renderable) {
         UUID versionNumber = UUID.randomUUID();
         memoryPageStore.put(new InstanceKey(
                 requestMapping.getSessionId(),

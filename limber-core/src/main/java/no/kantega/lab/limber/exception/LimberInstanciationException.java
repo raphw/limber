@@ -1,17 +1,17 @@
 package no.kantega.lab.limber.exception;
 
-import no.kantega.lab.limber.servlet.IRenderable;
+import no.kantega.lab.limber.servlet.AbstractRenderable;
 
 public class LimberInstanciationException extends RuntimeException {
 
-    private final Class<? extends IRenderable> clazz;
+    private final Class<? extends AbstractRenderable> clazz;
 
-    public LimberInstanciationException(Class<? extends IRenderable> clazz, Throwable cause) {
+    public LimberInstanciationException(Class<? extends AbstractRenderable> clazz, Throwable cause) {
         super("Cannot instantiate class", cause);
         this.clazz = clazz;
     }
 
-    public Class<? extends IRenderable> getClazz() {
+    public Class<? extends AbstractRenderable> getClazz() {
         return clazz;
     }
 }

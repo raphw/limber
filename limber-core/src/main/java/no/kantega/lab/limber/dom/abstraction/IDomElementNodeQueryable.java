@@ -22,6 +22,9 @@ public interface IDomElementNodeQueryable<N extends ElementNode<? extends N>> ex
     String getId();
 
     @Nonnull
+    String getXPath();
+
+    @Nonnull
     List<String> getCssClasses();
 
     @Nonnull

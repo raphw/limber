@@ -1,7 +1,7 @@
 package no.kantega.lab.limber.dom.doctype;
 
-import no.kantega.lab.limber.page.IHtmlRenderable;
-import no.kantega.lab.limber.page.context.IHtmlRenderContext;
+import no.kantega.lab.limber.dom.page.IHtmlRenderable;
+import no.kantega.lab.limber.dom.page.context.IHtmlRenderContext;
 
 import javax.annotation.Nonnull;
 import java.io.IOException;

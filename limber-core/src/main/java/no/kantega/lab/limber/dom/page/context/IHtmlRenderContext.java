@@ -1,4 +1,4 @@
-package no.kantega.lab.limber.page.context;
+package no.kantega.lab.limber.dom.page.context;
 
 import no.kantega.lab.limber.dom.selection.HtmlDocumentRootSelection;
 import no.kantega.lab.limber.servlet.request.context.IRenderContext;

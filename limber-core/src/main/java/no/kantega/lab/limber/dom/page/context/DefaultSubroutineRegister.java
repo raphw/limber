@@ -1,6 +1,6 @@
-package no.kantega.lab.limber.page.context;
+package no.kantega.lab.limber.dom.page.context;
 
-import no.kantega.lab.limber.page.IEventTriggerable;
+import no.kantega.lab.limber.dom.page.IEventTriggerable;
 
 import javax.annotation.Nonnull;
 import java.util.Map;

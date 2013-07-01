@@ -1,6 +1,6 @@
 package no.kantega.lab.limber.servlet.request.container;
 
-import no.kantega.lab.limber.servlet.IRenderable;
+import no.kantega.lab.limber.servlet.AbstractRenderable;
 import no.kantega.lab.limber.servlet.context.DefaultRequestMapping;
 import no.kantega.lab.limber.servlet.context.IRequestMapping;
 import no.kantega.lab.limber.servlet.meta.PageVersioning;
@@ -19,7 +19,7 @@ public class VersioningPseudoContainer extends AbstractInstanceContainer {
     }
 
     @Override
-    public IRenderable resolve(@Nonnull IRequestMapping requestMapping, @Nonnull IInstanceCreator instanceCreator) {
+    public AbstractRenderable resolve(@Nonnull IRequestMapping requestMapping, @Nonnull IInstanceCreator instanceCreator) {
 
         PageVersioning pageVersioning = requestMapping.getRenderableClass().getAnnotation(PageVersioning.class);
 

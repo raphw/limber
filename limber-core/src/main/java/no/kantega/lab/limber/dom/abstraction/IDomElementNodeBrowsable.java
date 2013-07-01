@@ -47,10 +47,10 @@ public interface IDomElementNodeBrowsable extends IDomNodeBrowsable {
     INodeSelection<?> findByFilter(@Nonnull INodeFilter<AbstractNode<?>> nodeFilter, int maxDepth);
 
     @Nonnull
-    <N2 extends AbstractNode<? extends N2>, N3 extends N2> INodeSelection<N2> findByFilter(@Nonnull INodeFilter<N2> nodeFilter, @Nonnull Class<? extends N3> filterBoundary);
+    <N2 extends AbstractNode<? extends N2>, N3 extends N2> INodeSelection<N2> findByFilter(@Nonnull INodeFilter<N2> nodeFilter, @Nonnull Class<N3> filterBoundary);
 
     @Nonnull
-    <N2 extends AbstractNode<? extends N2>, N3 extends N2> INodeSelection<N2> findByFilter(@Nonnull INodeFilter<N2> nodeFilter, @Nonnull Class<? extends N3> filterBoundary, int maxDepth);
+    <N2 extends AbstractNode<? extends N2>, N3 extends N2> INodeSelection<N2> findByFilter(@Nonnull INodeFilter<N2> nodeFilter, @Nonnull Class<N3> filterBoundary, int maxDepth);
 
     @Nonnull
     INodeSelection<?> getChildren();
@@ -59,7 +59,7 @@ public interface IDomElementNodeBrowsable extends IDomNodeBrowsable {
     INodeSelection<?> getChildren(@Nonnull INodeFilter<AbstractNode<?>> nodeFilter);
 
     @Nonnull
-    <N2 extends AbstractNode<? extends N2>, N3 extends N2> INodeSelection<N2> getChildren(@Nonnull INodeFilter<N2> nodeFilter, Class<? extends N3> filterBoundary);
+    <N2 extends AbstractNode<? extends N2>, N3 extends N2> INodeSelection<N2> getChildren(@Nonnull INodeFilter<N2> nodeFilter, Class<N3> filterBoundary);
 
     @Nonnull
     ITextNodeSelection findTextNodes();

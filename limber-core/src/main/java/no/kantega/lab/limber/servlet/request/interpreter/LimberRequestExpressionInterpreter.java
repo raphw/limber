@@ -1,7 +1,7 @@
 package no.kantega.lab.limber.servlet.request.interpreter;
 
 import no.kantega.lab.limber.exception.LimberRequestMappingException;
-import no.kantega.lab.limber.servlet.IRenderable;
+import no.kantega.lab.limber.servlet.AbstractRenderable;
 import no.kantega.lab.limber.servlet.context.DefaultRequestMapping;
 import no.kantega.lab.limber.servlet.context.IHttpServletRequestWrapper;
 import no.kantega.lab.limber.servlet.context.IRequestMapping;
@@ -47,17 +47,17 @@ public class LimberRequestExpressionInterpreter implements IRequestInterpreter {
             return null;
         }
 
-        // Find represented class and check if it interprets IRenderable .
+        // Find represented class and check if it interprets AbstractRenderable .
         Class<?> clazz;
         try {
             clazz = Class.forName(pathMatcher.group(1));
         } catch (ClassNotFoundException e) {
             return null;
         }
-        if (!IRenderable.class.isAssignableFrom(clazz)) {
+        if (!AbstractRenderable.class.isAssignableFrom(clazz)) {
             throw new LimberRequestMappingException(clazz);
         }
-        Class<? extends IRenderable> renderableClass = castToRenderable(clazz);
+        Class<? extends AbstractRenderable> renderableClass = castToRenderable(clazz);
 
         // Check for second group match, representing the page version.
         UUID versionId = null;
@@ -82,12 +82,12 @@ public class LimberRequestExpressionInterpreter implements IRequestInterpreter {
     }
 
     @SuppressWarnings("unchecked")
-    private Class<? extends IRenderable> castToRenderable(@Nonnull Class<?> type) {
-        return (Class<? extends IRenderable>) type;
+    private Class<? extends AbstractRenderable> castToRenderable(@Nonnull Class<?> type) {
+        return (Class<? extends AbstractRenderable>) type;
     }
 
     @Override
-    public URI resolve(@Nonnull Class<? extends IRenderable> renderableClass, UUID versionId, UUID ajaxId) {
+    public URI resolve(@Nonnull Class<? extends AbstractRenderable> renderableClass, UUID versionId, UUID ajaxId) {
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append("/?limber=");
         stringBuilder.append(renderableClass.getName());

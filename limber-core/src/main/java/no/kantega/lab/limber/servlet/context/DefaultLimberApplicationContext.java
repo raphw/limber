@@ -5,6 +5,7 @@ import no.kantega.lab.limber.servlet.request.interpreter.IRequestInterpreter;
 import javax.annotation.Nonnull;
 import javax.servlet.FilterConfig;
 import javax.servlet.ServletContext;
+import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.util.*;
 import java.util.regex.Matcher;
@@ -76,6 +77,17 @@ public class DefaultLimberApplicationContext implements ILimberApplicationContex
             return servletContext.getResource(path.toString()) != null;
         } catch (MalformedURLException e) {
             return false;
+        }
+    }
+
+    @Nonnull
+    @Override
+    public InputStream getLocalResourceAsStream(@Nonnull CharSequence path) {
+        InputStream resource = servletContext.getResourceAsStream(path.toString());
+        if (resource == null) {
+            throw new IllegalArgumentException();
+        } else {
+            return resource;
         }
     }
 
