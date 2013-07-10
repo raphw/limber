@@ -20,9 +20,15 @@ public abstract class AbstractInstanceContainer implements IInstanceContainer {
     }
 
     @Override
-    public UUID store(@Nonnull IRequestMapping requestMapping, @Nonnull AbstractRenderable renderable) {
+    public UUID store(@Nonnull String sessionId, @Nonnull AbstractRenderable renderable) {
         if (parent == null) throw new IllegalStateException();
-        return parent.store(requestMapping, renderable);
+        return parent.store(sessionId, renderable);
+    }
+
+    @Override
+    public AbstractRenderable storeBlockingIfAbsent(@Nonnull IRequestMapping requestMapping, @Nonnull IInstanceCreator instanceCreator) {
+        if (parent == null) throw new IllegalStateException();
+        return parent.storeBlockingIfAbsent(requestMapping, instanceCreator);
     }
 
     @Override

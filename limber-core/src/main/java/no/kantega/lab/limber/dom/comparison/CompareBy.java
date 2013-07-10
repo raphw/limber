@@ -8,5 +8,5 @@ import java.lang.annotation.*;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface CompareBy {
 
-    Class<? extends IComparisonStrategy> value();
+    Class<? extends IDomComparisonStrategy> value();
 }

@@ -1,5 +1,6 @@
 package no.kantega.lab.limber.servlet;
 
+import net.sf.ehcache.CacheManager;
 import no.kantega.lab.limber.servlet.context.RequestCycleRenderContext;
 import no.kantega.lab.limber.servlet.request.LimberRequestHandler;
 import org.slf4j.Logger;
@@ -15,10 +16,18 @@ public class LimberFilter implements Filter {
 
     private final static Logger LOGGER = LoggerFactory.getLogger(LimberFilter.class);
 
+    private final Thread shutdownHook = new Thread() {
+        @Override
+        public void run() {
+            LimberFilter.this.destroy();
+        }
+    };
+
     private LimberRequestHandler requestHelper;
 
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
+        Runtime.getRuntime().addShutdownHook(shutdownHook);
         UUID filterId = GlobalLimberFilterRegistry.findOrCreateUUID(this);
         requestHelper = new LimberRequestHandler(filterConfig, filterId);
         System.out.println(String.format("Limber[%s]: '%s' is servicing context '/%s'",
@@ -55,5 +64,11 @@ public class LimberFilter implements Filter {
 
     @Override
     public void destroy() {
+        CacheManager.getInstance().shutdown();
+        System.out.println(String.format("Limber[%s]: '%s' is shut down for context '/%s'",
+                requestHelper.getLimberApplicationContext().getFilterId(),
+                requestHelper.getLimberApplicationContext().getContextPath(),
+                requestHelper.getLimberApplicationContext().getFilterName()));
+        Runtime.getRuntime().removeShutdownHook(shutdownHook);
     }
 }

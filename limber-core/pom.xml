@@ -36,6 +36,12 @@
             <artifactId>xercesImpl</artifactId>
         </dependency>
 
+        <!-- Cache -->
+        <dependency>
+            <groupId>net.sf.ehcache</groupId>
+            <artifactId>ehcache</artifactId>
+        </dependency>
+
         <!-- Utilities -->
         <dependency>
             <groupId>com.google.guava</groupId>

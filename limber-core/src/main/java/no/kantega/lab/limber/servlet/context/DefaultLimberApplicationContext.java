@@ -96,4 +96,10 @@ public class DefaultLimberApplicationContext implements ILimberApplicationContex
     public String getMimeType(@Nonnull CharSequence path) {
         return servletContext.getMimeType(path.toString());
     }
+
+    @Nonnull
+    @Override
+    public String getFilterName() {
+        return servletContext.getServletContextName();
+    }
 }

@@ -13,4 +13,6 @@ public interface IRenderContext {
     IHttpServletRequestWrapper getHttpServletRequestWrapper();
 
     IHttpServletResponseWrapper getHttpServletResponseWrapper();
+
+//    IHttpSessionWrapper getHttpSessionWrapper();
 }

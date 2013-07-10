@@ -2,8 +2,9 @@ package no.kantega.lab.limber.servlet.request;
 
 import no.kantega.lab.limber.servlet.AbstractRenderable;
 import no.kantega.lab.limber.servlet.context.*;
+import no.kantega.lab.limber.servlet.meta.PageRenderSynchronization;
+import no.kantega.lab.limber.servlet.request.container.EhcacheContainer;
 import no.kantega.lab.limber.servlet.request.container.IInstanceContainer;
-import no.kantega.lab.limber.servlet.request.container.InMemoryContainer;
 import no.kantega.lab.limber.servlet.request.container.VersioningPseudoContainer;
 import no.kantega.lab.limber.servlet.request.context.DefaultRenderContext;
 import no.kantega.lab.limber.servlet.request.context.IRenderContext;
@@ -48,7 +49,7 @@ public class LimberRequestHandler {
         instanceCreator = new ReflectionInstanceCreator();
 
         // Set up request containers
-        IInstanceContainer latest = new InMemoryContainer();
+        IInstanceContainer latest = new EhcacheContainer();
         latest = new VersioningPseudoContainer(latest);
         topInstanceContainer = latest;
 
@@ -116,6 +117,16 @@ public class LimberRequestHandler {
     private boolean renderRequest(@Nonnull IRenderContext renderContext,
                                   @Nonnull AbstractRenderable renderable,
                                   @Nonnull OutputStream outputStream) throws IOException {
-        return renderable.render(outputStream, renderContext);
+        if (renderable.getClass().getAnnotation(PageRenderSynchronization.class).value()) {
+            synchronized (renderable) {
+                return renderable.render(outputStream, renderContext);
+            }
+        } else {
+            return renderable.render(outputStream, renderContext);
+        }
+    }
+
+    public ILimberApplicationContext getLimberApplicationContext() {
+        return limberApplicationContext;
     }
 }

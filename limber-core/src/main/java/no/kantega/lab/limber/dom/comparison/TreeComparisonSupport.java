@@ -16,12 +16,12 @@ public class TreeComparisonSupport {
         /* empty */
     }
 
-    public List<IReplacementStep> compare(Class<? extends IComparisonStrategy> comparisonStrategyClass, ElementNode<?> leftRoot, ElementNode<?> rightRoot) {
-        IComparisonStrategy comparisonStrategy = makeInstance(comparisonStrategyClass);
+    public List<IReplacementStep> compare(Class<? extends IDomComparisonStrategy> comparisonStrategyClass, ElementNode<?> leftRoot, ElementNode<?> rightRoot) {
+        IDomComparisonStrategy comparisonStrategy = makeInstance(comparisonStrategyClass);
         return comparisonStrategy.compareElementNodes(leftRoot, rightRoot);
     }
 
-    IComparisonStrategy makeInstance(Class<? extends IComparisonStrategy> comparisonStrategyClass) {
+    IDomComparisonStrategy makeInstance(Class<? extends IDomComparisonStrategy> comparisonStrategyClass) {
         try {
             return comparisonStrategyClass.newInstance();
         } catch (InstantiationException e) {

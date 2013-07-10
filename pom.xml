@@ -49,6 +49,7 @@
         <version.servlet-api>2.5</version.servlet-api>
         <version.xerces>2.11.0</version.xerces>
         <version.neko>1.9.18</version.neko>
+        <version.ehcache>2.7.2</version.ehcache>
         <version.commons.lang3>3.1</version.commons.lang3>
         <version.guava>14.0.1</version.guava>
         <version.reflections>0.9.9-RC1</version.reflections>
@@ -114,6 +115,13 @@
                 <groupId>xerces</groupId>
                 <artifactId>xercesImpl</artifactId>
                 <version>${version.xerces}</version>
+            </dependency>
+
+            <!-- Cache -->
+            <dependency>
+                <groupId>net.sf.ehcache</groupId>
+                <artifactId>ehcache</artifactId>
+                <version>${version.ehcache}</version>
             </dependency>
 
             <!-- Utilities -->

@@ -17,6 +17,9 @@ public interface ILimberApplicationContext {
     UUID getFilterId();
 
     @Nonnull
+    String getFilterName();
+
+    @Nonnull
     Set<String> getRegisteredPackages();
 
     @Nonnull

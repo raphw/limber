@@ -4,9 +4,6 @@ import no.kantega.lab.limber.dom.abstraction.IDomSelectable;
 import no.kantega.lab.limber.dom.comparison.CompareBy;
 import no.kantega.lab.limber.dom.comparison.RelapsingComparisonStrategy;
 import no.kantega.lab.limber.dom.element.ElementNode;
-import no.kantega.lab.limber.dom.page.context.DefaultHtmlRenderContext;
-import no.kantega.lab.limber.dom.page.context.DefaultHtmlRenderOptions;
-import no.kantega.lab.limber.dom.page.context.IHtmlRenderContext;
 import no.kantega.lab.limber.dom.page.util.WebPageRenderSupport;
 import no.kantega.lab.limber.dom.parser.DomTreeProvider;
 import no.kantega.lab.limber.dom.selection.HtmlDocumentRootSelection;
@@ -49,25 +46,8 @@ public class WebPage extends AbstractRenderable implements IDomSelectable<Elemen
             throw new IllegalStateException();
         }
 
-        // Take care of possible subroutine call.
-        if (renderContext.getRequestMapping().isSubroutine()) {
-            IEventTriggerable eventTriggerable = subroutineRegisterMap.get(renderContext.getRequestMapping().getSubroutineId());
-            if (eventTriggerable == null) {
-                // No subroutine found. Page cannot handle call.
-                return false;
-            } else {
-                return WebPageRenderSupport.getInstance().renderSubroutineResponse(
-                        outputStream, getClass(), eventTriggerable, makeHtmlRenderContext(renderContext), dom(), subroutineRegisterMap);
-            }
-        }
-
-        // No subroutine. Send full page as a response.
-        return WebPageRenderSupport.getInstance().renderPageResponse(
-                outputStream, makeHtmlRenderContext(renderContext), dom(), subroutineRegisterMap);
-    }
-
-    private IHtmlRenderContext makeHtmlRenderContext(IRenderContext renderContext) {
-        return new DefaultHtmlRenderContext(renderContext, new DefaultHtmlRenderOptions(), dom(), subroutineRegisterMap);
+        return WebPageRenderSupport.getInstance().renderResponse(
+                outputStream, getClass(), renderContext, htmlDocumentRootSelection, subroutineRegisterMap);
     }
 
 }
