@@ -1,5 +1,6 @@
 package no.kantega.lab.limber.dom.ajax;
 
+
 public enum AjaxElementIdentificator {
     SELECTOR("selector"),
     XPATH("xpath");

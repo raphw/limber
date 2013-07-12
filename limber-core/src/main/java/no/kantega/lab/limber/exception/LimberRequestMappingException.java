@@ -1,5 +1,6 @@
 package no.kantega.lab.limber.exception;
 
+
 public class LimberRequestMappingException extends RuntimeException {
 
     private final Class<?> clazz;

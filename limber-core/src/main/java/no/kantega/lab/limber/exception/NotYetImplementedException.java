@@ -1,5 +1,6 @@
 package no.kantega.lab.limber.exception;
 
+
 public class NotYetImplementedException extends RuntimeException {
 
     public NotYetImplementedException() {

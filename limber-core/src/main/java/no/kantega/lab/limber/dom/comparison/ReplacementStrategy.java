@@ -1,5 +1,6 @@
 package no.kantega.lab.limber.dom.comparison;
 
+
 public enum ReplacementStrategy {
     RERENDER("rerender");
 

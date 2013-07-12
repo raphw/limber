@@ -1,5 +1,6 @@
 package no.kantega.lab.limber.dom.analysis;
 
+
 public class HtmlElementReflectorFactory {
 
     private static final HtmlElementReflectorFactory INSTANCE = new HtmlElementReflectorFactory();

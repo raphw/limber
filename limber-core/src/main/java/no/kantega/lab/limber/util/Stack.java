@@ -1,5 +1,6 @@
 package no.kantega.lab.limber.util;
 
+
 import javax.annotation.Nonnull;
 import java.util.ArrayDeque;
 import java.util.Deque;

@@ -11,6 +11,11 @@
 
     <inceptionYear>2013</inceptionYear>
 
+    <organization>
+        <name>Kantega AS</name>
+        <url>http://www.kantega.no</url>
+    </organization>
+
     <name>Limber web framework</name>
     <description>A web framework based on DOM manipulation.</description>
     <url>http://www.kantega.no</url>
@@ -46,10 +51,11 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <version.servlet-api>2.5</version.servlet-api>
+        <version.java-ee>6.0</version.java-ee>
         <version.xerces>2.11.0</version.xerces>
         <version.neko>1.9.18</version.neko>
         <version.ehcache>2.7.2</version.ehcache>
+        <version.kryo>2.21</version.kryo>
         <version.commons.lang3>3.1</version.commons.lang3>
         <version.guava>14.0.1</version.guava>
         <version.reflections>0.9.9-RC1</version.reflections>
@@ -98,9 +104,9 @@
 
             <!-- Servlet API -->
             <dependency>
-                <groupId>javax.servlet</groupId>
-                <artifactId>servlet-api</artifactId>
-                <version>${version.servlet-api}</version>
+                <groupId>javax</groupId>
+                <artifactId>javaee-api</artifactId>
+                <version>${version.java-ee}</version>
                 <scope>provided</scope>
             </dependency>
 
@@ -122,6 +128,13 @@
                 <groupId>net.sf.ehcache</groupId>
                 <artifactId>ehcache</artifactId>
                 <version>${version.ehcache}</version>
+            </dependency>
+
+            <!-- Serialization -->
+            <dependency>
+                <groupId>com.esotericsoftware.kryo</groupId>
+                <artifactId>kryo</artifactId>
+                <version>${version.kryo}</version>
             </dependency>
 
             <!-- Utilities -->
@@ -151,5 +164,46 @@
 
         </dependencies>
     </dependencyManagement>
+
+    <!--<build>-->
+        <!--<plugins>-->
+            <!-- Add license to source file headers -->
+            <!--<plugin>-->
+                <!--<inherited>false</inherited>-->
+                <!--<groupId>org.codehaus.mojo</groupId>-->
+                <!--<artifactId>license-maven-plugin</artifactId>-->
+                <!--<version>1.5</version>-->
+                <!--<configuration>-->
+                    <!--<licenseName>apache_2_0</licenseName>-->
+                    <!--<licenseResolver>file:///${project.basedir}/license</licenseResolver>-->
+                    <!--<includes>-->
+                        <!--<include>**/src/main/java/**</include>-->
+                        <!--<include>**/src/test/java/**</include>-->
+                    <!--</includes>-->
+                    <!--<processStartTag>=================</processStartTag>-->
+                    <!--<processEndTag>=================</processEndTag>-->
+                    <!--<sectionDelimiter></sectionDelimiter>-->
+                    <!--<addJavaLicenseAfterPackage>false</addJavaLicenseAfterPackage>-->
+                <!--</configuration>-->
+                <!--<executions>-->
+                    <!--<execution>-->
+                        <!--<goals>-->
+                            <!--<goal>update-file-header</goal>-->
+                        <!--</goals>-->
+                        <!--<phase>process-sources</phase>-->
+                    <!--</execution>-->
+                <!--</executions>-->
+            <!--</plugin>-->
+            <!--<plugin>-->
+            <!--<groupId>net.alchim31.maven</groupId>-->
+            <!--<artifactId>yuicompressor-maven-plugin</artifactId>-->
+            <!--<configuration>-->
+            <!--<excludes>-->
+            <!--<exclude>**/jquery*.js</exclude>-->
+            <!--</excludes>-->
+            <!--</configuration>-->
+            <!--</plugin>-->
+        <!--</plugins>-->
+    <!--</build>-->
 
 </project>

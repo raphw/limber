@@ -11,7 +11,7 @@ class InstanceKey {
     private final Class<? extends AbstractRenderable> renderableClass;
     private final UUID versionNumber;
 
-    public InstanceKey(
+    InstanceKey(
             @Nonnull String sessionId,
             @Nonnull Class<? extends AbstractRenderable> renderableClass,
             UUID versionNumber) {
@@ -38,5 +38,17 @@ class InstanceKey {
         result = 31 * result + renderableClass.hashCode();
         result = 31 * result + versionNumber.hashCode();
         return result;
+    }
+
+    String getSessionId() {
+        return sessionId;
+    }
+
+    Class<? extends AbstractRenderable> getRenderableClass() {
+        return renderableClass;
+    }
+
+    UUID getVersionNumber() {
+        return versionNumber;
     }
 }

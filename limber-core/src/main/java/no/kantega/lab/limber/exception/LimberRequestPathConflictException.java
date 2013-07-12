@@ -1,5 +1,6 @@
 package no.kantega.lab.limber.exception;
 
+
 public class LimberRequestPathConflictException extends RuntimeException {
 
     private final Class<?> clazz;

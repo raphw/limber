@@ -1,5 +1,6 @@
 package no.kantega.lab.limber.dom.comparison;
 
+
 import no.kantega.lab.limber.dom.element.ElementNode;
 
 import java.util.List;

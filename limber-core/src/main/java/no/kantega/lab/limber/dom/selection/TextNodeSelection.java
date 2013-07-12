@@ -1,5 +1,6 @@
 package no.kantega.lab.limber.dom.selection;
 
+
 import no.kantega.lab.limber.dom.element.TextNode;
 
 import javax.annotation.Nonnull;

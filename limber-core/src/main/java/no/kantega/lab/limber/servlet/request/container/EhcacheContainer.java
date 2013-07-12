@@ -4,10 +4,10 @@ import net.sf.ehcache.Cache;
 import net.sf.ehcache.CacheManager;
 import net.sf.ehcache.Ehcache;
 import net.sf.ehcache.Element;
-import net.sf.ehcache.config.CacheConfiguration;
-import net.sf.ehcache.config.PersistenceConfiguration;
+import net.sf.ehcache.config.*;
 import net.sf.ehcache.store.MemoryStoreEvictionPolicy;
 import no.kantega.lab.limber.servlet.AbstractRenderable;
+import no.kantega.lab.limber.servlet.context.ILimberApplicationContext;
 import no.kantega.lab.limber.servlet.context.IRequestMapping;
 import no.kantega.lab.limber.servlet.meta.PageRestitution;
 import no.kantega.lab.limber.servlet.request.creator.IInstanceCreator;
@@ -18,14 +18,17 @@ import java.util.UUID;
 
 public class EhcacheContainer extends AbstractInstanceContainer {
 
+    private static final Configuration DEFAULT_CONFIGURATION = new Configuration().diskStore(new DiskStoreConfiguration().path("java.io.tmpdir"));
+
     private final Ehcache pageCache;
     private final BlockingPageCache blockingPageCache;
 
-    public EhcacheContainer() {
-        CacheManager singletonManager = CacheManager.getInstance();
+    public EhcacheContainer(ILimberApplicationContext limberApplicationContext) {
+        CacheManager singletonManager = CacheManager.create(DEFAULT_CONFIGURATION);
         pageCache = new Cache(makePageStoreConfig());
         singletonManager.addCache(pageCache);
         blockingPageCache = new BlockingPageCache(pageCache);
+
     }
 
     @Override
@@ -91,7 +94,8 @@ public class EhcacheContainer extends AbstractInstanceContainer {
     }
 
     private CacheConfiguration makePageStoreConfig() {
-        return new CacheConfiguration()
+
+        CacheConfiguration cacheConfiguration = new CacheConfiguration()
                 .name(String.format("pageCache"))
                 .memoryStoreEvictionPolicy(MemoryStoreEvictionPolicy.LRU)
                 .timeToIdleSeconds(0)
@@ -104,5 +108,11 @@ public class EhcacheContainer extends AbstractInstanceContainer {
                 .eternal(true)
                 .persistence(new PersistenceConfiguration().strategy(PersistenceConfiguration.Strategy.LOCALTEMPSWAP))
                 .logging(false);
+
+        Searchable searchable = new Searchable();
+        searchable.addSearchAttribute(new SearchAttribute().name("sessionId").expression("key.getSessionId()"));
+        cacheConfiguration.addSearchable(searchable);
+
+        return cacheConfiguration;
     }
 }

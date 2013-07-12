@@ -17,12 +17,14 @@
     <description>An example application of the limber web framework.</description>
 
     <dependencies>
+
         <!-- The core limber framework -->
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>limber-core</artifactId>
             <version>${project.version}</version>
         </dependency>
+
     </dependencies>
 
     <build>

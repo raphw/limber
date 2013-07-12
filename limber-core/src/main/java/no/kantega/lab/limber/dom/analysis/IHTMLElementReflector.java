@@ -1,5 +1,6 @@
 package no.kantega.lab.limber.dom.analysis;
 
+
 public interface IHtmlElementReflector {
 
     boolean isBlock(CharSequence tagName);

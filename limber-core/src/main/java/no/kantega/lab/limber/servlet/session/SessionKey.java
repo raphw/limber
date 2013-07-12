@@ -1,5 +1,6 @@
 package no.kantega.lab.limber.servlet.session;
 
+
 import javax.annotation.Nonnull;
 
 public class SessionKey<T> {

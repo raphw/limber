@@ -49,7 +49,7 @@ public class LimberRequestHandler {
         instanceCreator = new ReflectionInstanceCreator();
 
         // Set up request containers
-        IInstanceContainer latest = new EhcacheContainer();
+        IInstanceContainer latest = new EhcacheContainer(limberApplicationContext);
         latest = new VersioningPseudoContainer(latest);
         topInstanceContainer = latest;
 

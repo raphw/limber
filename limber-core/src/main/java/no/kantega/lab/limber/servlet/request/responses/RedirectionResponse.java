@@ -1,5 +1,6 @@
 package no.kantega.lab.limber.servlet.request.responses;
 
+
 import no.kantega.lab.limber.servlet.AbstractRenderable;
 import no.kantega.lab.limber.servlet.meta.PageVersioning;
 import no.kantega.lab.limber.servlet.meta.VersioningPolicy;
