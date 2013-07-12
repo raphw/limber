@@ -7,7 +7,7 @@ import no.kantega.lab.limber.dom.element.LinkNode;
 import no.kantega.lab.limber.dom.element.PlainLinkNode;
 import no.kantega.lab.limber.dom.page.WebPage;
 import no.kantega.lab.limber.dom.selection.ElementNodeSelection;
-import no.kantega.lab.limber.servlet.meta.RequestMapping;
+import no.kantega.lab.limber.kernel.meta.RequestMapping;
 
 import java.util.Date;
 

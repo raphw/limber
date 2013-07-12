@@ -2,7 +2,7 @@ package no.kantega.lab.limber.dom.abstraction;
 
 import no.kantega.lab.limber.dom.element.LinkNode;
 import no.kantega.lab.limber.dom.target.ITargetable;
-import no.kantega.lab.limber.servlet.AbstractRenderable;
+import no.kantega.lab.limber.kernel.AbstractRenderable;
 
 import javax.annotation.Nonnull;
 import java.net.URI;

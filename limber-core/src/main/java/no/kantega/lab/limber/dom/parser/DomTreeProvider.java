@@ -4,7 +4,7 @@ import no.kantega.lab.limber.dom.doctype.DoctypeDeclaration;
 import no.kantega.lab.limber.dom.element.ElementNode;
 import no.kantega.lab.limber.dom.selection.HtmlDocumentRootSelection;
 import no.kantega.lab.limber.exception.LimberParsingException;
-import no.kantega.lab.limber.servlet.AbstractRenderable;
+import no.kantega.lab.limber.kernel.AbstractRenderable;
 import org.apache.xerces.parsers.AbstractSAXParser;
 import org.apache.xerces.xni.parser.XMLParserConfiguration;
 import org.cyberneko.html.HTMLConfiguration;

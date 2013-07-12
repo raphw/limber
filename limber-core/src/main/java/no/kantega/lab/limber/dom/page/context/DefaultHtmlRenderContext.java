@@ -2,8 +2,12 @@ package no.kantega.lab.limber.dom.page.context;
 
 import no.kantega.lab.limber.dom.page.IEventTriggerable;
 import no.kantega.lab.limber.dom.selection.HtmlDocumentRootSelection;
-import no.kantega.lab.limber.servlet.context.*;
-import no.kantega.lab.limber.servlet.request.context.IRenderContext;
+import no.kantega.lab.limber.kernel.application.ILimberApplicationContext;
+import no.kantega.lab.limber.kernel.application.ILimberPageRegister;
+import no.kantega.lab.limber.kernel.request.IHttpServletRequestWrapper;
+import no.kantega.lab.limber.kernel.request.IRenderContext;
+import no.kantega.lab.limber.kernel.request.IRequestMapping;
+import no.kantega.lab.limber.kernel.response.IHttpServletResponseWrapper;
 
 import javax.annotation.Nonnull;
 import java.util.Map;

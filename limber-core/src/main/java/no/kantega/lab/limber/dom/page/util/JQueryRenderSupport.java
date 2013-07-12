@@ -2,7 +2,7 @@ package no.kantega.lab.limber.dom.page.util;
 
 import no.kantega.lab.limber.dom.page.IEventTriggerable;
 import no.kantega.lab.limber.dom.page.context.IHtmlRenderContext;
-import no.kantega.lab.limber.servlet.request.context.IRenderContext;
+import no.kantega.lab.limber.kernel.request.IRenderContext;
 
 import java.io.IOException;
 import java.io.Writer;

@@ -12,7 +12,7 @@ import no.kantega.lab.limber.dom.page.context.DefaultHtmlRenderContext;
 import no.kantega.lab.limber.dom.page.context.DefaultHtmlRenderOptions;
 import no.kantega.lab.limber.dom.page.context.IHtmlRenderContext;
 import no.kantega.lab.limber.dom.selection.HtmlDocumentRootSelection;
-import no.kantega.lab.limber.servlet.request.context.IRenderContext;
+import no.kantega.lab.limber.kernel.request.IRenderContext;
 
 import javax.annotation.Nonnull;
 import java.io.*;
@@ -83,7 +83,7 @@ public class WebPageRenderSupport {
         } else if (eventTriggerable.isAjaxEventTrigger()) {
             return renderAjaxSubroutineResponse(pageWriter, eventTriggerable,
                     findDomComparisonStrategy(webPageClass),
-                    htmlRenderContext, htmlDocumentSelection, subroutineRegisterMap);
+                    htmlRenderContext, htmlDocumentSelection);
         } else {
             return renderNonAjaxSubroutineResponse(pageWriter, eventTriggerable,
                     htmlRenderContext, htmlDocumentSelection, subroutineRegisterMap);
@@ -103,8 +103,7 @@ public class WebPageRenderSupport {
                                                  @Nonnull IEventTriggerable eventTriggerable,
                                                  @Nonnull Class<? extends IDomComparisonStrategy> comparisonStrategyClass,
                                                  @Nonnull IHtmlRenderContext htmlRenderContext,
-                                                 @Nonnull HtmlDocumentRootSelection htmlDocumentSelection,
-                                                 @Nonnull Map<UUID, IEventTriggerable> subroutineRegisterMap) throws IOException {
+                                                 @Nonnull HtmlDocumentRootSelection htmlDocumentSelection) throws IOException {
 
         ElementNode<?> rootNodeClone = htmlDocumentSelection.getRootNode().clone(),
                 rootNodeOriginal = htmlDocumentSelection.getRootNode();

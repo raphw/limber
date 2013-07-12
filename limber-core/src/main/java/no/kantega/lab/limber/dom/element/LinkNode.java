@@ -6,7 +6,7 @@ import no.kantega.lab.limber.dom.page.context.IHtmlRenderContext;
 import no.kantega.lab.limber.dom.target.ITargetable;
 import no.kantega.lab.limber.dom.target.RenderableTarget;
 import no.kantega.lab.limber.dom.target.URITarget;
-import no.kantega.lab.limber.servlet.AbstractRenderable;
+import no.kantega.lab.limber.kernel.AbstractRenderable;
 import org.apache.commons.lang3.StringUtils;
 
 import javax.annotation.Nonnull;

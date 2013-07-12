@@ -7,10 +7,10 @@ import no.kantega.lab.limber.dom.element.ElementNode;
 import no.kantega.lab.limber.dom.page.util.WebPageRenderSupport;
 import no.kantega.lab.limber.dom.parser.DomTreeProvider;
 import no.kantega.lab.limber.dom.selection.HtmlDocumentRootSelection;
-import no.kantega.lab.limber.servlet.AbstractRenderable;
-import no.kantega.lab.limber.servlet.meta.ResourceIdentification;
-import no.kantega.lab.limber.servlet.meta.ResourceType;
-import no.kantega.lab.limber.servlet.request.context.IRenderContext;
+import no.kantega.lab.limber.kernel.AbstractRenderable;
+import no.kantega.lab.limber.kernel.meta.ResourceIdentification;
+import no.kantega.lab.limber.kernel.meta.ResourceType;
+import no.kantega.lab.limber.kernel.request.IRenderContext;
 
 import javax.annotation.Nonnull;
 import java.io.IOException;

@@ -1,6 +1,6 @@
 package no.kantega.lab.limber.exception;
 
-import no.kantega.lab.limber.servlet.AbstractRenderable;
+import no.kantega.lab.limber.kernel.AbstractRenderable;
 
 public class LimberInstanciationException extends RuntimeException {
 

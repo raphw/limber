@@ -2,9 +2,9 @@ package no.kantega.lab.limber.dom.parser;
 
 
 import no.kantega.lab.limber.exception.NotYetImplementedException;
-import no.kantega.lab.limber.servlet.AbstractRenderable;
-import no.kantega.lab.limber.servlet.meta.ResourceIdentification;
-import no.kantega.lab.limber.servlet.meta.ResourceType;
+import no.kantega.lab.limber.kernel.AbstractRenderable;
+import no.kantega.lab.limber.kernel.meta.ResourceIdentification;
+import no.kantega.lab.limber.kernel.meta.ResourceType;
 import org.apache.commons.lang3.StringUtils;
 
 import javax.annotation.Nonnull;
