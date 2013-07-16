@@ -7,6 +7,5 @@ import javax.annotation.Nonnull;
 
 public interface IInstanceCreator {
 
-    @Nonnull
     AbstractRenderable create(@Nonnull IRequestMapping requestMapping);
 }

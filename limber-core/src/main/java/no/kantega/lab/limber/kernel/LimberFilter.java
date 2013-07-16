@@ -1,7 +1,5 @@
 package no.kantega.lab.limber.kernel;
 
-
-import net.sf.ehcache.CacheManager;
 import no.kantega.lab.limber.kernel.application.LimberApplicationHandler;
 import no.kantega.lab.limber.kernel.request.LimberRequestHandler;
 import no.kantega.lab.limber.kernel.request.RequestCycleRenderContext;
@@ -57,6 +55,5 @@ public class LimberFilter implements Filter {
     @Override
     public void destroy() {
         LimberApplicationHandler.getInstance().deregisterApplication(applicationId);
-        CacheManager.getInstance().shutdown();
     }
 }

@@ -3,9 +3,10 @@ package no.kantega.lab.limber.kernel.container;
 import no.kantega.lab.limber.kernel.AbstractRenderable;
 
 import javax.annotation.Nonnull;
+import java.io.Serializable;
 import java.util.UUID;
 
-class InstanceKey {
+class InstanceKey implements Serializable {
 
     private final String sessionId;
     private final Class<? extends AbstractRenderable> renderableClass;
@@ -50,5 +51,14 @@ class InstanceKey {
 
     UUID getVersionNumber() {
         return versionNumber;
+    }
+
+    @Override
+    public String toString() {
+        return "InstanceKey{" +
+                "sessionId='" + sessionId + '\'' +
+                ", renderableClass=" + renderableClass +
+                ", versionNumber=" + versionNumber +
+                '}';
     }
 }

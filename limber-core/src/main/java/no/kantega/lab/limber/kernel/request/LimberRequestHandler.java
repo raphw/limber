@@ -31,13 +31,7 @@ public class LimberRequestHandler {
             throws IOException {
 
         ILimberApplicationContext applicationContext = LimberApplicationHandler.getInstance().getApplication(applicationId);
-        if (applicationContext == null) {
-            throw new IllegalStateException();
-        }
         ILimberApplicationConfiguration applicationConfiguration = applicationContext.getLimberApplicationConfiguration();
-        if (applicationConfiguration == null) {
-            throw new IllegalStateException();
-        }
 
         // Wrap servlet request and responses
         IHttpServletRequestWrapper httpServletRequestWrapper = new DefaultHttpServletRequestWrapper(httpServletRequest);
@@ -92,7 +86,7 @@ public class LimberRequestHandler {
 
     private AbstractRenderable findRenderableToRequest(@Nonnull IRequestMapping requestMapping,
                                                        @Nonnull ILimberApplicationConfiguration applicationConfiguration) {
-        return applicationConfiguration.getInstanceContainer().resolve(requestMapping, applicationConfiguration.getInstanceCreator());
+        return applicationConfiguration.getInstanceContainerStack().resolve(requestMapping);
     }
 
     private boolean renderRequest(@Nonnull IRenderContext renderContext,

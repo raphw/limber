@@ -123,13 +123,6 @@
                 <version>${version.xerces}</version>
             </dependency>
 
-            <!-- Cache -->
-            <dependency>
-                <groupId>net.sf.ehcache</groupId>
-                <artifactId>ehcache</artifactId>
-                <version>${version.ehcache}</version>
-            </dependency>
-
             <!-- Serialization -->
             <dependency>
                 <groupId>com.esotericsoftware.kryo</groupId>

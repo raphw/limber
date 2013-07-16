@@ -1,5 +1,7 @@
 package no.kantega.lab.limber.kernel.application;
 
+import no.kantega.lab.limber.kernel.session.LimberSessionHandler;
+
 import javax.annotation.Nonnull;
 import javax.servlet.ServletContext;
 import java.io.InputStream;
@@ -36,7 +38,9 @@ public interface ILimberApplicationContext {
     @Nonnull
     String getApplicationName();
 
+    @Nonnull
     ILimberApplicationConfiguration getLimberApplicationConfiguration();
 
-    ILimberApplicationConfiguration setLimberApplicationConfiguration(ILimberApplicationConfiguration applicationConfiguration);
+    @Nonnull
+    LimberSessionHandler getLimberSessionHandler();
 }

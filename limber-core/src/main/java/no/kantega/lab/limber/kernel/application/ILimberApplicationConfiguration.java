@@ -1,18 +1,26 @@
 package no.kantega.lab.limber.kernel.application;
 
-import no.kantega.lab.limber.kernel.container.IInstanceContainer;
-import no.kantega.lab.limber.kernel.creator.IInstanceCreator;
+import no.kantega.lab.limber.kernel.container.IInstanceContainerStack;
+import no.kantega.lab.limber.kernel.creator.IInstanceCreationMapper;
 import no.kantega.lab.limber.kernel.mapper.IRequestMapper;
 
+import javax.annotation.Nonnull;
 import java.util.Deque;
 
 public interface ILimberApplicationConfiguration {
 
+    @Nonnull
     ILimberPageRegister getLimberPageRegister();
 
+    @Nonnull
     Deque<IRequestMapper> getRequestInterpreters();
 
-    IInstanceContainer getInstanceContainer();
+    @Nonnull
+    IInstanceContainerStack getInstanceContainerStack();
 
-    IInstanceCreator getInstanceCreator();
+    @Nonnull
+    IInstanceCreationMapper getInstanceCreationMapper();
+
+    @Nonnull
+    ILimberApplicationConfiguration validate();
 }

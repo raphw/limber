@@ -18,4 +18,6 @@ public interface IInstanceContainer {
     AbstractRenderable remove(@Nonnull IRequestMapping requestMapping);
 
     IInstanceContainer getParent();
+
+    IInstanceContainer setParent(IInstanceContainer parent);
 }

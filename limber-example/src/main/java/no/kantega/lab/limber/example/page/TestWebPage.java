@@ -9,10 +9,11 @@ import no.kantega.lab.limber.dom.page.WebPage;
 import no.kantega.lab.limber.dom.selection.ElementNodeSelection;
 import no.kantega.lab.limber.kernel.meta.RequestMapping;
 
+import java.io.Serializable;
 import java.util.Date;
 
 @RequestMapping("/")
-public class TestWebPage extends WebPage {
+public class TestWebPage extends WebPage implements Serializable {
 
     public TestWebPage() {
 

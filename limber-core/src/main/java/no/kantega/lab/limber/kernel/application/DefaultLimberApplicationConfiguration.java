@@ -1,25 +1,28 @@
 package no.kantega.lab.limber.kernel.application;
 
-import no.kantega.lab.limber.kernel.container.IInstanceContainer;
-import no.kantega.lab.limber.kernel.creator.IInstanceCreator;
+import no.kantega.lab.limber.kernel.container.DefaultInstanceContainerStack;
+import no.kantega.lab.limber.kernel.container.IInstanceContainerStack;
+import no.kantega.lab.limber.kernel.creator.DefaultInstanceCreationMapper;
+import no.kantega.lab.limber.kernel.creator.IInstanceCreationMapper;
 import no.kantega.lab.limber.kernel.mapper.IRequestMapper;
 
 import javax.annotation.Nonnull;
 import java.util.Deque;
+import java.util.LinkedList;
 
 public class DefaultLimberApplicationConfiguration implements ILimberApplicationConfiguration {
 
-    private final ILimberPageRegister limberPageRegister;
     private final Deque<IRequestMapper> requestInterpreters;
-    private final IInstanceContainer topInstanceContainer;
-    private final IInstanceCreator instanceCreator;
+    private final IInstanceContainerStack instanceContainerStack;
+    private final IInstanceCreationMapper instanceCreationMapper;
 
-    public DefaultLimberApplicationConfiguration(@Nonnull ILimberPageRegister limberPageRegister, @Nonnull Deque<IRequestMapper> requestInterpreters,
-                                                 @Nonnull IInstanceContainer topInstanceContainer, @Nonnull IInstanceCreator instanceCreator) {
-        this.limberPageRegister = limberPageRegister;
-        this.requestInterpreters = requestInterpreters;
-        this.topInstanceContainer = topInstanceContainer;
-        this.instanceCreator = instanceCreator;
+    private final ILimberPageRegister limberPageRegister;
+
+    public DefaultLimberApplicationConfiguration() {
+        this.requestInterpreters = new LinkedList<IRequestMapper>();
+        this.instanceCreationMapper = new DefaultInstanceCreationMapper();
+        this.instanceContainerStack = new DefaultInstanceContainerStack(instanceCreationMapper);
+        this.limberPageRegister = new DefaultLimberPageRegister(requestInterpreters);
     }
 
     @Nonnull
@@ -36,13 +39,24 @@ public class DefaultLimberApplicationConfiguration implements ILimberApplication
 
     @Nonnull
     @Override
-    public IInstanceContainer getInstanceContainer() {
-        return topInstanceContainer;
+    public IInstanceContainerStack getInstanceContainerStack() {
+        return instanceContainerStack;
     }
 
     @Nonnull
     @Override
-    public IInstanceCreator getInstanceCreator() {
-        return instanceCreator;
+    public IInstanceCreationMapper getInstanceCreationMapper() {
+        return instanceCreationMapper;
+    }
+
+    @Nonnull
+    @Override
+    public ILimberApplicationConfiguration validate() {
+        if (requestInterpreters.size() == 0
+                || instanceContainerStack.peek() == null
+                || instanceCreationMapper.size() == 0) {
+            throw new IllegalStateException();
+        }
+        return this;
     }
 }

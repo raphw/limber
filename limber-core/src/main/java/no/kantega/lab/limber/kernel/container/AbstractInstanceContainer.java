@@ -9,7 +9,7 @@ import java.util.UUID;
 
 public abstract class AbstractInstanceContainer implements IInstanceContainer {
 
-    private final IInstanceContainer parent;
+    private IInstanceContainer parent;
 
     protected AbstractInstanceContainer() {
         this(null);
@@ -46,5 +46,12 @@ public abstract class AbstractInstanceContainer implements IInstanceContainer {
     @Override
     public IInstanceContainer getParent() {
         return parent;
+    }
+
+    @Nonnull
+    @Override
+    public IInstanceContainer setParent(IInstanceContainer parent) {
+        this.parent = parent;
+        return this;
     }
 }

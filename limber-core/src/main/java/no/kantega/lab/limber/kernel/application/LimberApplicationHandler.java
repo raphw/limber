@@ -32,10 +32,14 @@ public class LimberApplicationHandler {
 
         initializeStartUpListeners(applicationContext);
 
+        filterConfig.getServletContext().addListener(applicationContext.getLimberSessionHandler());
+
         for (Map.Entry<ILimberApplicationListener, ILimberApplicationListenerFilter> applicationListener : applicationListeners.entrySet()) {
             if (applicationListener.getValue().isApplicable(applicationContext))
                 applicationListener.getKey().onApplicationStart(applicationContext);
         }
+
+        applicationContext.getLimberApplicationConfiguration().validate();
 
         return applicationId;
     }
@@ -73,7 +77,9 @@ public class LimberApplicationHandler {
     }
 
     public ILimberApplicationContext getApplication(@Nonnull UUID uuid) {
-        return applicationMap.get(uuid);
+        ILimberApplicationContext applicationContext = applicationMap.get(uuid);
+        if (applicationContext == null) throw new IllegalArgumentException();
+        return applicationContext;
     }
 
     @Nonnull

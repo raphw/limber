@@ -38,4 +38,16 @@ public class VersioningPseudoContainer extends AbstractInstanceContainer {
 
         return getParent().resolve(requestMapping, instanceCreator);
     }
+
+    @Nonnull
+    @Override
+    public IInstanceContainer setParent(@Nonnull IInstanceContainer parent) {
+        return super.setParent(parent);
+    }
+
+    @Nonnull
+    @Override
+    public IInstanceContainer getParent() {
+        return super.getParent();
+    }
 }

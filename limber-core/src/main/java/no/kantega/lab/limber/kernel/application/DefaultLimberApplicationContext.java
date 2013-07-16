@@ -2,6 +2,7 @@ package no.kantega.lab.limber.kernel.application;
 
 import com.google.common.base.Splitter;
 import no.kantega.lab.limber.kernel.mapper.IRequestMapper;
+import no.kantega.lab.limber.kernel.session.LimberSessionHandler;
 
 import javax.annotation.Nonnull;
 import javax.servlet.FilterConfig;
@@ -25,9 +26,11 @@ public class DefaultLimberApplicationContext implements ILimberApplicationContex
     private final UUID filterId;
     private final Set<String> registeredPackages;
 
+    private final ILimberApplicationConfiguration applicationConfiguration;
+
     private final Set<ILimberApplicationListener> applicationListeners;
 
-    private ILimberApplicationConfiguration applicationConfiguration;
+    private final LimberSessionHandler sessionHandler;
 
     public DefaultLimberApplicationContext(@Nonnull FilterConfig filterConfig, @Nonnull UUID filterId) {
         this.applicationName = filterConfig.getFilterName();
@@ -35,6 +38,8 @@ public class DefaultLimberApplicationContext implements ILimberApplicationContex
         this.filterId = filterId;
         registeredPackages = Collections.unmodifiableSet(findRegisteredPackages(filterConfig));
         applicationListeners = new LinkedHashSet<ILimberApplicationListener>();
+        this.applicationConfiguration = new DefaultLimberApplicationConfiguration();
+        sessionHandler = new LimberSessionHandler(filterId);
     }
 
     private Set<String> findRegisteredPackages(@Nonnull FilterConfig filterConfig) {
@@ -127,17 +132,15 @@ public class DefaultLimberApplicationContext implements ILimberApplicationContex
         return applicationName;
     }
 
+    @Nonnull
     @Override
     public ILimberApplicationConfiguration getLimberApplicationConfiguration() {
         return applicationConfiguration;
     }
 
+    @Nonnull
     @Override
-    public ILimberApplicationConfiguration setLimberApplicationConfiguration(ILimberApplicationConfiguration applicationConfiguration) {
-        try {
-            return this.applicationConfiguration;
-        } finally {
-            this.applicationConfiguration = applicationConfiguration;
-        }
+    public LimberSessionHandler getLimberSessionHandler() {
+        return sessionHandler;
     }
 }

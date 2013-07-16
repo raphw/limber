@@ -1,29 +1,34 @@
 package no.kantega.lab.limber.kernel.session;
 
+import javax.annotation.Nonnull;
 import javax.servlet.http.HttpSessionEvent;
 import javax.servlet.http.HttpSessionListener;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.UUID;
 
 public class LimberSessionHandler implements HttpSessionListener {
 
-    private static final LimberSessionHandler INSTANCE = new LimberSessionHandler();
-
-    public static LimberSessionHandler getInstance() {
-        return INSTANCE;
-    }
+    private final UUID applicationId;
 
     private final Set<ILimberSessionListener> sessionListeners;
 
-    public LimberSessionHandler() {
+    public LimberSessionHandler(@Nonnull UUID applicationId) {
         sessionListeners = new HashSet<ILimberSessionListener>();
+        this.applicationId = applicationId;
     }
 
     @Override
-    public void sessionCreated(HttpSessionEvent httpSessionEvent) {
+    public void sessionCreated(@Nonnull HttpSessionEvent httpSessionEvent) {
+        for (ILimberSessionListener sessionListener : sessionListeners) {
+            sessionListener.onSessionCreate(httpSessionEvent.getSession().getId());
+        }
     }
 
     @Override
-    public void sessionDestroyed(HttpSessionEvent httpSessionEvent) {
+    public void sessionDestroyed(@Nonnull HttpSessionEvent httpSessionEvent) {
+        for (ILimberSessionListener sessionListener : sessionListeners) {
+            sessionListener.onSessionDestroy(httpSessionEvent.getSession().getId());
+        }
     }
 }

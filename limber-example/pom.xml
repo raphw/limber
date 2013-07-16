@@ -16,6 +16,11 @@
     <name>Limber web framework - example</name>
     <description>An example application of the limber web framework.</description>
 
+    <properties>
+        <version.slf4j.simple>1.7.5</version.slf4j.simple>
+        <version.jetty>8.1.11.v20130520</version.jetty>
+    </properties>
+
     <dependencies>
 
         <!-- The core limber framework -->
@@ -23,6 +28,13 @@
             <groupId>${project.groupId}</groupId>
             <artifactId>limber-core</artifactId>
             <version>${project.version}</version>
+        </dependency>
+
+        <!-- Simple logger implementation -->
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-simple</artifactId>
+            <version>${version.slf4j.simple}</version>
         </dependency>
 
     </dependencies>
@@ -62,7 +74,7 @@
             <plugin>
                 <groupId>org.mortbay.jetty</groupId>
                 <artifactId>jetty-maven-plugin</artifactId>
-                <version>7.6.3.v20120416</version>
+                <version>${version.jetty}</version>
                 <configuration>
                     <connectors>
                         <connector implementation="org.eclipse.jetty.server.nio.SelectChannelConnector">
