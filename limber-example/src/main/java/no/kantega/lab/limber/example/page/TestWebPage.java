@@ -3,10 +3,10 @@ package no.kantega.lab.limber.example.page;
 import no.kantega.lab.limber.dom.ajax.AjaxEventTrigger;
 import no.kantega.lab.limber.dom.ajax.IAjaxCallback;
 import no.kantega.lab.limber.dom.element.ElementNode;
+import no.kantega.lab.limber.dom.element.IDomNodeVisitor;
 import no.kantega.lab.limber.dom.element.LinkNode;
 import no.kantega.lab.limber.dom.element.PlainLinkNode;
 import no.kantega.lab.limber.dom.page.WebPage;
-import no.kantega.lab.limber.dom.selection.ElementNodeSelection;
 import no.kantega.lab.limber.kernel.meta.RequestMapping;
 
 import java.io.Serializable;
@@ -21,11 +21,15 @@ public class TestWebPage extends WebPage implements Serializable {
 
         dom().findByTag("h2").setContent("Hello limber framework");
 
-        ElementNodeSelection<?, ?> selection = dom().findByTag("ul").clear();
-        for (String s : new String[]{"It is easy to use", "It is elegant to use", "Out-of-the-box jQuery"}) {
-            selection.appendChild("li").setContent(s);
-        }
-        selection.setRandomIdIfNone();
+        dom().findByTag("ul").clear().visit(new IDomNodeVisitor<ElementNode<?>>() {
+            @Override
+            public void visit(ElementNode<?> node) {
+                for (String s : new String[]{"It is easy to use", "It is elegant to use", "Out-of-the-box jQuery"}) {
+                    node.appendChild("li").setContent(s);
+                }
+            }
+        }).setRandomIdIfNone();
+
 
         dom().findByTag("button").setContent("Ajax demo").setRandomIdIfNone().addAjaxEvent(AjaxEventTrigger.CLICK, new IAjaxCallback<ElementNode<?>>() {
             @Override
