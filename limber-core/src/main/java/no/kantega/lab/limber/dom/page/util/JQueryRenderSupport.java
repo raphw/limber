@@ -26,15 +26,17 @@ public class JQueryRenderSupport {
         for (IEventTriggerable eventTriggerable : ajaxEventRegister) {
 
             // Write identifier
-            writer.append("jQuery('#");
-            writer.append(eventTriggerable.getEventTarget().setRandomIdIfNone().getId());
-            writer.append("')");
+            if (eventTriggerable.getEventTarget().isIdSet()) {
+                writer.append("jQuery('#").append(eventTriggerable.getEventTarget().getId()).append("')");
+            } else {
+                writer.append("jQuery(document).xpath('").append(eventTriggerable.getEventTarget().getXPath()).append("')");
+            }
 
             // Start bind
             writer.append(".bind(");
 
             // Event
-            writer.append("'click'"); // Prelim.
+            writer.append("'").append(eventTriggerable.getAjaxEventTrigger().getEventDescription()).append("'");
 
             //  Response wrapper
             writer.append(",");

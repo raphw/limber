@@ -28,10 +28,10 @@ public class TestWebPage extends WebPage implements Serializable {
                     node.appendChild("li").setContent(s);
                 }
             }
-        }).setRandomIdIfNone();
+        });
 
 
-        dom().findByTag("button").setContent("Ajax demo").setRandomIdIfNone().addAjaxEvent(AjaxEventTrigger.CLICK, new IAjaxCallback<ElementNode<?>>() {
+        dom().findByTag("button").setContent("Ajax demo").addAjaxEvent(AjaxEventTrigger.CLICK, new IAjaxCallback<ElementNode<?>>() {
             @Override
             public void onEvent(AjaxEventTrigger ajaxEventTrigger, ElementNode<?> eventTarget) {
                 System.out.println("Ajax!");
