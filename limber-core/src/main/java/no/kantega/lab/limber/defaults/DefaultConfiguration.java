@@ -1,11 +1,10 @@
 package no.kantega.lab.limber.defaults;
 
 import com.google.common.io.Files;
-import no.kantega.lab.limber.kernel.AbstractRenderable;
-import no.kantega.lab.limber.kernel.application.ILimberApplicationConfiguration;
 import no.kantega.lab.limber.kernel.application.ILimberApplicationContext;
 import no.kantega.lab.limber.kernel.application.ILimberApplicationListener;
 import no.kantega.lab.limber.kernel.application.LoadOnStartup;
+import no.kantega.lab.limber.kernel.application.configuration.ILimberApplicationConfiguration;
 import no.kantega.lab.limber.kernel.container.IInstanceContainer;
 import no.kantega.lab.limber.kernel.container.PagePersistingCacheInstanceContainer;
 import no.kantega.lab.limber.kernel.container.VersioningPseudoContainer;
@@ -36,14 +35,13 @@ public class DefaultConfiguration implements ILimberApplicationListener {
         ILimberApplicationConfiguration applicationConfiguration = applicationContext.getLimberApplicationConfiguration();
 
         // Set up request interpreters
-        Deque<IRequestMapper> requestInterpreters = applicationConfiguration.getRequestInterpreters();
+        Deque<IRequestMapper> requestInterpreters = applicationConfiguration.getRequestMapperDeque();
         requestInterpreters.add(new LimberRequestExpressionMapper());
         requestInterpreters.add(new AnnotationRequestMapper(applicationContext));
         requestInterpreters.add(new RessourceRequestMapper(applicationContext));
 
         // Set up default instance creator
-        applicationConfiguration.getInstanceCreationMapper()
-                .addCreator(AbstractRenderable.class, new ReflectionInstanceCreator());
+        applicationConfiguration.getInstanceCreatorCollection().add(Object.class, new ReflectionInstanceCreator());
 
         // Make base directory
         File baseDirectory = Files.createTempDir();

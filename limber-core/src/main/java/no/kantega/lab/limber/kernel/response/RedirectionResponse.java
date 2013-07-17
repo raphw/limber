@@ -26,7 +26,7 @@ public class RedirectionResponse extends AbstractRenderable {
 
     @Override
     public boolean render(@Nonnull OutputStream outputStream, @Nonnull IRenderContext renderContext) throws IOException {
-        URI referralURI = renderContext.getLimberPageRegister().decodeLink(renderableClass, uuid);
+        URI referralURI = renderContext.getPageContext().decodeLink(renderableClass, uuid);
         renderContext.getHttpServletResponseWrapper().putHeaderValue("Location", referralURI.toString());
         renderContext.getHttpServletResponseWrapper().setStatusCode(HttpServletResponse.SC_FOUND);
         return true;

@@ -26,7 +26,7 @@ public class VersioningPseudoContainer extends AbstractInstanceContainer {
 
         switch (pageVersioning.value()) {
             case NONE:
-                return instanceCreator.create(requestMapping);
+                return instanceCreator.create(requestMapping.getRenderableClass());
             case SINGLE:
                 requestMapping = new DefaultRequestMapping(
                         requestMapping.getSessionId(),

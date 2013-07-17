@@ -1,7 +1,6 @@
 package no.kantega.lab.limber.kernel.request;
 
 import no.kantega.lab.limber.kernel.application.ILimberApplicationContext;
-import no.kantega.lab.limber.kernel.application.ILimberPageRegister;
 import no.kantega.lab.limber.kernel.response.IHttpServletResponseWrapper;
 import no.kantega.lab.limber.kernel.store.DefaultStoreCollection;
 import no.kantega.lab.limber.kernel.store.IStoreCollection;
@@ -12,8 +11,6 @@ public class DefaultRenderContext implements IRenderContext {
 
     private final ILimberApplicationContext limberApplicationContext;
 
-    private final ILimberPageRegister limberPageRegister;
-
     private final IRequestMapping requestMapping;
 
     private final IStoreCollection storeCollection;
@@ -22,29 +19,24 @@ public class DefaultRenderContext implements IRenderContext {
 
     private final IHttpServletResponseWrapper httpServletResponseWrapper;
 
+    private final IPageContext pageContext;
 
     public DefaultRenderContext(@Nonnull ILimberApplicationContext applicationContext,
                                 @Nonnull IRequestMapping requestMapping,
                                 @Nonnull IHttpServletRequestWrapper httpServletRequestWrapper,
                                 @Nonnull IHttpServletResponseWrapper httpServletResponseWrapper) {
         this.limberApplicationContext = applicationContext;
-        this.limberPageRegister = applicationContext.getLimberApplicationConfiguration().getLimberPageRegister();
         this.requestMapping = requestMapping;
         this.storeCollection = DefaultStoreCollection.from(applicationContext, httpServletRequestWrapper);
         this.httpServletRequestWrapper = httpServletRequestWrapper;
         this.httpServletResponseWrapper = httpServletResponseWrapper;
+        this.pageContext = new DefaultPageContext(applicationContext);
     }
 
     @Nonnull
     @Override
     public ILimberApplicationContext getLimberApplicationContext() {
         return limberApplicationContext;
-    }
-
-    @Nonnull
-    @Override
-    public ILimberPageRegister getLimberPageRegister() {
-        return limberPageRegister;
     }
 
     @Nonnull
@@ -69,5 +61,10 @@ public class DefaultRenderContext implements IRenderContext {
     @Override
     public IHttpServletResponseWrapper getHttpServletResponseWrapper() {
         return httpServletResponseWrapper;
+    }
+
+    @Override
+    public IPageContext getPageContext() {
+        return pageContext;
     }
 }

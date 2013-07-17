@@ -39,7 +39,7 @@ public class LimberApplicationHandler {
                 applicationListener.getKey().onApplicationStart(applicationContext);
         }
 
-        applicationContext.getLimberApplicationConfiguration().validate();
+        applicationContext.getLimberApplicationConfiguration().validate(true);
 
         return applicationId;
     }

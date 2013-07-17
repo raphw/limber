@@ -3,8 +3,8 @@ package no.kantega.lab.limber.dom.page.context;
 import no.kantega.lab.limber.dom.page.IEventTriggerable;
 import no.kantega.lab.limber.dom.selection.HtmlDocumentRootSelection;
 import no.kantega.lab.limber.kernel.application.ILimberApplicationContext;
-import no.kantega.lab.limber.kernel.application.ILimberPageRegister;
 import no.kantega.lab.limber.kernel.request.IHttpServletRequestWrapper;
+import no.kantega.lab.limber.kernel.request.IPageContext;
 import no.kantega.lab.limber.kernel.request.IRenderContext;
 import no.kantega.lab.limber.kernel.request.IRequestMapping;
 import no.kantega.lab.limber.kernel.response.IHttpServletResponseWrapper;
@@ -57,12 +57,6 @@ public class DefaultHtmlRenderContext implements IHtmlRenderContext {
 
     @Nonnull
     @Override
-    public ILimberPageRegister getLimberPageRegister() {
-        return renderContext.getLimberPageRegister();
-    }
-
-    @Nonnull
-    @Override
     public IRequestMapping getRequestMapping() {
         return renderContext.getRequestMapping();
     }
@@ -83,5 +77,10 @@ public class DefaultHtmlRenderContext implements IHtmlRenderContext {
     @Override
     public IHttpServletResponseWrapper getHttpServletResponseWrapper() {
         return renderContext.getHttpServletResponseWrapper();
+    }
+
+    @Override
+    public IPageContext getPageContext() {
+        return renderContext.getPageContext();
     }
 }

@@ -65,7 +65,7 @@ public class JQueryRenderSupport {
     private void makeCallbackUrl(Writer writer, IRenderContext renderContext, UUID ajaxId) throws IOException {
         writer.append("url:");
         writer.append("'");
-        writer.append(renderContext.getLimberPageRegister().decodeLink(
+        writer.append(renderContext.getPageContext().decodeLink(
                 renderContext.getRequestMapping().getRenderableClass(),
                 renderContext.getRequestMapping().getVersionId(),
                 ajaxId).toASCIIString());

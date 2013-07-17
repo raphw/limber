@@ -1,15 +1,12 @@
-package no.kantega.lab.limber.kernel.application;
+package no.kantega.lab.limber.kernel.request;
 
 import no.kantega.lab.limber.kernel.AbstractRenderable;
-import no.kantega.lab.limber.kernel.request.IRequestMapping;
 
 import javax.annotation.Nonnull;
 import java.net.URI;
 import java.util.UUID;
 
-public interface ILimberPageRegister {
-
-    AbstractRenderable resolve(@Nonnull IRequestMapping requestMapping);
+public interface IPageContext {
 
     URI decodeLink(@Nonnull AbstractRenderable renderable);
 

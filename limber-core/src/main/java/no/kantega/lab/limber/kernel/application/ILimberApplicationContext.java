@@ -1,5 +1,6 @@
 package no.kantega.lab.limber.kernel.application;
 
+import no.kantega.lab.limber.kernel.application.configuration.ILimberApplicationConfiguration;
 import no.kantega.lab.limber.kernel.session.LimberSessionHandler;
 
 import javax.annotation.Nonnull;

@@ -1,7 +1,7 @@
 package no.kantega.lab.limber.kernel.container;
 
 import no.kantega.lab.limber.kernel.AbstractRenderable;
-import no.kantega.lab.limber.kernel.application.ILimberApplicationConfiguration;
+import no.kantega.lab.limber.kernel.application.configuration.ILimberApplicationConfiguration;
 import no.kantega.lab.limber.kernel.creator.IInstanceCreator;
 import no.kantega.lab.limber.kernel.meta.PageRestitution;
 import no.kantega.lab.limber.kernel.request.IRequestMapping;
@@ -33,7 +33,7 @@ public class PagePersistingCacheInstanceContainer extends AbstractInstanceContai
         return pagePersistingCache.get(instanceKey, pagePersistingCache.new PersistedStateCacheLoader(instanceKey) {
             @Override
             protected AbstractRenderable makeValue(@Nonnull InstanceKey key) {
-                return instanceCreator.create(requestMapping);
+                return instanceCreator.create(requestMapping.getRenderableClass());
             }
         });
     }
@@ -51,7 +51,7 @@ public class PagePersistingCacheInstanceContainer extends AbstractInstanceContai
                 return storeBlockingIfAbsent(requestMapping, instanceCreator);
             }
         } else {
-            UUID uuid = store(requestMapping.getSessionId(), instanceCreator.create(requestMapping));
+            UUID uuid = store(requestMapping.getSessionId(), instanceCreator.create(requestMapping.getRenderableClass()));
             return new RedirectionResponse(requestMapping.getRenderableClass(), uuid);
         }
     }

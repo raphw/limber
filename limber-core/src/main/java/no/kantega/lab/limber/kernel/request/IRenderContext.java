@@ -2,7 +2,6 @@ package no.kantega.lab.limber.kernel.request;
 
 
 import no.kantega.lab.limber.kernel.application.ILimberApplicationContext;
-import no.kantega.lab.limber.kernel.application.ILimberPageRegister;
 import no.kantega.lab.limber.kernel.response.IHttpServletResponseWrapper;
 import no.kantega.lab.limber.kernel.store.IStoreCollection;
 
@@ -14,10 +13,9 @@ public interface IRenderContext {
     ILimberApplicationContext getLimberApplicationContext();
 
     @Nonnull
-    ILimberPageRegister getLimberPageRegister();
-
-    @Nonnull
     IRequestMapping getRequestMapping();
+
+    IPageContext getPageContext();
 
     @Nonnull
     IStoreCollection getStoreCollection();

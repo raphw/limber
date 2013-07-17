@@ -1,28 +1,19 @@
-package no.kantega.lab.limber.kernel.application;
+package no.kantega.lab.limber.kernel.request;
 
 import no.kantega.lab.limber.exception.NotYetImplementedException;
 import no.kantega.lab.limber.kernel.AbstractRenderable;
-import no.kantega.lab.limber.kernel.mapper.IRequestMapper;
-import no.kantega.lab.limber.kernel.request.IRequestMapping;
+import no.kantega.lab.limber.kernel.application.ILimberApplicationContext;
 
 import javax.annotation.Nonnull;
 import java.net.URI;
-import java.util.Deque;
-import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.UUID;
 
-public class DefaultLimberPageRegister implements ILimberPageRegister {
+public class DefaultPageContext implements IPageContext {
 
-    private final Deque<IRequestMapper> requestInterpreters;
+    private final ILimberApplicationContext applicationContext;
 
-    public DefaultLimberPageRegister(@Nonnull ILimberApplicationConfiguration applicationConfiguration) {
-        this.requestInterpreters = new LinkedList<IRequestMapper>();
-    }
-
-    @Override
-    public AbstractRenderable resolve(@Nonnull IRequestMapping requestMapping) {
-        return null;
+    public DefaultPageContext(@Nonnull ILimberApplicationContext applicationContext) {
+        this.applicationContext = applicationContext;
     }
 
     @Override
@@ -47,16 +38,8 @@ public class DefaultLimberPageRegister implements ILimberPageRegister {
 
     @Override
     public URI decodeLink(@Nonnull Class<? extends AbstractRenderable> renderable, UUID versionId, UUID subroutineId) {
-        // Reversely iterate over the list of request interpreters.
-        Iterator<IRequestMapper> iterator = requestInterpreters.descendingIterator();
-        while (iterator.hasNext()) {
-            IRequestMapper interpreter = iterator.next();
-            URI link = interpreter.resolve(renderable, versionId, subroutineId);
-            if (link != null) {
-                return link;
-            }
-        }
-        return null;
+        return applicationContext.getLimberApplicationConfiguration().getRequestMapperDeque().resolve(
+                renderable, versionId, subroutineId);
     }
 
     @Nonnull

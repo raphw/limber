@@ -1,10 +1,9 @@
 package no.kantega.lab.limber.kernel.request;
 
 import no.kantega.lab.limber.kernel.AbstractRenderable;
-import no.kantega.lab.limber.kernel.application.ILimberApplicationConfiguration;
 import no.kantega.lab.limber.kernel.application.ILimberApplicationContext;
 import no.kantega.lab.limber.kernel.application.LimberApplicationHandler;
-import no.kantega.lab.limber.kernel.mapper.IRequestMapper;
+import no.kantega.lab.limber.kernel.application.configuration.ILimberApplicationConfiguration;
 import no.kantega.lab.limber.kernel.meta.PageRenderSynchronization;
 import no.kantega.lab.limber.kernel.response.DefaultHttpServletResponseWrapper;
 import no.kantega.lab.limber.kernel.response.IHttpServletResponseWrapper;
@@ -37,7 +36,7 @@ public class LimberRequestHandler {
         IHttpServletRequestWrapper httpServletRequestWrapper = new DefaultHttpServletRequestWrapper(httpServletRequest);
 
         // Wrap request as IRequestContainer, if request can be mapped.
-        IRequestMapping requestMapping = mapRequest(httpServletRequestWrapper, applicationConfiguration);
+        IRequestMapping requestMapping = applicationConfiguration.getRequestMapperDeque().map(httpServletRequestWrapper);
         if (requestMapping == null) {
             return false;
         }
@@ -53,22 +52,11 @@ public class LimberRequestHandler {
         RequestCycleRenderContext.setRenderContext(renderContext);
 
         // Query container stack to handle the request.
-        AbstractRenderable renderable = findRenderableToRequest(requestMapping, applicationConfiguration);
+        AbstractRenderable renderable = applicationConfiguration.getInstanceContainerStack().resolve(requestMapping);
         return renderable != null && renderRequest(
                 renderContext,
                 renderable,
                 httpServletResponse.getOutputStream());
-    }
-
-    private IRequestMapping mapRequest(@Nonnull IHttpServletRequestWrapper httpServletRequestWrapper,
-                                       @Nonnull ILimberApplicationConfiguration applicationConfiguration) throws IOException {
-        for (IRequestMapper requestMapper : applicationConfiguration.getRequestInterpreters()) {
-            IRequestMapping requestMapping = requestMapper.map(httpServletRequestWrapper);
-            if (requestMapping != null) {
-                return requestMapping;
-            }
-        }
-        return null;
     }
 
     private IRenderContext makeRenderContext(
@@ -82,11 +70,6 @@ public class LimberRequestHandler {
                 httpServletRequestWrapper,
                 httpServletResponseWrapper
         );
-    }
-
-    private AbstractRenderable findRenderableToRequest(@Nonnull IRequestMapping requestMapping,
-                                                       @Nonnull ILimberApplicationConfiguration applicationConfiguration) {
-        return applicationConfiguration.getInstanceContainerStack().resolve(requestMapping);
     }
 
     private boolean renderRequest(@Nonnull IRenderContext renderContext,
