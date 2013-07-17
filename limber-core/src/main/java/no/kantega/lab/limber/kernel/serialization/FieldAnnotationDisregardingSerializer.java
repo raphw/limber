@@ -1,28 +1,18 @@
-package no.kantega.lab.limber.kernel.container;
+package no.kantega.lab.limber.kernel.serialization;
 
-import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryo.serializers.FieldSerializer;
 
+import javax.annotation.Nonnull;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
-import java.util.Collection;
-import java.util.HashSet;
 
 public class FieldAnnotationDisregardingSerializer<T> extends FieldSerializer<T> {
 
-    private static Collection<Class<? extends Annotation>> disregardedAnnotationTypes =
-            new HashSet<Class<? extends Annotation>>();
+    private final LimberKryo limberKryo;
 
-    public static boolean markAnnotation(Class<? extends Annotation> annotationType) {
-        return disregardedAnnotationTypes.add(annotationType);
-    }
-
-    public static boolean unmarkAnnotation(Class<? extends Annotation> annotationType) {
-        return disregardedAnnotationTypes.remove(annotationType);
-    }
-
-    public FieldAnnotationDisregardingSerializer(Kryo kryo, Class<?> type) {
-        super(kryo, type);
+    public FieldAnnotationDisregardingSerializer(@Nonnull LimberKryo limberKryo, @Nonnull Class<?> type) {
+        super(limberKryo, type);
+        this.limberKryo = limberKryo;
     }
 
     protected void initializeCachedFields() {
@@ -37,7 +27,7 @@ public class FieldAnnotationDisregardingSerializer<T> extends FieldSerializer<T>
 
     private boolean containsDisregardedAnnotation(Field field) {
         for (Annotation annotation : field.getAnnotations()) {
-            if (disregardedAnnotationTypes.contains(annotation.annotationType())) {
+            if (limberKryo.getDisregardedAnnotations().contains(annotation.annotationType())) {
                 return true;
             }
         }

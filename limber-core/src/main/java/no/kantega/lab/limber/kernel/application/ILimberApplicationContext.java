@@ -10,7 +10,7 @@ import java.util.UUID;
 
 public interface ILimberApplicationContext {
 
-    public static final String LIMBER_PACKAGE_CONTEXT_PARAMETER = "scan-package";
+    public static final String LIMBER_PACKAGE_CONTEXT_PARAMETER = "packages";
 
     @Nonnull
     ServletContext getServletContext();

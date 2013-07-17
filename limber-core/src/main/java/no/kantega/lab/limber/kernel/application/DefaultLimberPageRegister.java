@@ -3,19 +3,26 @@ package no.kantega.lab.limber.kernel.application;
 import no.kantega.lab.limber.exception.NotYetImplementedException;
 import no.kantega.lab.limber.kernel.AbstractRenderable;
 import no.kantega.lab.limber.kernel.mapper.IRequestMapper;
+import no.kantega.lab.limber.kernel.request.IRequestMapping;
 
 import javax.annotation.Nonnull;
 import java.net.URI;
 import java.util.Deque;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.UUID;
 
 public class DefaultLimberPageRegister implements ILimberPageRegister {
 
     private final Deque<IRequestMapper> requestInterpreters;
 
-    public DefaultLimberPageRegister(@Nonnull Deque<IRequestMapper> requestInterpreters) {
-        this.requestInterpreters = requestInterpreters;
+    public DefaultLimberPageRegister(@Nonnull ILimberApplicationConfiguration applicationConfiguration) {
+        this.requestInterpreters = new LinkedList<IRequestMapper>();
+    }
+
+    @Override
+    public AbstractRenderable resolve(@Nonnull IRequestMapping requestMapping) {
+        return null;
     }
 
     @Override

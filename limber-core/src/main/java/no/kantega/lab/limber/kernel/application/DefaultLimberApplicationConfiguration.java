@@ -5,6 +5,7 @@ import no.kantega.lab.limber.kernel.container.IInstanceContainerStack;
 import no.kantega.lab.limber.kernel.creator.DefaultInstanceCreationMapper;
 import no.kantega.lab.limber.kernel.creator.IInstanceCreationMapper;
 import no.kantega.lab.limber.kernel.mapper.IRequestMapper;
+import no.kantega.lab.limber.kernel.serialization.ISerializationStrategy;
 
 import javax.annotation.Nonnull;
 import java.util.Deque;
@@ -15,6 +16,8 @@ public class DefaultLimberApplicationConfiguration implements ILimberApplication
     private final Deque<IRequestMapper> requestInterpreters;
     private final IInstanceContainerStack instanceContainerStack;
     private final IInstanceCreationMapper instanceCreationMapper;
+
+    private ISerializationStrategy serializationStrategy;
 
     private final ILimberPageRegister limberPageRegister;
 
@@ -49,12 +52,25 @@ public class DefaultLimberApplicationConfiguration implements ILimberApplication
         return instanceCreationMapper;
     }
 
+    @Override
+    public ISerializationStrategy getSerializationStrategy() {
+        return serializationStrategy;
+    }
+
+    @Nonnull
+    @Override
+    public ILimberApplicationConfiguration setSerializationStrategy(ISerializationStrategy serializationStrategy) {
+        this.serializationStrategy = serializationStrategy;
+        return this;
+    }
+
     @Nonnull
     @Override
     public ILimberApplicationConfiguration validate() {
         if (requestInterpreters.size() == 0
                 || instanceContainerStack.peek() == null
-                || instanceCreationMapper.size() == 0) {
+                || instanceCreationMapper.size() == 0
+                || serializationStrategy == null) {
             throw new IllegalStateException();
         }
         return this;

@@ -1,8 +1,8 @@
 package no.kantega.lab.limber.kernel.application;
 
-import no.kantega.lab.limber.kernel.container.IInstanceContainerStack;
 import no.kantega.lab.limber.kernel.creator.IInstanceCreationMapper;
 import no.kantega.lab.limber.kernel.mapper.IRequestMapper;
+import no.kantega.lab.limber.kernel.serialization.ISerializationStrategy;
 
 import javax.annotation.Nonnull;
 import java.util.Deque;
@@ -16,10 +16,12 @@ public interface ILimberApplicationConfiguration {
     Deque<IRequestMapper> getRequestInterpreters();
 
     @Nonnull
-    IInstanceContainerStack getInstanceContainerStack();
+    IInstanceCreationMapper getInstanceCreationMapper();
+
+    ISerializationStrategy getSerializationStrategy();
 
     @Nonnull
-    IInstanceCreationMapper getInstanceCreationMapper();
+    ILimberApplicationConfiguration setSerializationStrategy(ISerializationStrategy serializationStrategy);
 
     @Nonnull
     ILimberApplicationConfiguration validate();

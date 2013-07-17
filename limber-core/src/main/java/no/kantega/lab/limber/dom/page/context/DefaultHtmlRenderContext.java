@@ -8,6 +8,7 @@ import no.kantega.lab.limber.kernel.request.IHttpServletRequestWrapper;
 import no.kantega.lab.limber.kernel.request.IRenderContext;
 import no.kantega.lab.limber.kernel.request.IRequestMapping;
 import no.kantega.lab.limber.kernel.response.IHttpServletResponseWrapper;
+import no.kantega.lab.limber.kernel.store.IStoreCollection;
 
 import javax.annotation.Nonnull;
 import java.util.Map;
@@ -48,26 +49,37 @@ public class DefaultHtmlRenderContext implements IHtmlRenderContext {
         return htmlDocumentRootSelection;
     }
 
+    @Nonnull
     @Override
     public ILimberApplicationContext getLimberApplicationContext() {
         return renderContext.getLimberApplicationContext();
     }
 
+    @Nonnull
     @Override
     public ILimberPageRegister getLimberPageRegister() {
         return renderContext.getLimberPageRegister();
     }
 
+    @Nonnull
     @Override
     public IRequestMapping getRequestMapping() {
         return renderContext.getRequestMapping();
     }
 
+    @Nonnull
+    @Override
+    public IStoreCollection getStoreCollection() {
+        return renderContext.getStoreCollection();
+    }
+
+    @Nonnull
     @Override
     public IHttpServletRequestWrapper getHttpServletRequestWrapper() {
         return renderContext.getHttpServletRequestWrapper();
     }
 
+    @Nonnull
     @Override
     public IHttpServletResponseWrapper getHttpServletResponseWrapper() {
         return renderContext.getHttpServletResponseWrapper();

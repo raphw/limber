@@ -15,7 +15,7 @@ public abstract class PersistingCache<K, V> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(PersistingCache.class);
 
-    private final Cache<K, V> underlyingCache;
+    private Cache<K, V> underlyingCache;
 
     private final File persistenceDirectory;
 
@@ -154,8 +154,11 @@ public abstract class PersistingCache<K, V> {
         underlyingCache.invalidate(key);
     }
 
-    public boolean releaseCache() {
-        underlyingCache.invalidateAll();
+    @SuppressWarnings("unchecked")
+    public boolean invalidate() {
+        Cache<K, V> formerCache = underlyingCache;
+        underlyingCache = new InvalidatedCache();
+        formerCache.invalidateAll();
         return persistenceDirectory.delete();
     }
 

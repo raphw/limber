@@ -1,6 +1,7 @@
 package no.kantega.lab.limber.kernel.container;
 
 import no.kantega.lab.limber.kernel.AbstractRenderable;
+import no.kantega.lab.limber.kernel.application.ILimberApplicationConfiguration;
 import no.kantega.lab.limber.kernel.creator.IInstanceCreator;
 import no.kantega.lab.limber.kernel.meta.PageRestitution;
 import no.kantega.lab.limber.kernel.request.IRequestMapping;
@@ -14,8 +15,8 @@ public class PagePersistingCacheInstanceContainer extends AbstractInstanceContai
 
     private final PagePersistingCache pagePersistingCache;
 
-    public PagePersistingCacheInstanceContainer(@Nonnull File directory) {
-        this.pagePersistingCache = new PagePersistingCache(directory);
+    public PagePersistingCacheInstanceContainer(@Nonnull File directory, @Nonnull ILimberApplicationConfiguration applicationConfiguration) {
+        this.pagePersistingCache = new PagePersistingCache(directory, applicationConfiguration.getSerializationStrategy());
     }
 
     @Override
@@ -72,7 +73,7 @@ public class PagePersistingCacheInstanceContainer extends AbstractInstanceContai
                 requestMapping.getVersionId());
     }
 
-    public boolean releaseCache() {
-        return pagePersistingCache.releaseCache();
+    public boolean invalidate() {
+        return pagePersistingCache.invalidate();
     }
 }

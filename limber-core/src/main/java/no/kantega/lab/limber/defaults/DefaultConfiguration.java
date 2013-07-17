@@ -1,5 +1,6 @@
 package no.kantega.lab.limber.defaults;
 
+import com.google.common.io.Files;
 import no.kantega.lab.limber.kernel.AbstractRenderable;
 import no.kantega.lab.limber.kernel.application.ILimberApplicationConfiguration;
 import no.kantega.lab.limber.kernel.application.ILimberApplicationContext;
@@ -13,17 +14,19 @@ import no.kantega.lab.limber.kernel.mapper.AnnotationRequestMapper;
 import no.kantega.lab.limber.kernel.mapper.IRequestMapper;
 import no.kantega.lab.limber.kernel.mapper.LimberRequestExpressionMapper;
 import no.kantega.lab.limber.kernel.mapper.RessourceRequestMapper;
+import no.kantega.lab.limber.kernel.serialization.KryoSerializationStrategy;
 import no.kantega.lab.limber.util.IStack;
 
 import javax.annotation.Nonnull;
 import java.io.File;
-import java.io.IOException;
 import java.util.Deque;
 
 @LoadOnStartup(DefaultConfiguration.DEFAULT_PRIORITY)
 public class DefaultConfiguration implements ILimberApplicationListener {
 
     public static final int DEFAULT_PRIORITY = 1000;
+
+    public static final String PAGE_SUBDIR = "pages";
 
     private PagePersistingCacheInstanceContainer pagePersistingCacheInstanceContainer;
 
@@ -43,30 +46,22 @@ public class DefaultConfiguration implements ILimberApplicationListener {
                 .addCreator(AbstractRenderable.class, new ReflectionInstanceCreator());
 
         // Make base directory
-        File baseDirectory = createTempDirectory();
+        File baseDirectory = Files.createTempDir();
         baseDirectory = new File(baseDirectory, applicationContext.getFilterId().toString());
-        baseDirectory = new File(baseDirectory, "pagecache");
+        baseDirectory = new File(baseDirectory, PAGE_SUBDIR);
+
+        // Set up serialization strategy
+        applicationConfiguration.setSerializationStrategy(new KryoSerializationStrategy());
 
         // Set up request containers
         IStack<IInstanceContainer> instanceContainerStack = applicationConfiguration.getInstanceContainerStack();
-        pagePersistingCacheInstanceContainer = new PagePersistingCacheInstanceContainer(baseDirectory);
+        pagePersistingCacheInstanceContainer = new PagePersistingCacheInstanceContainer(baseDirectory, applicationConfiguration);
         instanceContainerStack.push(pagePersistingCacheInstanceContainer);
         instanceContainerStack.push(new VersioningPseudoContainer(instanceContainerStack.peek()));
     }
 
     @Override
     public void onApplicationShutdown(@Nonnull ILimberApplicationContext applicationContext) {
-        pagePersistingCacheInstanceContainer.releaseCache();
-    }
-
-    private static File createTempDirectory() {
-        try {
-            File temp = File.createTempFile("temp", Long.toString(System.nanoTime()));
-            if (!temp.delete()) throw new IOException("Could not delete temp file: " + temp.getAbsolutePath());
-            if (!temp.mkdir()) throw new IOException("Could not create temp directory: " + temp.getAbsolutePath());
-            return temp;
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        pagePersistingCacheInstanceContainer.invalidate();
     }
 }
