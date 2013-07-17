@@ -28,7 +28,12 @@ public class DefaultInstanceContainerStack extends AbstractInstanceContainer imp
 
     @Override
     public void push(@Nonnull IInstanceContainer instanceContainer) {
-        instanceContainer.setParent(getParent());
+        IInstanceContainer deepestParent = instanceContainer;
+        while(deepestParent.getParent() != null) {
+            deepestParent = deepestParent.getParent();
+        }
+        deepestParent.setParent(getParent());
+        setParent(instanceContainer);
     }
 
     @Override

@@ -55,6 +55,10 @@ public class DefaultConfiguration implements ILimberApplicationListener {
         // Set up cloning strategy
         applicationConfiguration.setCloningStrategy(new ClonerCloningStrategy());
 
+        // Set remaining application variables
+        applicationConfiguration.setApplicationFolder(Files.createTempDir());
+        applicationConfiguration.setApplicationKeyWord("limber");
+
         // Set up request containers
         IStack<IInstanceContainer> instanceContainerStack = applicationConfiguration.getInstanceContainerStack();
         pagePersistingCacheInstanceContainer = new PagePersistingCacheInstanceContainer(baseDirectory, applicationConfiguration);

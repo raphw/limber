@@ -4,7 +4,7 @@ import no.kantega.lab.limber.dom.abstraction.IDomSelectable;
 import no.kantega.lab.limber.dom.comparison.CompareBy;
 import no.kantega.lab.limber.dom.comparison.RelapsingComparisonStrategy;
 import no.kantega.lab.limber.dom.element.ElementNode;
-import no.kantega.lab.limber.dom.page.util.WebPageRenderSupport;
+import no.kantega.lab.limber.dom.page.render.AbstractWebPageRenderStrategy;
 import no.kantega.lab.limber.dom.parser.DomTreeProvider;
 import no.kantega.lab.limber.dom.selection.HtmlDocumentRootSelection;
 import no.kantega.lab.limber.kernel.AbstractRenderable;
@@ -46,7 +46,7 @@ public class WebPage extends AbstractRenderable implements IDomSelectable<Elemen
             throw new IllegalStateException();
         }
 
-        return WebPageRenderSupport.getInstance().renderResponse(
+        return AbstractWebPageRenderStrategy.make(renderContext, subroutineRegisterMap).render(
                 outputStream, getClass(), renderContext, htmlDocumentRootSelection, subroutineRegisterMap);
     }
 

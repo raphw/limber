@@ -147,6 +147,6 @@ public class DefaultLimberApplicationConfiguration implements ILimberApplication
         if (name.length() > 30) return true;
         if (!StringUtils.isAlphanumeric(name)) return true;
         char firstLetter = name.charAt(0);
-        return firstLetter < 'a' || firstLetter > 'Z';
+        return firstLetter < 'A' || firstLetter > 'z';
     }
 }

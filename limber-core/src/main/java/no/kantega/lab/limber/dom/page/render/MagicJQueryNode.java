@@ -1,8 +1,9 @@
-package no.kantega.lab.limber.dom.page.util;
+package no.kantega.lab.limber.dom.page.render;
 
 import no.kantega.lab.limber.dom.element.ElementNode;
 import no.kantega.lab.limber.dom.page.IEventTriggerable;
 import no.kantega.lab.limber.dom.page.context.IHtmlRenderContext;
+import no.kantega.lab.limber.dom.page.util.JQueryRenderSupport;
 
 import javax.annotation.Nonnull;
 import java.io.IOException;

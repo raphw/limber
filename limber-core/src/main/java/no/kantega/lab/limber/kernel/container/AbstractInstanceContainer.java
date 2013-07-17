@@ -41,7 +41,7 @@ public abstract class AbstractInstanceContainer implements IInstanceContainer {
     @Override
     public AbstractRenderable resolve(@Nonnull IRequestMapping requestMapping, @Nonnull IInstanceCreator instanceCreator, @Nonnull IStoreCollection storeCollection) {
         if (parent == null) throw new IllegalStateException();
-        return parent.remove(requestMapping, storeCollection);
+        return parent.resolve(requestMapping, instanceCreator, storeCollection);
     }
 
     @Override
