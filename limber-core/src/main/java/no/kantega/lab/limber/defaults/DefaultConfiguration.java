@@ -1,10 +1,10 @@
 package no.kantega.lab.limber.defaults;
 
 import com.google.common.io.Files;
+import no.kantega.lab.limber.kernel.application.ILimberApplicationConfiguration;
 import no.kantega.lab.limber.kernel.application.ILimberApplicationContext;
 import no.kantega.lab.limber.kernel.application.ILimberApplicationListener;
 import no.kantega.lab.limber.kernel.application.LoadOnStartup;
-import no.kantega.lab.limber.kernel.application.configuration.ILimberApplicationConfiguration;
 import no.kantega.lab.limber.kernel.container.IInstanceContainer;
 import no.kantega.lab.limber.kernel.container.PagePersistingCacheInstanceContainer;
 import no.kantega.lab.limber.kernel.container.VersioningPseudoContainer;

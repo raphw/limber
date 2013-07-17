@@ -1,5 +1,11 @@
-package no.kantega.lab.limber.kernel.application.configuration;
+package no.kantega.lab.limber.kernel.application;
 
+import no.kantega.lab.limber.kernel.container.DefaultInstanceContainerStack;
+import no.kantega.lab.limber.kernel.container.IInstanceContainerStack;
+import no.kantega.lab.limber.kernel.creator.DefaultInstanceCreatorCollection;
+import no.kantega.lab.limber.kernel.creator.IInstanceCreatorCollection;
+import no.kantega.lab.limber.kernel.mapper.DefaultRequestMapperDeque;
+import no.kantega.lab.limber.kernel.mapper.IRequestMapperDeque;
 import no.kantega.lab.limber.kernel.serialization.ISerializationStrategy;
 import org.apache.commons.lang3.StringUtils;
 
@@ -106,9 +112,12 @@ public class DefaultLimberApplicationConfiguration implements ILimberApplication
     }
 
     private boolean makeAndCheck(File applicationFolder) {
-        if (applicationFolder == null) return false;
-        return applicationFolder.mkdirs() && applicationFolder.exists() && applicationFolder.isDirectory()
-                && applicationFolder.canRead() && applicationFolder.canWrite();
+        return applicationFolder != null
+                && applicationFolder.mkdirs()
+                && applicationFolder.exists()
+                && applicationFolder.isDirectory()
+                && applicationFolder.canRead()
+                && applicationFolder.canWrite();
     }
 
     private boolean isInvalidName(String name) {

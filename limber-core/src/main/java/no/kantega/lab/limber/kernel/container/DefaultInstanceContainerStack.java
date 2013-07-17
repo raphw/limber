@@ -1,8 +1,7 @@
-package no.kantega.lab.limber.kernel.application.configuration;
+package no.kantega.lab.limber.kernel.container;
 
 import no.kantega.lab.limber.kernel.AbstractRenderable;
-import no.kantega.lab.limber.kernel.container.AbstractInstanceContainer;
-import no.kantega.lab.limber.kernel.container.IInstanceContainer;
+import no.kantega.lab.limber.kernel.creator.IInstanceCreatorCollection;
 import no.kantega.lab.limber.kernel.request.IRequestMapping;
 
 import javax.annotation.Nonnull;

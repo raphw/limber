@@ -1,6 +1,4 @@
-package no.kantega.lab.limber.kernel.application.configuration;
-
-import no.kantega.lab.limber.kernel.creator.IInstanceCreator;
+package no.kantega.lab.limber.kernel.creator;
 
 import javax.annotation.Nonnull;
 

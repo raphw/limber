@@ -1,9 +1,9 @@
 package no.kantega.lab.limber.kernel.request;
 
 import no.kantega.lab.limber.kernel.AbstractRenderable;
+import no.kantega.lab.limber.kernel.application.ILimberApplicationConfiguration;
 import no.kantega.lab.limber.kernel.application.ILimberApplicationContext;
 import no.kantega.lab.limber.kernel.application.LimberApplicationHandler;
-import no.kantega.lab.limber.kernel.application.configuration.ILimberApplicationConfiguration;
 import no.kantega.lab.limber.kernel.meta.PageRenderSynchronization;
 import no.kantega.lab.limber.kernel.response.DefaultHttpServletResponseWrapper;
 import no.kantega.lab.limber.kernel.response.IHttpServletResponseWrapper;

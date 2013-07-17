@@ -1,7 +1,6 @@
-package no.kantega.lab.limber.kernel.application.configuration;
+package no.kantega.lab.limber.kernel.mapper;
 
 import no.kantega.lab.limber.kernel.AbstractRenderable;
-import no.kantega.lab.limber.kernel.mapper.IRequestMapper;
 import no.kantega.lab.limber.kernel.request.IHttpServletRequestWrapper;
 import no.kantega.lab.limber.kernel.request.IRequestMapping;
 

@@ -1,8 +1,7 @@
-package no.kantega.lab.limber.kernel.application.configuration;
+package no.kantega.lab.limber.kernel.creator;
 
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.ListMultimap;
-import no.kantega.lab.limber.kernel.creator.IInstanceCreator;
 
 import javax.annotation.Nonnull;
 import java.util.List;

@@ -1,7 +1,7 @@
 package no.kantega.lab.limber.kernel.container;
 
 import no.kantega.lab.limber.kernel.AbstractRenderable;
-import no.kantega.lab.limber.kernel.application.configuration.ILimberApplicationConfiguration;
+import no.kantega.lab.limber.kernel.application.ILimberApplicationConfiguration;
 import no.kantega.lab.limber.kernel.creator.IInstanceCreator;
 import no.kantega.lab.limber.kernel.meta.PageRestitution;
 import no.kantega.lab.limber.kernel.request.IRequestMapping;
