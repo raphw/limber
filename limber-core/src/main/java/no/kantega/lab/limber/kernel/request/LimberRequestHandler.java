@@ -52,7 +52,8 @@ public class LimberRequestHandler {
         RequestCycleRenderContext.setRenderContext(renderContext);
 
         // Query container stack to handle the request.
-        AbstractRenderable renderable = applicationConfiguration.getInstanceContainerStack().resolve(requestMapping);
+        AbstractRenderable renderable = applicationConfiguration.getInstanceContainerStack().resolve(
+                requestMapping, renderContext.getStoreCollection());
         return renderable != null && renderRequest(
                 renderContext,
                 renderable,

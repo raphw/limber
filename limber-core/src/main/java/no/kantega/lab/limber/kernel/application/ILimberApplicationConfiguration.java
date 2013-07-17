@@ -1,5 +1,6 @@
 package no.kantega.lab.limber.kernel.application;
 
+import no.kantega.lab.limber.kernel.clone.ICloningStrategy;
 import no.kantega.lab.limber.kernel.container.IInstanceContainerStack;
 import no.kantega.lab.limber.kernel.creator.IInstanceCreatorCollection;
 import no.kantega.lab.limber.kernel.mapper.IRequestMapperDeque;
@@ -22,6 +23,10 @@ public interface ILimberApplicationConfiguration {
     ISerializationStrategy getSerializationStrategy();
 
     ISerializationStrategy setSerializationStrategy(ISerializationStrategy serializationStrategy);
+
+    ICloningStrategy getCloningStrategy();
+
+    ICloningStrategy setCloningStrategy(ICloningStrategy cloningStrategy);
 
     File getApplicationFolder();
 

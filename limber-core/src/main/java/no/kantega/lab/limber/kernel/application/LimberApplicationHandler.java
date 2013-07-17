@@ -48,7 +48,7 @@ public class LimberApplicationHandler {
         Collection<Class<?>> startupListeners = PackageScanSupport.getInstance().scanPackage(applicationContext.getRegisteredPackages(), LoadOnStartup.class);
         List<Class<?>> sortedStartupListeners = new ArrayList<Class<?>>(startupListeners);
         Collections.sort(sortedStartupListeners, new StartupPriorityComparator());
-        ILimberApplicationListenerFilter uuidFilter = new ILimberApplicationListenerFilter.UuidFilter(applicationContext.getFilterId());
+        ILimberApplicationListenerFilter uuidFilter = new ILimberApplicationListenerFilter.UuidFilter(applicationContext.getApplicationId());
         for (Class<?> startupListener : sortedStartupListeners) {
             addApplicationListener(instantiate(startupListener), uuidFilter);
         }

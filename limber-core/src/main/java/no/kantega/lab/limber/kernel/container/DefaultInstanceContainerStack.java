@@ -3,6 +3,7 @@ package no.kantega.lab.limber.kernel.container;
 import no.kantega.lab.limber.kernel.AbstractRenderable;
 import no.kantega.lab.limber.kernel.creator.IInstanceCreatorCollection;
 import no.kantega.lab.limber.kernel.request.IRequestMapping;
+import no.kantega.lab.limber.kernel.store.IStoreCollection;
 
 import javax.annotation.Nonnull;
 import java.util.List;
@@ -16,13 +17,13 @@ public class DefaultInstanceContainerStack extends AbstractInstanceContainer imp
     }
 
     @Override
-    public AbstractRenderable resolve(@Nonnull IRequestMapping requestMapping) {
-        return resolve(requestMapping, instanceCreatorCollection);
+    public AbstractRenderable resolve(@Nonnull IRequestMapping requestMapping, @Nonnull IStoreCollection storeCollection) {
+        return resolve(requestMapping, instanceCreatorCollection, storeCollection);
     }
 
     @Override
-    public AbstractRenderable storeBlockingIfAbsent(@Nonnull IRequestMapping requestMapping) {
-        return storeBlockingIfAbsent(requestMapping, instanceCreatorCollection);
+    public AbstractRenderable storeBlockingIfAbsent(@Nonnull IRequestMapping requestMapping, @Nonnull IStoreCollection storeCollection) {
+        return storeBlockingIfAbsent(requestMapping, instanceCreatorCollection, storeCollection);
     }
 
     @Override

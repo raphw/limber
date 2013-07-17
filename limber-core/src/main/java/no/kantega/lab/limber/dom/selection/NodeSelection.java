@@ -4,6 +4,7 @@ import no.kantega.lab.limber.dom.element.*;
 import no.kantega.lab.limber.dom.filter.*;
 import no.kantega.lab.limber.dom.filter.util.NodeFilterSupport;
 import no.kantega.lab.limber.dom.filter.util.QueryMatchMode;
+import no.kantega.lab.limber.kernel.clone.ICloningStrategy;
 
 import javax.annotation.Nonnull;
 import java.util.*;
@@ -291,8 +292,15 @@ public class NodeSelection<N extends AbstractNode<? extends N>, S extends NodeSe
         try {
             return (S) super.clone();
         } catch (CloneNotSupportedException e) {
-            throw new IllegalStateException();
+            throw new IllegalStateException(e);
         }
+    }
+
+    @Nonnull
+    @Override
+    @SuppressWarnings("unchecked")
+    public S clone(@Nonnull ICloningStrategy cloningStrategy) {
+        return (S) cloningStrategy.deepClone(this);
     }
 
     @Override

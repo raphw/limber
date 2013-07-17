@@ -3,7 +3,6 @@ package no.kantega.lab.limber.dom.element;
 import no.kantega.lab.limber.dom.abstraction.IDomNodeCastable;
 import no.kantega.lab.limber.dom.abstraction.IDomNodeQueryable;
 import no.kantega.lab.limber.dom.abstraction.IDomNodeRepresentable;
-import no.kantega.lab.limber.dom.clone.CloneSupport;
 import no.kantega.lab.limber.dom.filter.BooleanRepeaterFilter;
 import no.kantega.lab.limber.dom.filter.ConjunctionFilter;
 import no.kantega.lab.limber.dom.filter.INodeFilter;
@@ -12,6 +11,8 @@ import no.kantega.lab.limber.dom.filter.util.NodeFilterSupport;
 import no.kantega.lab.limber.dom.page.IHtmlRenderable;
 import no.kantega.lab.limber.dom.page.context.IHtmlRenderContext;
 import no.kantega.lab.limber.dom.selection.NodeSelection;
+import no.kantega.lab.limber.kernel.clone.ICloningStrategy;
+import no.kantega.lab.limber.kernel.request.RequestCycleRenderContext;
 
 import javax.annotation.Nonnull;
 import javax.annotation.OverridingMethodsMustInvokeSuper;
@@ -164,7 +165,16 @@ public abstract class AbstractNode<N extends AbstractNode<N>>
     @Override
     @SuppressWarnings("unchecked")
     public N clone() {
-        return (N) CloneSupport.getInstance().deepClone(this);
+        return clone(RequestCycleRenderContext
+                .getRenderContext().getLimberApplicationContext()
+                .getLimberApplicationConfiguration().getCloningStrategy());
+    }
+
+    @Nonnull
+    @Override
+    @SuppressWarnings("unchecked")
+    public N clone(@Nonnull ICloningStrategy cloningStrategy) {
+        return (N) cloningStrategy.deepClone(this);
     }
 
     @Override

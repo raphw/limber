@@ -3,6 +3,7 @@ package no.kantega.lab.limber.kernel.container;
 import no.kantega.lab.limber.kernel.AbstractRenderable;
 import no.kantega.lab.limber.kernel.creator.IInstanceCreator;
 import no.kantega.lab.limber.kernel.request.IRequestMapping;
+import no.kantega.lab.limber.kernel.store.IStoreCollection;
 
 import javax.annotation.Nonnull;
 import java.util.UUID;
@@ -20,27 +21,27 @@ public abstract class AbstractInstanceContainer implements IInstanceContainer {
     }
 
     @Override
-    public UUID store(@Nonnull String sessionId, @Nonnull AbstractRenderable renderable) {
+    public UUID store(@Nonnull String sessionId, @Nonnull AbstractRenderable renderable, @Nonnull IStoreCollection storeCollection) {
         if (parent == null) throw new IllegalStateException();
-        return parent.store(sessionId, renderable);
+        return parent.store(sessionId, renderable, storeCollection);
     }
 
     @Override
-    public AbstractRenderable storeBlockingIfAbsent(@Nonnull IRequestMapping requestMapping, @Nonnull IInstanceCreator instanceCreator) {
+    public AbstractRenderable storeBlockingIfAbsent(@Nonnull IRequestMapping requestMapping, @Nonnull IInstanceCreator instanceCreator, @Nonnull IStoreCollection storeCollection) {
         if (parent == null) throw new IllegalStateException();
-        return parent.storeBlockingIfAbsent(requestMapping, instanceCreator);
+        return parent.storeBlockingIfAbsent(requestMapping, instanceCreator, storeCollection);
     }
 
     @Override
-    public AbstractRenderable remove(@Nonnull IRequestMapping requestMapping) {
+    public AbstractRenderable remove(@Nonnull IRequestMapping requestMapping, @Nonnull IStoreCollection storeCollection) {
         if (parent == null) throw new IllegalStateException();
-        return parent.remove(requestMapping);
+        return parent.remove(requestMapping, storeCollection);
     }
 
     @Override
-    public AbstractRenderable resolve(@Nonnull IRequestMapping requestMapping, @Nonnull IInstanceCreator instanceCreator) {
+    public AbstractRenderable resolve(@Nonnull IRequestMapping requestMapping, @Nonnull IInstanceCreator instanceCreator, @Nonnull IStoreCollection storeCollection) {
         if (parent == null) throw new IllegalStateException();
-        return parent.remove(requestMapping);
+        return parent.remove(requestMapping, storeCollection);
     }
 
     @Override

@@ -15,7 +15,7 @@ public interface ILimberApplicationListenerFilter {
 
         @Override
         public boolean isApplicable(@Nonnull ILimberApplicationContext applicationContext) {
-            return applicationContext.getFilterId().equals(uuid);
+            return applicationContext.getApplicationId().equals(uuid);
         }
     }
 

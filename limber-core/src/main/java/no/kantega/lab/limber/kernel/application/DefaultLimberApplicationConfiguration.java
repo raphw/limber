@@ -1,5 +1,6 @@
 package no.kantega.lab.limber.kernel.application;
 
+import no.kantega.lab.limber.kernel.clone.ICloningStrategy;
 import no.kantega.lab.limber.kernel.container.DefaultInstanceContainerStack;
 import no.kantega.lab.limber.kernel.container.IInstanceContainerStack;
 import no.kantega.lab.limber.kernel.creator.DefaultInstanceCreatorCollection;
@@ -11,24 +12,30 @@ import org.apache.commons.lang3.StringUtils;
 
 import javax.annotation.Nonnull;
 import java.io.File;
+import java.util.UUID;
 
 public class DefaultLimberApplicationConfiguration implements ILimberApplicationConfiguration {
+
+    private final String applicationId;
 
     private final IRequestMapperDeque requestMappers;
     private final IInstanceCreatorCollection instanceCreatorCollection;
     private final IInstanceContainerStack containerStack;
 
     private ISerializationStrategy serializationStrategy;
+    private ICloningStrategy cloningStrategy;
+
     private File applicationFolder;
     private String applicationKeyWord;
 
     private boolean locked;
 
-    public DefaultLimberApplicationConfiguration() {
+    public DefaultLimberApplicationConfiguration(@Nonnull UUID applicationId) {
         this.requestMappers = new DefaultRequestMapperDeque();
         this.instanceCreatorCollection = new DefaultInstanceCreatorCollection();
         this.containerStack = new DefaultInstanceContainerStack(instanceCreatorCollection);
         this.locked = false;
+        this.applicationId = applicationId.toString();
     }
 
     @Nonnull
@@ -64,8 +71,22 @@ public class DefaultLimberApplicationConfiguration implements ILimberApplication
     }
 
     @Override
+    public ICloningStrategy getCloningStrategy() {
+        return cloningStrategy;
+    }
+
+    @Override
+    public ICloningStrategy setCloningStrategy(ICloningStrategy cloningStrategy) {
+        try {
+            return cloningStrategy;
+        } finally {
+            this.cloningStrategy = checkLock(cloningStrategy);
+        }
+    }
+
+    @Override
     public File getApplicationFolder() {
-        return applicationFolder;
+        return applicationFolder == null ? null : new File(applicationFolder, applicationId);
     }
 
     @Override
@@ -104,7 +125,8 @@ public class DefaultLimberApplicationConfiguration implements ILimberApplication
                 || containerStack.peek() == null
                 || !instanceCreatorCollection.isObjectCreatable()
                 || serializationStrategy == null
-                || !makeAndCheck(applicationFolder)
+                || cloningStrategy == null
+                || !makeAndCheck(getApplicationFolder())
                 || isInvalidName(applicationKeyWord)) {
             throw new IllegalStateException();
         }

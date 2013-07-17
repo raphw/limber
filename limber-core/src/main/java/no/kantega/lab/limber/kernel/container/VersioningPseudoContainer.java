@@ -6,6 +6,7 @@ import no.kantega.lab.limber.kernel.creator.IInstanceCreator;
 import no.kantega.lab.limber.kernel.meta.PageVersioning;
 import no.kantega.lab.limber.kernel.request.DefaultRequestMapping;
 import no.kantega.lab.limber.kernel.request.IRequestMapping;
+import no.kantega.lab.limber.kernel.store.IStoreCollection;
 
 import javax.annotation.Nonnull;
 import java.util.UUID;
@@ -20,7 +21,7 @@ public class VersioningPseudoContainer extends AbstractInstanceContainer {
     }
 
     @Override
-    public AbstractRenderable resolve(@Nonnull IRequestMapping requestMapping, @Nonnull IInstanceCreator instanceCreator) {
+    public AbstractRenderable resolve(@Nonnull IRequestMapping requestMapping, @Nonnull IInstanceCreator instanceCreator, @Nonnull IStoreCollection storeCollection) {
 
         PageVersioning pageVersioning = requestMapping.getRenderableClass().getAnnotation(PageVersioning.class);
 
@@ -36,7 +37,7 @@ public class VersioningPseudoContainer extends AbstractInstanceContainer {
                 break;
         }
 
-        return getParent().resolve(requestMapping, instanceCreator);
+        return getParent().resolve(requestMapping, instanceCreator, storeCollection);
     }
 
     @Nonnull

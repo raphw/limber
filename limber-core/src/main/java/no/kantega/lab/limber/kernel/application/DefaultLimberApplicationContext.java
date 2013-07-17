@@ -23,7 +23,7 @@ public class DefaultLimberApplicationContext implements ILimberApplicationContex
 
     private final String applicationName;
     private final ServletContext servletContext;
-    private final UUID filterId;
+    private final UUID applicationId;
     private final Set<String> registeredPackages;
 
     private final ILimberApplicationConfiguration applicationConfiguration;
@@ -32,14 +32,14 @@ public class DefaultLimberApplicationContext implements ILimberApplicationContex
 
     private final LimberSessionHandler sessionHandler;
 
-    public DefaultLimberApplicationContext(@Nonnull FilterConfig filterConfig, @Nonnull UUID filterId) {
+    public DefaultLimberApplicationContext(@Nonnull FilterConfig filterConfig, @Nonnull UUID applicationId) {
         this.applicationName = filterConfig.getFilterName();
         this.servletContext = filterConfig.getServletContext();
-        this.filterId = filterId;
+        this.applicationId = applicationId;
         registeredPackages = Collections.unmodifiableSet(findRegisteredPackages(filterConfig));
         applicationListeners = new LinkedHashSet<ILimberApplicationListener>();
-        this.applicationConfiguration = new DefaultLimberApplicationConfiguration();
-        sessionHandler = new LimberSessionHandler(filterId);
+        this.applicationConfiguration = new DefaultLimberApplicationConfiguration(applicationId);
+        sessionHandler = new LimberSessionHandler(applicationId);
     }
 
     private Set<String> findRegisteredPackages(@Nonnull FilterConfig filterConfig) {
@@ -75,8 +75,8 @@ public class DefaultLimberApplicationContext implements ILimberApplicationContex
 
     @Nonnull
     @Override
-    public UUID getFilterId() {
-        return filterId;
+    public UUID getApplicationId() {
+        return applicationId;
     }
 
     @Nonnull

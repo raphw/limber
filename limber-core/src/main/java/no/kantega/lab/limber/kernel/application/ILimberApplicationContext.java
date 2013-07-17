@@ -16,7 +16,7 @@ public interface ILimberApplicationContext {
     ServletContext getServletContext();
 
     @Nonnull
-    UUID getFilterId();
+    UUID getApplicationId();
 
     @Nonnull
     String getFilterName();

@@ -5,6 +5,7 @@ import no.kantega.lab.limber.kernel.application.ILimberApplicationConfiguration;
 import no.kantega.lab.limber.kernel.application.ILimberApplicationContext;
 import no.kantega.lab.limber.kernel.application.ILimberApplicationListener;
 import no.kantega.lab.limber.kernel.application.LoadOnStartup;
+import no.kantega.lab.limber.kernel.clone.ClonerCloningStrategy;
 import no.kantega.lab.limber.kernel.container.IInstanceContainer;
 import no.kantega.lab.limber.kernel.container.PagePersistingCacheInstanceContainer;
 import no.kantega.lab.limber.kernel.container.VersioningPseudoContainer;
@@ -45,11 +46,14 @@ public class DefaultConfiguration implements ILimberApplicationListener {
 
         // Make base directory
         File baseDirectory = Files.createTempDir();
-        baseDirectory = new File(baseDirectory, applicationContext.getFilterId().toString());
+        baseDirectory = new File(baseDirectory, applicationContext.getApplicationId().toString());
         baseDirectory = new File(baseDirectory, PAGE_SUBDIR);
 
         // Set up serialization strategy
         applicationConfiguration.setSerializationStrategy(new KryoSerializationStrategy());
+
+        // Set up cloning strategy
+        applicationConfiguration.setCloningStrategy(new ClonerCloningStrategy());
 
         // Set up request containers
         IStack<IInstanceContainer> instanceContainerStack = applicationConfiguration.getInstanceContainerStack();

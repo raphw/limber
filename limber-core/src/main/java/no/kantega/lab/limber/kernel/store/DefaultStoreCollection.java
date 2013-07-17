@@ -14,7 +14,7 @@ public class DefaultStoreCollection implements IStoreCollection {
     public static IStoreCollection from(@Nonnull ILimberApplicationContext applicationContext,
                                         @Nonnull IHttpServletRequestWrapper httpServletRequestWrapper) {
         return new DefaultStoreCollection(
-                applicationContext.getFilterId(),
+                applicationContext.getApplicationId(),
                 applicationContext.getServletContext(),
                 httpServletRequestWrapper.getHttpServletRequest().getSession(true),
                 httpServletRequestWrapper.getHttpServletRequest()
