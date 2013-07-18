@@ -25,11 +25,20 @@ public class ElementNode<N extends ElementNode<N>> extends AbstractNode<N>
 
     private static final String HTML_ATTR_CLASS = "class";
     private static final String HTML_ATTR_STYLE = "style";
-    private static final String HTML_SEPARATOR_CLASS = "( )+";
+
+    private static final char HTML_SEPARATOR_CLASS = ' ';
     private static final String HTML_SEPARATOR_CLASS_REGEX = "(" + HTML_SEPARATOR_CLASS + ")+";
-    private static final String HTML_SEPARATOR_STYLE_ARRAY = ":";
-    private static final String HTML_SEPARATOR_STYLE_ARRAY_REGEX = "( )*[" + HTML_SEPARATOR_STYLE_ARRAY + "]+[" + HTML_SEPARATOR_STYLE_ARRAY + " ]*";
+
+
+    private static final char HTML_SEPARATOR_STYLE_ARRAY = ':';
     private static final char HTML_SEPARATOR_STYLE_VALUE = ';';
+
+    private static final String HTML_SEPARATOR_STYLE_VALUE_REGEX = "( )*["
+            + HTML_SEPARATOR_STYLE_VALUE + "]+[" + HTML_SEPARATOR_STYLE_VALUE + " ]*";
+
+    private static final char XPATH_SEPARATOR_SYMBOL = '/';
+    private static final char XPATH_ELEMENT_INDEX_OPENING_SYMBOL = '[';
+    private static final char XPATH_ELEMENT_INDEX_CLOSING_SYMBOL = ']';
 
     private String tagName;
 
@@ -108,14 +117,19 @@ public class ElementNode<N extends ElementNode<N>> extends AbstractNode<N>
         return stringBuilder.toString();
     }
 
-
-    protected void getXPath(StringBuilder stringBuilder) {
+    protected void getXPath(@Nonnull StringBuilder stringBuilder) {
         if (getParent() == null) {
-            stringBuilder.append("/").append(getTagName().toLowerCase());
+            appendXPathNode(stringBuilder, 0);
         } else {
             getParent().getXPath(stringBuilder);
-            stringBuilder.append("/*[").append(getParent().getChildIndex(this, ElementNode.class) + 1).append(']');
+            appendXPathNode(stringBuilder, getChildIndex(
+                    this, new TagNameVisibilityFilter<ElementNode<?>>(getTagName()), ElementNode.class));
         }
+    }
+
+    private void appendXPathNode(@Nonnull StringBuilder stringBuilder, int index) {
+        stringBuilder.append(XPATH_SEPARATOR_SYMBOL).append(getTagName()).append(XPATH_ELEMENT_INDEX_OPENING_SYMBOL)
+                .append(index).append(XPATH_ELEMENT_INDEX_CLOSING_SYMBOL);
     }
 
     @Nonnull
@@ -337,25 +351,17 @@ public class ElementNode<N extends ElementNode<N>> extends AbstractNode<N>
 
     @Override
     public int getChildIndex(@Nonnull AbstractNode<?> node) {
+        return getChildIndex(node, new BooleanRepeaterFilter<AbstractNode<?>>(true), AbstractNode.class);
+    }
+
+    @Override
+    public <N2 extends AbstractNode<? extends N2>, N3 extends N2> int getChildIndex(@Nonnull N2 node, @Nonnull INodeFilter<N2> nodeFilter, @Nonnull Class<N3> clazz) {
         int i = 0;
-        for (AbstractNode<?> child : getChildren()) {
+        for (AbstractNode<?> child : getParent().getChildren(nodeFilter, clazz)) {
             if (child == node) {
                 return i;
             }
             i++;
-        }
-        throw new IllegalArgumentException();
-    }
-
-    public int getChildIndex(@Nonnull AbstractNode<?> node, @Nonnull Class<? extends AbstractNode> nodeClass) {
-        int i = 0;
-        for (AbstractNode<?> child : getChildren()) {
-            if (child == node) {
-                return i;
-            }
-            if (nodeClass.isAssignableFrom(child.getClass())) {
-                i++;
-            }
         }
         throw new IllegalArgumentException();
     }
@@ -509,8 +515,8 @@ public class ElementNode<N extends ElementNode<N>> extends AbstractNode<N>
     @Override
     public List<String> getCssClasses() {
         String cssClassAttributeValue = getAttr(HTML_ATTR_CLASS);
-        if (cssClassAttributeValue == null) return Collections.emptyList();
-        List<String> cssClassNameList = Arrays.asList(cssClassAttributeValue.split(HTML_SEPARATOR_CLASS_REGEX));
+        if (cssClassAttributeValue == null) return new ArrayList<String>();
+        List<String> cssClassNameList = new ArrayList<String>(Arrays.asList(cssClassAttributeValue.split(HTML_SEPARATOR_CLASS_REGEX)));
         for (int i = 0; i < cssClassNameList.size(); i++) {
             cssClassNameList.set(i, normalizeCssClassName(cssClassNameList.get(i)));
         }
@@ -565,11 +571,11 @@ public class ElementNode<N extends ElementNode<N>> extends AbstractNode<N>
     @Override
     public Map<String, String> getCssStyles() {
         String cssClassAttributeValue = getAttr(HTML_ATTR_STYLE);
-        if (cssClassAttributeValue == null) return Collections.emptyMap();
-        List<String> currentCssStyles = Arrays.asList(cssClassAttributeValue.split(HTML_SEPARATOR_STYLE_ARRAY_REGEX));
+        if (cssClassAttributeValue == null) return new HashMap<String, String>();
+        List<String> currentCssStyles = Arrays.asList(cssClassAttributeValue.split(HTML_SEPARATOR_STYLE_VALUE_REGEX));
         Map<String, String> cssStyleMap = new HashMap<String, String>();
         for (String combinedStyle : currentCssStyles) {
-            int valueIndex = combinedStyle.indexOf(HTML_SEPARATOR_STYLE_VALUE);
+            int valueIndex = combinedStyle.indexOf(HTML_SEPARATOR_STYLE_ARRAY);
             if (valueIndex == -1) {
                 cssStyleMap.put(combinedStyle, null);
             } else {
@@ -587,7 +593,10 @@ public class ElementNode<N extends ElementNode<N>> extends AbstractNode<N>
     public N setCssStyles(@Nonnull Map<? extends CharSequence, ? extends CharSequence> cssStyles) {
         StringBuilder stringBuilder = new StringBuilder();
         for (Map.Entry<? extends CharSequence, ? extends CharSequence> entry : cssStyles.entrySet()) {
-            stringBuilder.append(entry.getKey()).append(HTML_SEPARATOR_STYLE_VALUE).append(entry.getValue()).append(';');
+            stringBuilder.append(entry.getKey())
+                    .append(HTML_SEPARATOR_STYLE_ARRAY)
+                    .append(entry.getValue())
+                    .append(HTML_SEPARATOR_STYLE_VALUE);
         }
         putAttr(HTML_ATTR_STYLE, stringBuilder.toString());
         return (N) this;
@@ -729,6 +738,7 @@ public class ElementNode<N extends ElementNode<N>> extends AbstractNode<N>
             }
 
             @Override
+            @Nonnull
             public AbstractNode<?> next() {
                 return getChildren().get(iterationCount++);
             }

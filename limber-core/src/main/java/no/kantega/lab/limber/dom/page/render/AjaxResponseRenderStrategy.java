@@ -1,6 +1,6 @@
 package no.kantega.lab.limber.dom.page.render;
 
-import no.kantega.lab.limber.dom.ajax.AjaxResponseRenderSupport;
+import no.kantega.lab.limber.dom.ajax.XhrResponseRenderSupport;
 import no.kantega.lab.limber.dom.comparison.CompareBy;
 import no.kantega.lab.limber.dom.comparison.IDomComparisonStrategy;
 import no.kantega.lab.limber.dom.comparison.IReplacementStep;
@@ -36,7 +36,7 @@ public class AjaxResponseRenderStrategy extends AbstractSubroutineRenderStrategy
         List<IReplacementStep> replacementSteps = TreeComparisonSupport.getInstance().compare(
                 findDomComparisonStrategy(webPageClass), rootNodeClone, rootNodeOriginal);
 
-        AjaxResponseRenderSupport.getInstance().renderReplacementSteps(pageWriter, htmlRenderContext, replacementSteps);
+        XhrResponseRenderSupport.getInstance().renderReplacementSteps(pageWriter, htmlRenderContext, replacementSteps);
 
         return true;
     }

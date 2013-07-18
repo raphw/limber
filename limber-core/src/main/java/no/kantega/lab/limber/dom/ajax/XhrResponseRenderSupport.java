@@ -8,21 +8,25 @@ import java.io.IOException;
 import java.io.Writer;
 import java.util.List;
 
-public class AjaxResponseRenderSupport {
+public class XhrResponseRenderSupport {
 
-    private static final AjaxResponseRenderSupport INSTANCE = new AjaxResponseRenderSupport();
+    private static final XhrResponseRenderSupport INSTANCE = new XhrResponseRenderSupport();
 
-    public static AjaxResponseRenderSupport getInstance() {
+    public static XhrResponseRenderSupport getInstance() {
         return INSTANCE;
     }
 
     private static final String XML_HEADER = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>";
 
+    private static final char TAG_OPENING_SYMBOL = '<';
+    private static final char TAG_CLOSING_SYMBOL = '>';
+    private static final char CLOSING_TAG_SYMBOL = '/';
+
     public static final String UPDATES_TAG_NAME = "updates";
     public static final String UPDATE_TAG_NAME = "update";
 
-    public static final String IDENTIFICATOR_TYPE_TAG_NAME = "identification";
-    public static final String LOCATION_TAG_NAME = "location";
+    public static final String IDENTIFICATOR_TYPE_TAG_NAME = "locationType";
+    public static final String LOCATION_TAG_NAME = "locationId";
     public static final String ACTION_TAG_NAME = "action";
     public static final String CONTENT_TAG_NAME = "content";
 
@@ -44,7 +48,7 @@ public class AjaxResponseRenderSupport {
 
     private void renderReplacementStep(@Nonnull Writer writer, @Nonnull IHtmlRenderContext htmlRenderContext, @Nonnull IReplacementStep replacementStep) throws IOException {
 
-        // Write location and type
+        // Write type and location
         if (replacementStep.getFromNode().isIdSet()) {
             renderInsideTag(writer, IDENTIFICATOR_TYPE_TAG_NAME, AjaxElementIdentificator.SELECTOR.getIdentificatorName());
             renderInsideTag(writer, LOCATION_TAG_NAME, replacementStep.getFromNode().getId());
@@ -72,10 +76,10 @@ public class AjaxResponseRenderSupport {
     }
 
     private void renderOpeningTag(@Nonnull Writer writer, @Nonnull String tagName) throws IOException {
-        writer.append('<').append(tagName).append('>');
+        writer.append(TAG_OPENING_SYMBOL).append(tagName).append(TAG_CLOSING_SYMBOL);
     }
 
     private void renderClosingTag(@Nonnull Writer writer, @Nonnull String tagName) throws IOException {
-        writer.append("</").append(tagName).append('>');
+        writer.append(TAG_OPENING_SYMBOL).append(CLOSING_TAG_SYMBOL).append(tagName).append(TAG_CLOSING_SYMBOL);
     }
 }

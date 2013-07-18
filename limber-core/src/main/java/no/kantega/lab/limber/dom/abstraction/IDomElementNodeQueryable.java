@@ -3,6 +3,7 @@ package no.kantega.lab.limber.dom.abstraction;
 import no.kantega.lab.limber.dom.ajax.AjaxBoundEventTupel;
 import no.kantega.lab.limber.dom.element.AbstractNode;
 import no.kantega.lab.limber.dom.element.ElementNode;
+import no.kantega.lab.limber.dom.filter.INodeFilter;
 import no.kantega.lab.limber.dom.filter.util.QueryMatchMode;
 
 import javax.annotation.Nonnull;
@@ -43,6 +44,8 @@ public interface IDomElementNodeQueryable<N extends ElementNode<? extends N>> ex
     boolean isRoot();
 
     int getChildIndex(@Nonnull AbstractNode<?> node);
+
+    <N2 extends AbstractNode<? extends N2>, N3 extends N2> int getChildIndex(@Nonnull N2 node, @Nonnull INodeFilter<N2> nodeFilter, @Nonnull Class<N3> clazz);
 
     int size();
 

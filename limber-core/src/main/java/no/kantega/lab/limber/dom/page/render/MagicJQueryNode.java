@@ -1,9 +1,9 @@
 package no.kantega.lab.limber.dom.page.render;
 
+import no.kantega.lab.limber.dom.ajax.XhrBindingRenderSupport;
 import no.kantega.lab.limber.dom.element.ElementNode;
 import no.kantega.lab.limber.dom.page.IEventTriggerable;
 import no.kantega.lab.limber.dom.page.context.IHtmlRenderContext;
-import no.kantega.lab.limber.dom.page.util.JQueryRenderSupport;
 
 import javax.annotation.Nonnull;
 import java.io.IOException;
@@ -13,10 +13,15 @@ import java.util.HashSet;
 
 public class MagicJQueryNode extends ElementNode<MagicJQueryNode> {
 
+    private static final String SCRIPT_TAG_NAME = "script";
+    private static final String JAVASCRIPT_TAG_OPENING = "<script type=\"text/javascript\">";
+    private static final String JAVASCRIPT_TAG_CLOSING = "</script>\n";
+
     private final Collection<IEventTriggerable> eventTriggerables;
 
+
     public MagicJQueryNode(@Nonnull Collection<IEventTriggerable> eventTriggerables) {
-        super("script");
+        super(SCRIPT_TAG_NAME);
         this.eventTriggerables = eventTriggerables;
     }
 
@@ -33,9 +38,9 @@ public class MagicJQueryNode extends ElementNode<MagicJQueryNode> {
             return false;
         }
 
-        writer.append("<script type=\"text/javascript\">\n");
-        JQueryRenderSupport.getInstance().makeEventJavascript(writer, htmlRenderContext, ajaxEventTriggerables);
-        writer.append("</script>\n");
+        writer.append(JAVASCRIPT_TAG_OPENING);
+        XhrBindingRenderSupport.getInstance().renderAjaxBindings(writer, htmlRenderContext, ajaxEventTriggerables);
+        writer.append(JAVASCRIPT_TAG_CLOSING);
 
         return true;
     }
